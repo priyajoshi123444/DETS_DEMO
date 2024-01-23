@@ -191,7 +191,7 @@
             </div> <!-- container -->
             
             <div class="about_image bg_cover wow fadeInLeft" data-wow-duration="1.3s" data-wow-delay="0.2s"
-                style="background-image: url(assets/images/map-lying-wooden-table.jpg)">
+                style="background-image: url(assets/images/close-up-information-sign-white-wall_1048944-1693995.jpg)">
                 <div class="image_content">
                     <h4 class="experience"><span>Easy</span>Expenses Management!</h4>
                 </div>
@@ -329,7 +329,7 @@
     
     <!--====== CONTACT PART START ======-->
 
-    <section id="contact" class="contact_area bg_cover pt-120 pb-130" style="background-image: url(assets/images/businessmen-hands-white-table-with-documents-drafts.jpg)">
+    <section id="contact" class="contact_area bg_cover pt-120 pb-130" style="background-image: url(assets/images/young-asian-woman-worried-need-help-stress-home-accounting-debt-bills-bank-papers-expenses-payments-feeling-desperate-bad-financial-situation-top-view_164138-726.jpg)">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">

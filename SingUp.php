@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: url('assets/images/istockphoto-1393379221-612x612.jpg') center/cover no-repeat fixed;
+            background: url('assets/images/man-using-calculator-concept-budget-business-finance_220873-13988.avif') center/cover no-repeat fixed;
             color: #ffffff;
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -42,6 +42,7 @@
         }
 
         .signup-container form label {
+            color:#123391;
             font-weight: 600;
         }
 
@@ -61,6 +62,7 @@
         }
 
         .signup-container .login-link {
+            color:#123391;
             margin-top: 20px;
             font-size: 14px;
         }

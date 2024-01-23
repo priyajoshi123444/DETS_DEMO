@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: url('assets/images/istockphoto-1393379221-612x612.jpg') center/cover no-repeat fixed;
+            background: url('assets/images/man-using-calculator-concept-budget-business-finance_220873-13988.avif') center/cover no-repeat fixed;
             color: #ffffff;
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -38,6 +38,7 @@
         }
 
         .forgot-password-container p {
+            color:#123391;
             font-size: 14px;
             margin-bottom: 20px;
         }
@@ -47,6 +48,7 @@
         }
 
         .forgot-password-container form label {
+            color:#123391;
             font-weight: 600;
         }
 
@@ -75,6 +77,7 @@
 <body>
     <div class="overlay">
         <div class="forgot-password-container">
+            
             <h2>Forgot Password</h2>
             <p>Enter your email address and we'll send you instructions on how to reset your password.</p>
             <form>
