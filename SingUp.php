@@ -102,10 +102,21 @@
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
                     </div>
-                    <button type="submit">Sign Up</button>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <form action="SingUp.php" method="post">
+        <button type="button" onclick="redirectToLogin()">Sign Up</button>
+                   
+                    <script>
+        function redirectToLogin() {
+            window.location.href = "Login.php";
+        }
+    </script>
                 </form>
                 <div class="login-link">
-                    Already have an account? <a href="login.html">Login</a>
+                    Already have an account? <a href="Login.php">Login</a>
                 </div>
             </div>
         </div>

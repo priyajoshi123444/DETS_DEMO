@@ -95,7 +95,7 @@
                                         <a class="page-scroll" href="#contact">Contact</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="page-scroll" href="Login.php">Login</a>
+                                        <a href="Login.php">Login</a>
                                     </li>
                                 </ul>
                             </div> <!-- navbar collapse -->
