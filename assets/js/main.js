@@ -17,18 +17,31 @@
     /*=====================================
     Sticky
     ======================================= */
-    window.onscroll = function () {
-        var header_navbar = document.getElementById("header_navbar");
-        var logo = document.querySelector("img#logo");
-        var sticky = header_navbar.offsetTop;
+    // window.onscroll = function () {
+    //     var header_navbar = document.getElementById("header_navbar");
+    //     var logo = document.querySelector("img#logo");
+    //     var sticky = header_navbar.offsetTop;
 
-        if (window.pageYOffset > sticky) {
-            header_navbar.classList.add("sticky");
-            logo.setAttribute("src", "assets/images/logo-2.svg")
-        } else {
-            header_navbar.classList.remove("sticky");
-            logo.setAttribute("src", "assets/images/logo.svg")
-        }
+    //     if (window.pageYOffset > sticky) {
+    //         header_navbar.classList.add("sticky"); 
+    //         logo.setAttribute("src", "assets/images/logo-2.svg")
+    //     } else {
+    //         header_navbar.classList.remove("sticky");
+    //         logo.setAttribute("src", "assets/images/logo.svg")
+    //     }
+
+        window.onscroll = function () {
+            var header_navbar = document.getElementById("header_navbar");
+            var logo = document.querySelector("img#logo");
+            var sticky = header_navbar.offsetTop;
+    
+            if (window.pageYOffset > sticky) {
+                header_navbar.classList.add("sticky"); 
+                // logo.setAttribute("src", "assets/images/logo-2.svg")
+            } else {
+                header_navbar.classList.remove("sticky");
+                // logo.setAttribute("src", "assets/images/logo-2.svg")
+            }
 
 
 
