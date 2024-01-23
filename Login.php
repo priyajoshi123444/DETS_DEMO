@@ -78,7 +78,15 @@
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
                     </div>
-                    <button type="submit">Login</button>
+                    <form action="Login.php" method="post">
+        <button type="button" onclick="redirectToIndex()">Login</button>
+                   
+                    <script>
+        function redirectToIndex() {
+            window.location.href = "index.php";
+        }
+    </script>
+                </form>
                 </form>
                 <div class="forgot-password">
                     <a href="ForgetPassword.php">Forgot Password?</a>
