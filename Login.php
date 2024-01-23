@@ -83,6 +83,8 @@
                 <div class="forgot-password">
                     <a href="ForgetPassword.php">Forgot Password?</a>
                 </div>
+                <div class="text-center mt-4 font-weight-light"> Don't have an account? <a href="SingUp.php" class="text-primary">Create</a>
+                  </div>
             </div>
         </div>
     </div>
