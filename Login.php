@@ -84,11 +84,11 @@
                         <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
                     </div>
                     <form action="Login.php" method="post">
-        <button type="button" onclick="redirectToIndex()">Login</button>
+        <button type="button" onclick="redirectToSidebar()">Login</button>
                    
                     <script>
-        function redirectToIndex() {
-            window.location.href = "index.php";
+        function redirectToSidebar() {
+            window.location.href = "sidebar.php";
         }
     </script>
                 </form>
