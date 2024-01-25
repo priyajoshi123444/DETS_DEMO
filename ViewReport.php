@@ -7,6 +7,10 @@
     <title>View Reports - Expenses Management</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -20,6 +24,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         h2 {
@@ -29,47 +34,30 @@
 
         .nav-tabs {
             margin-bottom: 20px;
+            position: relative;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        table, th, td {
-            border: 1px solid #dee2e6;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #007bff;
-            color: #ffffff;
-        }
-
-        tr:hover {
-            background-color: #f2f2f2;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
+        .pdf-icon {
+            font-size: 1.5em;
+            color: #28a745;
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
         }
         .Form{
             display: flex;
+        }
+        .add-expenses-container {
+            background: url('assets/images/navy-blue-concrete-wall-with-scratches.jpg') no-repeat center center fixed;
+            background-size: cover;
         }
     </style>
 </head>
 
 <body>
+<div class="form-container add-expenses-container">
 <div class="Form">
 
 <?php include 'sidebar.php'; ?>
@@ -84,6 +72,8 @@
             <li class="nav-item">
                 <a class="nav-link" id="income-tab" data-bs-toggle="tab" href="#income">Income Report</a>
             </li>
+            <!-- PDF icon for generating PDF report -->
+            <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
         </ul>
 
         <!-- Tab content for expenses and income reports -->
@@ -99,11 +89,9 @@
                             <th>Amount</th>
                             <th>Category</th>
                             <th>Description</th>
-                            <!-- Add more columns as needed -->
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example row, replace with dynamic data from your backend -->
                         <tr>
                             <td>2022-03-15</td>
                             <td>$50.00</td>
@@ -126,11 +114,9 @@
                             <th>Amount</th>
                             <th>Category</th>
                             <th>Description</th>
-                            <!-- Add more columns as needed -->
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Example row, replace with dynamic data from your backend -->
                         <tr>
                             <td>2022-03-20</td>
                             <td>$200.00</td>
@@ -144,11 +130,29 @@
         </div>
 
         <!-- Button to go back or perform other actions -->
-        <a href="#" class="btn btn-primary mt-3">Go Back</a>
+        <a href="sidebar.php" class="btn btn-primary mt-3">Go Back</a>
+    </div>
+    </div>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome JS -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+    <script>
+        function generatePDF() {
+            // Create a new jsPDF instance
+            var doc = new jsPDF();
+
+            // Add content to the PDF
+            doc.text('Expense Report', 10, 10);
+            // ... Add more content as needed ...
+
+            // Save the PDF with a specific name
+            doc.save('expense_report.pdf');
+        }
+    </script>
 </body>
 
 </html>

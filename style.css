@@ -2238,7 +2238,7 @@ progress {
 .container-lg,
 .container-xl,
 .container-xxl {
-  width: 100%;
+  width: 55%;
   padding-right: var(--bs-gutter-x, 0.75rem);
   padding-left: var(--bs-gutter-x, 0.75rem);
   margin-right: auto;
@@ -13606,6 +13606,7 @@ dl {
 
 /* Tables */
 .table {
+  width: 80% !important;
   margin-bottom: 0; }
   .table thead th {
     border-top: 0;

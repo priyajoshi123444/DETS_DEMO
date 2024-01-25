@@ -24,6 +24,7 @@
 </head>
 
 <body>
+  
   <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
       <li class="nav-item nav-profile">
@@ -54,8 +55,9 @@
         </a>
         <div class="collapse show" id="ui-basic">
           <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="AddExp.php">Add Expense</a></li>
             <li class="nav-item"> <a class="nav-link" href="ViewExp.php">View Expense</a></li>
-            <li class="nav-item"> <a class="nav-link" href="AddExp.php">Add Expense</a></li>
+            
           </ul>
         </div>
       </li>
@@ -67,9 +69,9 @@
         </a>
         <div class="collapse" id="ui-basic-1">
           <ul class="nav flex-column sub-menu">
-
+          <li class="nav-item"> <a class="nav-link" href="AddIncome.php">Add Income</a></li>
             <li class="nav-item"> <a class="nav-link" href="ViewIncome.php">View Income</a></li>
-            <li class="nav-item"> <a class="nav-link" href="AddIncome.php">Add Income</a></li>
+            
           </ul>
         </div>
         
@@ -82,9 +84,9 @@
         </a>
         <div class="collapse" id="ui-basic-2">
           <ul class="nav flex-column sub-menu">
-
+          <li class="nav-item"> <a class="nav-link" href="AddBudget.php">Add Budget</a></li>
             <li class="nav-item"> <a class="nav-link" href="viewbudget.php">View Budget</a></li>
-            <li class="nav-item"> <a class="nav-link" href="AddBudget.php">Add Budget</a></li>
+            
           </ul>
         </div>
         

@@ -50,10 +50,15 @@
         .Form{
             display: flex;
         }
+        .add-expenses-container {
+            background: url('assets/images/navy-blue-concrete-wall-with-scratches.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
     </style>
 </head>
 
 <body>
+<div class="form-container add-expenses-container">
 <div class="Form">
 
 <?php include 'sidebar.php'; ?>
@@ -81,7 +86,8 @@
         </form>
 
         <!-- Button to go back or perform other actions -->
-        <a href="#" class="btn btn-primary mt-3">Go Back</a>
+        <a href="sidebar.php" class="btn btn-primary mt-3">Go Back</a>
+    </div>
     </div>
     </div>
     <!-- Bootstrap JS and Popper.js -->

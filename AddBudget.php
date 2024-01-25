@@ -49,10 +49,15 @@
         .Form{
             display: flex;
         }
+        .add-expenses-container {
+            background: url('assets/images/navy-blue-concrete-wall-with-scratches.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
     </style>
 </head>
 
 <body>
+<div class="form-container add-expenses-container">
 <div class="Form">
 
 <?php include 'sidebar.php'; ?>
@@ -81,6 +86,7 @@
 
             <button type="submit" class="btn btn-primary">Add Budget</button>
         </form>
+    </div>
     </div>
     </div>
     <!-- Bootstrap JS and Popper.js -->
