@@ -1,109 +1,159 @@
+<?php
+session_start();
+
+// Validate the form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve user input (sanitize input if needed)
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    // Add your database connection code here
+    $servername = "localhost";
+    $db_username = "root";
+    $db_password = "";
+    $dbname = "Expense";
+
+    $conn = new mysqli($servername, $db_username, $db_password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Prepare and execute a SELECT query to get user information
+    $stmt = $conn->prepare("SELECT username, password FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->bind_result($dbUsername, $dbPassword);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Verify the entered password with the stored hashed password
+    if ($dbUsername && password_verify($password, $dbPassword)) {
+        // Set session variable upon successful login
+        $_SESSION["username"] = $username;
+
+        // Redirect to the dashboard or another page
+        header("Location: sidebar.php");
+        exit();
+    } else {
+        $error_message = "Invalid username or password";
+    }
+
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Login - Expenses Management</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+<style>
         body {
-            background: url('assets/images/man-using-calculator-concept-budget-business-finance_220873-13988.avif') center/cover no-repeat fixed;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .overlay {
-            background: rgba(0, 0, 0, 0.5);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             height: 100vh;
+            background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .login-container {
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        .overlay {
+            background: rgba(255, 255, 255, 0.8);
             padding: 20px;
-            text-align: center;
-        }
-
-        .login-container h2 {
-            color:#123391;
-        }
-
-        .login-container form {
-            margin-top: 20px;
-        }
-
-        .login-container form label {
-            color:#123391;
-            font-weight: 600;
-        }
-
-        .login-container form button {
-            background-color:#123391;
-            color: #ffffff;
-            width: 100%;
-            padding: 10px;
-            border: none;
             border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
             cursor: pointer;
         }
 
-        .login-container form button:hover {
-            background-color: #0056b3;
-        }
-        .login-container .text-center {
-            color:#123391;
+        button:hover {
+            background-color: #45a049;
         }
 
-        .login-container .forgot-password {
+        .error-message {
+            color: red;
             text-align: center;
             margin-top: 10px;
         }
+
+        .links {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .links a {
+            color: #333;
+            text-decoration: underline;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .links a:hover {
+            color: #555;
+        }
     </style>
 </head>
-
 <body>
+
     <div class="overlay">
-        <div class="container">
-            <div class="login-container">
-                
-                <h2>Login</h2>
-                <form>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-                    </div>
-                    <form action="Login.php" method="post">
-        <button type="button" onclick="redirectToSidebar()">Login</button>
-                   
-                    <script>
-        function redirectToSidebar() {
-            window.location.href = "sidebar.php";
+        <h2>Login</h2>
+        <form action="" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+
+        <?php
+        // Display error messages if any
+        if (isset($error_message)) {
+            echo "<p class='error-message'>$error_message</p>";
         }
-    </script>
-                </form>
-                </form>
-                <div class="forgot-password">
-                    <a href="ForgetPassword.php">Forgot Password?</a>
-                </div>
-                <div class="text-center mt-4 font-weight-light"> Don't have an account? <a href="SingUp.php" class="text-primary">Create</a>
-                  </div>
-            </div>
+        ?>
+
+        <div class="links">
+            <a href="ForgetPassword.php">Forgot Password?</a>
+            <span>|</span>
+            <a href="SingUp.php">Create Account</a>
         </div>
     </div>
 
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

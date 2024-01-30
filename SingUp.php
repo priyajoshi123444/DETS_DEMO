@@ -1,131 +1,268 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+session_start();
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Sign Up - Expenses Management</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: url('assets/images/man-using-calculator-concept-budget-business-finance_220873-13988.avif') center/cover no-repeat fixed;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
+// Function to establish database connection (you need to customize this function)
+function connectToDatabase() {
+    $servername = "localhost";
+    $db_username = "root";
+    $db_password = "";
+    $dbname = "Expense";
+
+    $conn = new mysqli($servername, $db_username, $db_password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    return $conn;
+}
+
+// Validate the form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve user input (sanitize input if needed)
+    $username = $_POST["name"];
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $confirmPassword = $_POST["confirm_password"];
+    $mobileNumber = $_POST["mobile_number"];
+    $gender = $_POST["gender"];
+
+    // Validate name
+   // if (!preg_match("/^[a-zA-Z ]{1,10}$/", $username)) {
+       // $error_message = "Name should only contain letters and have a maximum length of 50 characters.";
+    //}
+
+    // Validate mobile number
+    //if (!preg_match("/^\d{10}$/", $mobileNumber)) {
+        //$error_message = "Mobile number should have exactly 10 digits.";
+   // }
+
+    // Validate file upload for the profile picture
+    $profilePicture = $_FILES["profile_picture"];
+
+    // Check if a file was uploaded successfully
+    if ($profilePicture["error"] == UPLOAD_ERR_OK) {
+        // Check if the uploaded file is an image
+        $allowedFormats = ['jpg', 'jpeg', 'png', 'gif'];
+        $fileExtension = pathinfo($profilePicture["name"], PATHINFO_EXTENSION);
+
+        if (!in_array(strtolower($fileExtension), $allowedFormats)) {
+            $error_message = "Invalid file format. Accepted formats: JPG, JPEG, PNG, GIF.";
         }
 
-        .overlay {
-            background: rgba(0, 0, 0, 0.7);
+        // Move the uploaded file to a destination folder (adjust the folder path as needed)
+        $uploadPath = "uploads/";
+        $uploadedFileName = $profilePicture["name"];
+        $targetFilePath = $uploadPath . $uploadedFileName;
+
+        if (move_uploaded_file($profilePicture["tmp_name"], $targetFilePath)) {
+            // File upload successful, continue with other data processing
+
+            // Add user to the database
+            $conn = connectToDatabase();
+
+            // Escape and sanitize user input to prevent SQL injection
+            $username = $conn->real_escape_string($username);
+            $email = $conn->real_escape_string($email);
+            $password = password_hash($conn->real_escape_string($password), PASSWORD_DEFAULT); // Hash the password
+            $mobileNumber = $conn->real_escape_string($mobileNumber);
+            $gender = $conn->real_escape_string($gender);
+            $targetFilePath = $conn->real_escape_string($targetFilePath);
+
+            // Insert data into the users table
+            $sql = "INSERT INTO users (username, email, password, mobile_number, gender, profile_picture_path) 
+                    VALUES ('$username', '$email', '$password', '$mobileNumber', '$gender', '$targetFilePath')";
+
+            if ($conn->query($sql) == TRUE) {
+                header("Location: login.php");
+        exit();
+            } else {
+                $error_message = "Error: " . $sql . "<br>" . $conn->error;
+            }
+
+            $conn->close();
+        } else {
+            $error_message = "Failed to move the uploaded file.";
+        }
+    } elseif ($profilePicture["error"] != UPLOAD_ERR_NO_FILE) {
+        $error_message = "File upload error: " . $profilePicture["error"];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             height: 100vh;
+            background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
         }
 
-        .signup-container {
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        .overlay {
+            background: rgba(255, 255, 255, 0.8);
             padding: 20px;
-        }
-
-        .signup-container h2 {
-            color: #123391;
-        }
-
-        .signup-container form {
-            margin-top: 20px;
-        }
-
-        .signup-container form label {
-            color:#123391;
-            font-weight: 600;
-        }
-
-        .signup-container form button {
-            background-color:#123391;
-            color: #ffffff;
-            width: 100%;
-            padding: 10px;
-            border: none;
             border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
             cursor: pointer;
-            margin-top: 20px;
         }
 
-        .signup-container form button:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: #45a049;
         }
 
-        .signup-container .login-link {
-            color:#123391;
-            margin-top: 20px;
-            font-size: 14px;
+        .reset-message {
+            color: green;
+            text-align: center;
+            margin-top: 10px;
         }
 
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 20px auto;
-            overflow: hidden;
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
         }
+        .gender-radio {
+    display: flex;
+    margin-top: 5px;
+}
 
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+.gender-radio label {
+    margin-right: 10px;
+    white-space: nowrap;
+}
     </style>
-</head>
+    <script>
+ 
 
-<body>
-    <div class="overlay">
-        <div class="container">
-            <div class="signup-container">
-                <div class="avatar">
-                    <img src="assets/images/istockphoto-1393379221-612x612.jpg" alt="User Avatar">
-                </div>
-                <h2>Sign Up</h2>
-                <form>
-                    <div class="mb-3">
-                        <label for="fullname" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="fullname" placeholder="Enter your full name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-                    </div>
-                    <form action="SingUp.php" method="post">
-        <button type="button" onclick="redirectToLogin()">Sign Up</button>
-                   
-                    <script>
-        function redirectToLogin() {
-            window.location.href = "Login.php";
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var mobileNumber = document.getElementById("mobile_number").value;
+            var profilePicture = document.getElementById("profile_picture").value;
+            var profilePictureInput = document.getElementById("profile_picture");
+            var allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+
+            // Validate name
+            if (!/^[a-zA-Z ]{1,10}$/.test(name)) {
+                alert("Name should only contain letters and have a maximum length of 10 characters.");
+                return false;
+            }
+
+            // Validate mobile number
+            if (!/^\d{10}$/.test(mobileNumber)) {
+                alert("Mobile number should have exactly 10 digits.");
+                return false;
+            }
+
+            // for image
+            if (profilePictureInput.files.length === 0) {
+            alert("Please select a profile picture.");
+            return false;
+        }
+
+        // Get the file name and split it to get the extension
+        var fileName = profilePictureInput.value;
+        var fileExtension = fileName.split('.').pop().toLowerCase();
+
+        // Check if the file extension is allowed
+        if (allowedExtensions.indexOf(fileExtension) === -1) {
+            alert("Invalid file format. Accepted formats: JPG, JPEG, PNG, GIF.");
+            profilePictureInput.value = ""; // Clear the file input
+            return false;
+        }
+
+        return true;
         }
     </script>
-                </form>
-                <div class="login-link">
-                    Already have an account? <a href="Login.php">Login</a>
+</head>
+<body>
+
+    <div class="overlay">
+        <h2>Registration</h2>
+        <?php if (isset($success_message)): ?>
+            <p class="success-message"><?php echo $success_message; ?></p>
+        <?php else: ?>
+            <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <label for="profile_picture">Profile Picture:</label>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*"required>
+                <small>(Accepted formats: JPG, JPEG, PNG, GIF)</small>
+
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="mobile_number">Mobile Number:</label>
+                <input type="text" id="mobile_number" name="mobile_number" required>
+
+                <label for="gender">Gender:</label>
+                <div class="gender-radio">
+                    <label><input type="radio" name="gender" value="male" required> Male</label>
+                    <label><input type="radio" name="gender" value="female" required> Female</label>
+                    <label><input type="radio" name="gender" value="other" required> Other</label>
                 </div>
-            </div>
-        </div>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+
+               
+
+               
+                <button type="submit">Register</button>
+            </form>
+
+            <?php
+            // Display success or error messages if any
+            if (isset($error_message)) {
+                echo "<p class='error-message'>$error_message</p>";
+            }
+            ?>
+        <?php endif; ?>
     </div>
 
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
