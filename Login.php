@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare and execute a SELECT query to get user information
-    $stmt = $conn->prepare("SELECT username, password FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT username, password FROM user WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->bind_result($dbUsername, $dbPassword);

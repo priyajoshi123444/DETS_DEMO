@@ -130,7 +130,7 @@
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="login.php">
+        <a class="nav-link" href="logout.php">
           <span class="menu-title">Logout</span>
           <i class="mdi mdi-logout menu-icon"></i>
         </a>
