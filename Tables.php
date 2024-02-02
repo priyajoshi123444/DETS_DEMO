@@ -27,6 +27,16 @@ CREATE TABLE user (
     reset_status BOOLEAN DEFAULT 0,
     last_password_change DATETIME
 )";
+$sqlExpenses = "CREATE TABLE IF NOT EXISTS `your_database_name`.`expenses` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `expenseName` VARCHAR(255) NOT NULL,
+    `expenseAmount` DECIMAL(10, 2) NOT NULL,
+    `expenseCategory` VARCHAR(50) NOT NULL,
+    `expenseDescription` TEXT,
+    `expenseDate` DATE NOT NULL,
+    `billImage` VARCHAR(255)
+)";
+
 // Execute the create table query
 if ($conn->query($sqlCreateUserTable) == TRUE) {
     echo "User table created successfully\n";

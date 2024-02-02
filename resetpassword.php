@@ -17,31 +17,39 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $token = $_GET["token"];
-    $password = $_POST["password"];
+    
+    // Check if "new_password" is set in the POST array
+    if (isset($_POST["new_password"])) {
+        $password = $_POST["new_password"];
 
-    $checkTokenQuery = "SELECT * FROM user WHERE reset_token = '$token' AND reset_token_expiry > NOW()";
-    $checkTokenResult = $conn->query($checkTokenQuery);
+        $checkTokenQuery = "SELECT * FROM user WHERE reset_token = '$token' AND reset_token_expiry > NOW()";
+        $checkTokenResult = $conn->query($checkTokenQuery);
 
-    if ($checkTokenResult->num_rows > 0) {
-        $user = $checkTokenResult->fetch_assoc();
-        $email = $user["email"];
+        if ($checkTokenResult->num_rows > 0) {
+            $user = $checkTokenResult->fetch_assoc();
+            $email = $user["email"];
 
-        $updatePasswordQuery = $conn->prepare("UPDATE user SET password = ?, reset_status = 1, last_password_change = NOW() WHERE email = ?");
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $updatePasswordQuery->bind_param("ss", $hashedPassword, $email);
+            $updatePasswordQuery = $conn->prepare("UPDATE user SET password = ?, reset_status = 1, last_password_change = NOW() WHERE email = ?");
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $updatePasswordQuery->bind_param("ss", $hashedPassword, $email);
 
-        if ($updatePasswordQuery->execute()) {
-            echo "Password reset successfully.";
+            if ($updatePasswordQuery->execute()) {
+                echo "Password reset successfully.";
+            } else {
+                echo "Error updating password: " . $conn->error;
+            }
+
+            $updatePasswordQuery->close();
         } else {
-            echo "Error updating password: " . $conn->error;
+            echo "Invalid or expired token.";
         }
-
-        $updatePasswordQuery->close();
     } else {
-        echo "Invalid or expired token.";
+        echo "New password not provided.";
     }
 }
 ?>
+<!-- Your HTML code remains the same -->
+
 <!-- Your HTML code remains the same -->
 
 <!DOCTYPE html>
@@ -56,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0;
             padding: 0;
             height: 100vh;
-            background: url('assets/images/your_background_image.jpg') center/cover no-repeat fixed;
+            background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
             display: flex;
             align-items: center;
             justify-content: center;

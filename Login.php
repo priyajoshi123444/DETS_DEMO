@@ -1,46 +1,45 @@
 <?php
-session_start();
-
+//session_start();
+$conn=mysqli_connect("localhost","root","","Expense") or die("connection filed");
 // Validate the form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve user input (sanitize input if needed)
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+if(isset($_POST['Login']))
+{
+  $email=$_POST['email'];
+  $password=$_POST['password'];
 
-    // Add your database connection code here
-    $servername = "localhost";
-    $db_username = "root";
-    $db_password = "";
-    $dbname = "Expense";
+  $select_query="SELECT * FROM user WHERE email='$email'";
+  $result=mysqli_query($conn,$select_query);
+  $rows_count=mysqli_num_rows($result);
+  $row_data=mysqli_fetch_assoc($result);
 
-    $conn = new mysqli($servername, $db_username, $db_password, $dbname);
+ 
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
 
-    // Prepare and execute a SELECT query to get user information
-    $stmt = $conn->prepare("SELECT username, password FROM user WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->bind_result($dbUsername, $dbPassword);
-    $stmt->fetch();
-    $stmt->close();
+  if($rows_count>0)
+  {
+        $_SESSION['email']=$email;
+        if(password_verify($password,$row_data['password']))
+        {
+              if($rows_count==1){
+              session_start();
+               $_SESSION['email']=$email;    
+               header("Location: sidebar.php");
+                  }
+       
+       }
+       else
+       {
+        echo "<script>alert('Invalid Credentials for password')</script>" ;
+        // if username and password not match-ivalid credentials;
+        }
 
-    // Verify the entered password with the stored hashed password
-    if ($dbUsername && password_verify($password, $dbPassword)) {
-        // Set session variable upon successful login
-        $_SESSION["username"] = $username;
-
-        // Redirect to the dashboard or another page
-        header("Location: sidebar.php");
-        exit();
-    } else {
-        $error_message = "Invalid username or password";
-    }
-
-    $conn->close();
+  }else{
+        echo "<script>alert('Invalid Credentials')</script>" ;
+        // unvalid username -invalid credentials;
+  }  
+   
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -132,13 +131,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="overlay">
         <h2>Login</h2>
         <form action="" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
             
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             
-            <button type="submit">Login</button>
+            <button type="submit" name="Login">Login</button>
         </form>
 
         <?php

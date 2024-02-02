@@ -17,5 +17,5 @@ echo "Connected successfully";
 // Perform database operations here
 
 // Close the connection
-$conn->close();
+
 ?>

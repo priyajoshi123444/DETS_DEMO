@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             align-items: center;
             justify-content: center;
         }
-
+ 
         .overlay {
             background: rgba(255, 255, 255, 0.8);
             padding: 20px;

@@ -5,14 +5,14 @@ include('connection.php');
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['username'])) {
     header("Location: SingUp.php"); // Redirect to login page if not logged in
     exit();
 } 
 
 // Fetch user information from the database
-$email = $_SESSION['email'];
-$sql = "SELECT * FROM user WHERE email = '$email'";
+$username = $_SESSION['username'];
+$sql = "SELECT * FROM user WHERE username = '$username'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {

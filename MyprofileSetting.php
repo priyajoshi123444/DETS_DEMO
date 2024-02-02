@@ -4,27 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Expenses Management</title>
+    <title>Update Your Profile - Expense Tracker</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
         }
 
         .container {
-            max-width: 500px;
-            margin: 50px auto;
-            background-color: #ffffff;
             padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #111;
+            padding-top: 20px;
+            height: 100%;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
         }
 
         h2 {
             color: #007bff;
-            margin-bottom: 20px;
         }
 
         form {
@@ -47,68 +70,96 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
-
-        .profile-img {
-            max-width: 100%;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .Form{
-            display: flex;
-        }
-        .add-expenses-container {
-            background: url('assets/images/navy-blue-concrete-wall-with-scratches.jpg') no-repeat center center fixed;
-            background-size: cover;
-        }
     </style>
 </head>
 
 <body>
-<div class="form-container add-expenses-container">
-<div class="Form">
-<?php include 'sidebar.php'; ?>
-
+    <div class="sidebar">
+        <?php include 'sidebar.php'; ?>
+    </div>
     <div class="container">
-        <h2>My Profile Settings</h2>
-
-        <!-- User profile form -->
-        <form>
-            <!-- Profile image upload -->
-            <div class="mb-3">
-                <img src="placeholder.jpg" alt="Profile Image" class="profile-img">
-                <input type="file" class="form-control" id="profileImage" accept="image/*">
-            </div>
-
+        <h2>Update Your Profile</h2>
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <!-- Add your user data fields here -->
             <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required>
+            </div>
+
+            <div class="form-group"><label for="gender">Gender</label>
+                <div class="gender-radio">
+                    <label><input type="radio" name="gender" value="male" required> Male</label>
+                    <label><input type="radio" name="gender" value="female" required> Female</label>
+                    <label><input type="radio" name="gender" value="other" required> Other</label>
+                </div>
+
+                
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Enter mobile number" required>
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                <label for="profileImage">Profile Image</label>
+                <input type="file" class="form-control" name="profileImage" id="profileImage" accept="image/*">
             </div>
 
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Update Profile</button>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
 
-        <!-- Button to go back or perform other actions -->
-        <a href="sidebar.php" class="btn btn-primary mt-3">Go Back</a>
-    </div>
-    </div>
+        <?php
+        
+        session_start(); 
+
+        // PHP code for handling form submission and database insertion
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "Expense";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            // Get username from session
+            $email = $_SESSION["email"]; // Replace 'your_username_key' with the actual key
+            $name = $_POST["username"];
+            $useremail = $_POST["email"];
+            $gender = $_POST["gender"];
+            $mobile = $_POST["mobile"];
+
+            // Handle profile image upload
+            $targetDir = "uploads/";
+            $targetFile = $targetDir . basename($_FILES["profileImage"]["name"]);
+
+            move_uploaded_file($_FILES["profileImage"]["tmp_name"], $targetFile);
+
+            $sql = "UPDATE user SET username='$name', email='$useremail', gender='$gender', mobile_number='$mobile', profile_Image='$targetFile' WHERE email='$email'";
+
+            if ($conn->query($sql) == TRUE) {
+                echo "User data updated successfully.";
+            } else {
+                echo "Error: " . $sql . "<br>" . $conn->error;
+            }
+        }
+        ?>
     </div>
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function validateForm() {
+            // Add validation logic if needed
+            return true;
+        }
+    </script>
 </body>
 
 </html>
