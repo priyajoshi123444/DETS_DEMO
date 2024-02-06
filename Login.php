@@ -1,46 +1,35 @@
 <?php
-//session_start();
-$conn=mysqli_connect("localhost","root","","Expense") or die("connection filed");
+session_start();
+$conn = mysqli_connect("localhost", "root", "", "Expense") or die("connection filed");
+
 // Validate the form submission
-if(isset($_POST['Login']))
-{
-  $email=$_POST['email'];
-  $password=$_POST['password'];
+if (isset($_POST['Login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-  $select_query="SELECT * FROM user WHERE email='$email'";
-  $result=mysqli_query($conn,$select_query);
-  $rows_count=mysqli_num_rows($result);
-  $row_data=mysqli_fetch_assoc($result);
+    $select_query = "SELECT * FROM user WHERE email='$email'";
+    $result = mysqli_query($conn, $select_query);
+    $rows_count = mysqli_num_rows($result);
+    $row_data = mysqli_fetch_assoc($result);
 
- 
-
-
-  if($rows_count>0)
-  {
-        $_SESSION['email']=$email;
-        if(password_verify($password,$row_data['password']))
-        {
-              if($rows_count==1){
-              session_start();
-               $_SESSION['email']=$email;    
-               header("Location: sidebar.php");
-                  }
-       
-       }
-       else
-       {
-        echo "<script>alert('Invalid Credentials for password')</script>" ;
-        // if username and password not match-ivalid credentials;
+    if ($rows_count > 0) {
+        $_SESSION['id'] = $expenseId;
+        $_SESSION['email'] = $email;
+        if (password_verify($password, $row_data['password'])) {
+            if ($rows_count == 1) {
+                header("Location: sidebar.php");
+                exit();
+            }
+        } else {
+            echo "<script>alert('Invalid Credentials for password')</script>";
         }
-
-  }else{
-        echo "<script>alert('Invalid Credentials')</script>" ;
-        // unvalid username -invalid credentials;
-  }  
-   
+    } else {
+        echo "<script>alert('Invalid Credentials')</script>";
+    }
 }
-
 ?>
+<!-- rest of your HTML code -->
+
 
 <!DOCTYPE html>
 <html lang="en">

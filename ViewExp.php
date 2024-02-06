@@ -56,7 +56,8 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -90,12 +91,21 @@
     <div class="sidebar">
         <?php include 'sidebar.php'; ?>
     </div>
-    
+
     <div class="container">
         <h2>View Expenses</h2>
 
         <?php
-        // PHP code for displaying expenses
+        session_start();
+
+        // Check if the user is logged in
+        $expenseId = null; // Define $expenseId before the conditional block
+
+        // Check if the 'id' key exists in the session
+        if (isset($_SESSION['id'])) {
+            $expenseId = $_SESSION['id'];
+        }
+
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -107,7 +117,8 @@
             die("Connection failed: " . $conn->connect_error);
         }
 
-        $sql = "SELECT * FROM expenses";
+        // Fetch expenses only for the logged-in user
+        $sql = "SELECT * FROM expenses WHERE id = '$expenseId'";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -123,8 +134,6 @@
         } else {
             echo "No expenses found.";
         }
-
-        $conn->close();
         ?>
 
     </div>
