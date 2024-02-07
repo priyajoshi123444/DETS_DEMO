@@ -98,7 +98,7 @@
         session_start();
 
         // Include database connection
-        include 'db_connection.php';
+        include  'connection.php';
 
         // Check if the user is logged in
         if (!isset($_SESSION['email'])) {
