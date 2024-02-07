@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     }
 
     // Retrieve the file name to delete from the database
-    $sql = "SELECT billImage FROM expenses WHERE id = $expenseId";
+    $sql = "SELECT billImage FROM expense WHERE id = $expenseId";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
         $billImageToDelete = $row['billImage'];
 
         // Delete the row from the database
-        $deleteSql = "DELETE FROM expenses WHERE id = $expenseId";
+        $deleteSql = "DELETE FROM expense WHERE id = $expenseId";
 
         if ($conn->query($deleteSql) === TRUE) {
             echo "Expense deleted successfully.";
@@ -35,12 +35,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
                 if (file_exists($fileToDelete)) {
                     unlink($fileToDelete);
                     echo " Image file deleted successfully.";
-                    header("Location: ViewExp.php");
-            exit();
                 } else {
                     echo " Image file not found.";
                 }
             }
+            
+            // Redirect to ViewExp.php after deleting expense
+            header("Location: ViewExp.php");
+            exit();
         } else {
             echo "Error deleting expense: " . $conn->error;
         }

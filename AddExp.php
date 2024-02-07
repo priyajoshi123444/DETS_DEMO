@@ -75,7 +75,7 @@
 
 <body>
     <div class="sidebar">
-        <?php include 'sidebar.php'; ?>
+        <?php include 'sidebar1.php'; ?>
     </div>
     <div class="container">
         <h2>Add Expenses</h2>
@@ -117,47 +117,61 @@
                 <small class="form-text text-muted">Upload a photo of your bill.</small>
             </div>
 
-            <a href="sidebar.php" class="btn btn-secondary btn-go-back">Go Back</a>
+            <a href="sidebar1.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Expense</button>
         </form>
 
         <?php
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "Expense";
+            session_start();
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
+            // Check if the user is logged in
+            if (!isset($_SESSION['email'])) {
+                // Redirect to login page or display an error message
+                header("Location: login.php");
+                exit();
             }
 
-            $expenseName = $_POST["expenseName"];
-            $expenseAmount = $_POST["expenseAmount"];
-            $expenseCategory = $_POST["expenseCategory"];
-            $expenseDescription = $_POST["expenseDescription"];
-            $expenseDate = $_POST["expenseDate"];
-            $billImage = isset($_FILES["billImage"]) ? $_FILES["billImage"]["name"] : "";
+            // Get the logged-in user's email from the session
+            $email = $_SESSION['email'];
 
-            $sql = "INSERT INTO expenses (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, billImage)
-                    VALUES ('$expenseName', $expenseAmount, '$expenseCategory', '$expenseDescription', '$expenseDate', '$billImage')";
+            // Include database connection
+            include 'Connection.php';
 
-            if ($conn->query($sql) == TRUE) {
-                echo "Expense added successfully.";
+            // Fetch user ID based on email
+            $sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
+            $result_user_id = $conn->query($sql_user_id);
+
+            if ($result_user_id->num_rows > 0) {
+                $row_user_id = $result_user_id->fetch_assoc();
+                $user_id = $row_user_id['user_id'];
+
+                // Fetch other form data
+                $expenseName = $_POST["expenseName"];
+                $expenseAmount = $_POST["expenseAmount"];
+                $expenseCategory = $_POST["expenseCategory"];
+                $expenseDescription = $_POST["expenseDescription"];
+                $expenseDate = $_POST["expenseDate"];
+                $billImage = isset($_FILES["billImage"]) ? $_FILES["billImage"]["name"] : "";
+
+                // Construct SQL query to insert expense
+                $sql = "INSERT INTO expense (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, billImage, user_id) VALUES ('$expenseName', '$expenseAmount', '$expenseCategory', '$expenseDescription', '$expenseDate', '$billImage', '$user_id')";
+
+                // Execute SQL query to insert expense
+                if ($conn->query($sql) === TRUE) {
+                    echo "Expense added successfully.";
+                } else {
+                    echo "Error: " . $sql . "<br>" . $conn->error;
+                }
+
+                // Handle file upload here...
             } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
+                echo "<p>User not found.</p>";
             }
 
-            if (!empty($billImage)) {
-                $targetDir = "uploads/";  // Specify the directory where you want to store uploaded files
-                $targetFile = $targetDir . basename($_FILES["billImage"]["name"]);
-
-                move_uploaded_file($_FILES["billImage"]["tmp_name"], $targetFile);
-                echo "File uploaded successfully.";
-            }
+            // Close database connection
+            $conn->close();
         }
         ?>
 

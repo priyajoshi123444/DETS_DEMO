@@ -75,7 +75,7 @@
 
 <body>
     <div class="sidebar">
-        <?php include 'sidebar.php'; ?>
+        <?php include 'sidebar1.php'; ?>
     </div>
     <div class="container">
         <h2>Update Your Profile</h2>

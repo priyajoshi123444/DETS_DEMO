@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .sidebar {
             width: 250px;
             background-color: #111;
-            padding-top: 20px;
+            padding-top
             height: 100%;
         }
 
@@ -135,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
 <div class='sidebar'>
-            <?php include 'sidebar.php'; ?>
+            <?php include 'sidebar1.php'; ?>
         </div>
     <div class="container">
         <h2>Change Password</h2>

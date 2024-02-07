@@ -75,7 +75,7 @@
 
 <body>
     <div class="sidebar">
-        <?php include 'sidebar.php'; ?>
+        <?php include 'sidebar1.php'; ?>
     </div>
     <div class="container">
         <h2>Add Income</h2>
@@ -110,60 +110,80 @@
                 <label for="incomeDate">Income Date</label>
                 <input type="date" class="form-control" name="incomeDate" id="incomeDate" required>
             </div>
-            <a href="sidebar.php" class="btn btn-secondary btn-go-back">Go Back</a>
+
+            <a href="sidebar1.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Income</button>
         </form>
 
         <?php
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "Expense";
+            session_start();
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
+            // Check if the user is logged in
+            if (!isset($_SESSION['email'])) {
+                // Redirect to login page or display an error message
+                header("Location: login.php");
+                exit();
             }
 
-            $incomeName = $_POST["incomeName"];
-            $incomeAmount = $_POST["incomeAmount"];
-            $incomeCategory = $_POST["incomeCategory"];
-            $incomeDescription = $_POST["incomeDescription"];
-            $incomeDate = $_POST["incomeDate"];
+            // Get the logged-in user's email from the session
+            $email = $_SESSION['email'];
 
-            $sql = "INSERT INTO income (incomeName, incomeAmount, incomeCategory, incomeDescription, incomeDate)
-                    VALUES ('$incomeName', $incomeAmount, '$incomeCategory', '$incomeDescription', '$incomeDate')";
+            // Include database connection
+            include 'Connection.php';
 
-            if ($conn->query($sql) == TRUE) {
-                echo "Income added successfully.";
+            // Fetch user ID based on email
+            $sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
+            $result_user_id = $conn->query($sql_user_id);
+
+            if ($result_user_id->num_rows > 0) {
+                $row_user_id = $result_user_id->fetch_assoc();
+                $user_id = $row_user_id['user_id'];
+
+                // Fetch other form data
+                $incomeName = $_POST["incomeName"];
+                $incomeAmount = $_POST["incomeAmount"];
+                $incomeCategory = $_POST["incomeCategory"];
+                $incomeDescription = $_POST["incomeDescription"];
+                $incomeDate = $_POST["incomeDate"];
+
+                // Construct SQL query to insert income
+                $sql = "INSERT INTO income (incomeName, incomeAmount, incomeCategory, incomeDescription, incomeDate, user_id) VALUES ('$incomeName', '$incomeAmount', '$incomeCategory', '$incomeDescription', '$incomeDate', '$user_id')";
+
+                // Execute SQL query to insert income
+                if ($conn->query($sql) === TRUE) {
+                    echo "Income added successfully.";
+                } else {
+                    echo "Error: " . $sql . "<br>" . $conn->error;
+                }
             } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
+                echo "<p>User not found.</p>";
             }
 
+            // Close database connection
             $conn->close();
         }
         ?>
+
+        <script>
+            function validateForm() {
+                var incomeName = document.getElementById('incomeName').value;
+                var incomeAmount = document.getElementById('incomeAmount').value;
+                var incomeCategory = document.getElementById('incomeCategory').value;
+                var incomeDate = document.getElementById('incomeDate').value;
+
+                if (incomeName.trim() === '' || incomeAmount.trim() === '' || incomeCategory.trim() === '' || incomeDate.trim() === '') {
+                    alert('Please fill in all required fields.');
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
     </div>
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function validateForm() {
-            var incomeName = document.getElementById('incomeName').value;
-            var incomeAmount = document.getElementById('incomeAmount').value;
-            var incomeCategory = document.getElementById('incomeCategory').value;
-            var incomeDate = document.getElementById('incomeDate').value;
-
-            if (incomeName.trim() === '' || incomeAmount.trim() === '' || incomeCategory.trim() === '' || incomeDate.trim() === '') {
-                alert('Please fill in all required fields.');
-                return false;
-            }
-
-            return true;
-        }
-    </script>
 </body>
 
 </html>

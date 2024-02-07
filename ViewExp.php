@@ -87,7 +87,7 @@
 </head>
 <body>
     <div class="sidebar">
-        <?php include 'sidebar.php'; ?>
+        <?php include 'sidebar1.php'; ?>
     </div>
 
     <div class="container">
@@ -95,7 +95,10 @@
 
         <?php 
         // Start session to access session variables
-        session_start();
+        if(!isset($_SESSION)) 
+        { 
+            session_start(); 
+        } 
 
         // Include database connection
         include  'connection.php';
@@ -111,7 +114,10 @@
         $email = $_SESSION['email'];
 
         // Fetch expenses for the logged-in user
-        $sql = "SELECT * FROM expenses WHERE user_email = '$email'";
+      // Fetch expenses for the logged-in user
+$sql = "SELECT * FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+
+        
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -137,7 +143,7 @@
                         <td>{$row['expenseDate']}</td>
                         <td>{$row['billImage']}</td>
                         <td>
-                            <a href='edit_expense.php?id={$row['id']}' class='btn-edit'>Edit</a>
+                            <a href='editexp.php?id={$row['id']}' class='btn-edit'>Edit</a>
                             <a href='delete_expense.php?id={$row['id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
                         </td>
                     </tr>";
@@ -151,7 +157,7 @@
         $conn->close();
         ?>
 
-        <a href="sidebar.php" class="btn btn-primary">Go Back</a>
+        <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

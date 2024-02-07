@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,26 +72,27 @@
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
-        <?php include 'sidebar.php'; ?>
+        <?php include 'sidebar1.php'; ?>
     </div>
     <div class="container">
         <h2>Add Budget</h2>
-        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return validateForm()">
             <div class="form-group">
                 <label for="budgetName">Budget Name</label>
-                <input type="text" class="form-control" name="budgetName" id="budgetName" placeholder="Enter budget name" required>
+                <input type="text" class="form-control" name="budget_name" id="budgetName" placeholder="Enter budget name" required>
             </div>
 
             <div class="form-group">
-                <label for="budgetAmount">Budget Amount</label>
-                <input type="number" class="form-control" name="budgetAmount" id="budgetAmount" placeholder="Enter budget amount" required>
+                <label for="amount">Amount</label>
+                <input type="number" class="form-control" name="amount" id="amount" placeholder="Enter budget amount" required>
             </div>
 
             <div class="form-group">
-                <label for="budgetCategory">Budget Category</label>
-                <select class="form-select" name="budgetCategory" id="budgetCategory" required>
+                <label for="category">Category</label>
+                <select class="form-select" name="category" id="category" required>
                     <option value="" disabled selected>Select category</option>
                     <option value="food">Food</option>
                     <option value="utilities">Utilities</option>
@@ -100,64 +102,85 @@
             </div>
 
             <div class="form-group">
-                <label for="budgetDescription">Budget Description</label>
-                <textarea class="form-control" name="budgetDescription" id="budgetDescription" rows="3" placeholder="Enter budget description"></textarea>
+                <label for="description">Description</label>
+                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Enter budget description"></textarea>
             </div>
 
             <div class="form-group">
-                <label for="budgetStartDate">Budget Start Date</label>
-                <input type="date" class="form-control" name="budgetStartDate" id="budgetStartDate" required>
+                <label for="startDate">Start Date</label>
+                <input type="date" class="form-control" name="start_date" id="startDate" required>
             </div>
 
             <div class="form-group">
-                <label for="budgetEndDate">Budget End Date</label>
-                <input type="date" class="form-control" name="budgetEndDate" id="budgetEndDate" required>
+                <label for="endDate">End Date</label>
+                <input type="date" class="form-control" name="end_date" id="endDate" required>
             </div>
-            <a href="sidebar.php" class="btn btn-secondary btn-go-back">Go Back</a>
+
+            <a href="sidebar1.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Budget</button>
         </form>
 
         <?php
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "Expense";
+            session_start();
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
+            // Check if the user is logged in
+            if (!isset($_SESSION['email'])) {
+                // Redirect to login page or display an error message
+                header("Location: login.php");
+                exit();
             }
 
-            $budgetName = $_POST["budgetName"];
-            $budgetAmount = $_POST["budgetAmount"];
-            $budgetCategory = $_POST["budgetCategory"];
-            $budgetDescription = $_POST["budgetDescription"];
-            $budgetStartDate = $_POST["budgetStartDate"];
-            $budgetEndDate = $_POST["budgetEndDate"];
+            // Get the logged-in user's email from the session
+            $email = $_SESSION['email'];
 
-            $sql = "INSERT INTO budgets (budgetName, budgetAmount, budgetCategory, budgetDescription, budgetStartDate, budgetEndDate)
-                    VALUES ('$budgetName', $budgetAmount, '$budgetCategory', '$budgetDescription', '$budgetStartDate', '$budgetEndDate')";
+            // Include database connection
+            include 'Connection.php';
 
-            if ($conn->query($sql) == TRUE) {
-                echo "Budget added successfully.";
+            // Fetch user ID based on email
+            $sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
+            $result_user_id = $conn->query($sql_user_id);
+
+            if ($result_user_id->num_rows > 0) {
+                $row_user_id = $result_user_id->fetch_assoc();
+                $user_id = $row_user_id['user_id'];
+
+                // Fetch other form data
+                $budgetName = $_POST["budget_name"];
+                $amount = $_POST["amount"];
+                $category = $_POST["category"];
+                $description = $_POST["description"];
+                $startDate = $_POST["start_date"];
+                $endDate = $_POST["end_date"];
+
+                // Construct SQL query to insert budget
+                $sql = "INSERT INTO budget (budget_name, amount, category, description, start_date, end_date, user_id) VALUES ('$budgetName', '$amount', '$category', '$description', '$startDate', '$endDate', '$user_id')";
+
+                // Execute SQL query to insert budget
+                if ($conn->query($sql) === TRUE) {
+                    echo "Budget added successfully.";
+                } else {
+                    echo "Error: " . $sql . "<br>" . $conn->error;
+                }
             } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
+                echo "<p>User not found.</p>";
             }
+
+            // Close database connection
+            $conn->close();
         }
         ?>
 
         <script>
             function validateForm() {
                 var budgetName = document.getElementById('budgetName').value;
-                var budgetAmount = document.getElementById('budgetAmount').value;
-                var budgetCategory = document.getElementById('budgetCategory').value;
-                var budgetStartDate = document.getElementById('budgetStartDate').value;
-                var budgetEndDate = document.getElementById('budgetEndDate').value;
+                var amount = document.getElementById('amount').value;
+                var category = document.getElementById('category').value;
+                var startDate = document.getElementById('startDate').value;
+                var endDate = document.getElementById('endDate').value;
 
-                if (budgetName.trim() === '' || budgetAmount.trim() === '' || budgetCategory.trim() === '' || budgetStartDate.trim() === '' || budgetEndDate.trim() === '') {
+                if (budgetName.trim() === '' || amount.trim() === '' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
                     alert('Please fill in all required fields.');
                     return false;
                 }
@@ -169,4 +192,5 @@
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

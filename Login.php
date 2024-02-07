@@ -15,11 +15,11 @@ if (isset($_POST['Login'])) {
     if ($rows_count > 0) {
         if (password_verify($password, $row_data['password'])) {
             // Set session variables
-            $_SESSION['user_id'] = $row_data['user_id']; // Change 'user_id' to the actual column name in your 'user' table
+            //$_SESSION['user_id'] = $row_data['user_id']; // Change 'user_id' to the actual column name in your 'user' table
             $_SESSION['email'] = $email;
 
             // Redirect to the dashboard or any other page
-            header("Location: sidebar.php");
+            header("Location: sidebar1.php");
             exit();
         } else {
             echo "<script>alert('Invalid Credentials for password')</script>";
