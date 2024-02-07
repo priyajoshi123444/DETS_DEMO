@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "Expense") or die("connection filed");
+$conn = mysqli_connect("localhost", "root", "", "Expense") or die("connection failed");
 
 // Validate the form submission
 if (isset($_POST['Login'])) {
@@ -13,13 +13,14 @@ if (isset($_POST['Login'])) {
     $row_data = mysqli_fetch_assoc($result);
 
     if ($rows_count > 0) {
-        $_SESSION['id'] = $expenseId;
-        $_SESSION['email'] = $email;
         if (password_verify($password, $row_data['password'])) {
-            if ($rows_count == 1) {
-                header("Location: sidebar.php");
-                exit();
-            }
+            // Set session variables
+            $_SESSION['user_id'] = $row_data['user_id']; // Change 'user_id' to the actual column name in your 'user' table
+            $_SESSION['email'] = $email;
+
+            // Redirect to the dashboard or any other page
+            header("Location: sidebar.php");
+            exit();
         } else {
             echo "<script>alert('Invalid Credentials for password')</script>";
         }
@@ -28,16 +29,13 @@ if (isset($_POST['Login'])) {
     }
 }
 ?>
-<!-- rest of your HTML code -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-<style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -117,31 +115,31 @@ if (isset($_POST['Login'])) {
 </head>
 <body>
 
-    <div class="overlay">
-        <h2>Login</h2>
-        <form action="" method="post">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
-            
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            
-            <button type="submit" name="Login">Login</button>
-        </form>
+<div class="overlay">
+    <h2>Login</h2>
+    <form action="" method="post">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required>
 
-        <?php
-        // Display error messages if any
-        if (isset($error_message)) {
-            echo "<p class='error-message'>$error_message</p>";
-        }
-        ?>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
-        <div class="links">
-            <a href="ForgetPassword.php">Forgot Password?</a>
-            <span>|</span>
-            <a href="SingUp.php">Create Account</a>
-        </div>
+        <button type="submit" name="Login">Login</button>
+    </form>
+
+    <?php
+    // Display error messages if any
+    if (isset($error_message)) {
+        echo "<p class='error-message'>$error_message</p>";
+    }
+    ?>
+
+    <div class="links">
+        <a href="ForgetPassword.php">Forgot Password?</a>
+        <span>|</span>
+        <a href="SingUp.php">Create Account</a>
     </div>
+</div>
 
 </body>
 </html>

@@ -110,7 +110,7 @@
                 <label for="incomeDate">Income Date</label>
                 <input type="date" class="form-control" name="incomeDate" id="incomeDate" required>
             </div>
-
+            <a href="sidebar.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Income</button>
         </form>
 

@@ -114,7 +114,10 @@
 
         <?php
         
-        session_start(); 
+        if(!isset($_SESSION)) 
+        { 
+            session_start(); 
+        } 
 
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {

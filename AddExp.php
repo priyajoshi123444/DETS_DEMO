@@ -117,6 +117,7 @@
                 <small class="form-text text-muted">Upload a photo of your bill.</small>
             </div>
 
+            <a href="sidebar.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Expense</button>
         </form>
 
@@ -157,8 +158,6 @@
                 move_uploaded_file($_FILES["billImage"]["tmp_name"], $targetFile);
                 echo "File uploaded successfully.";
             }
-
-            $conn->close();
         }
         ?>
 

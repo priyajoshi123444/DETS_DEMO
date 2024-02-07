@@ -1,30 +1,114 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['email'])) {
+    header("Location: login.php"); // Redirect to the login page if not logged in
+    exit;
+}
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $currentPassword = $_POST["currentPassword"];
+    $newPassword = $_POST["newPassword"];
+    $confirmPassword = $_POST["confirmPassword"];
+    
+    // Validate form data
+    if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+        $errorMessage = "All fields are required.";
+    } elseif ($newPassword !== $confirmPassword) {
+        $errorMessage = "New password and confirm password do not match.";
+    } else {
+        // Retrieve user's email from session
+        $email = $_SESSION['email'];
+
+        // Connect to the database
+        $conn = mysqli_connect("localhost", "root", "", "expense") or die("Connection failed");
+
+        // Retrieve the user's current password from the database
+        $sql = "SELECT password FROM user WHERE email = '$email'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $hashedPassword = $row['password'];
+
+            // Verify if the current password matches the password stored in the database
+            if (password_verify($currentPassword, $hashedPassword)) {
+                // Hash the new password
+                $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+                // Update the password in the database
+                $updateSql = "UPDATE user SET password = '$hashedNewPassword' WHERE email = '$email'";
+                if ($conn->query($updateSql) == TRUE) {
+                    $successMessage = "Password updated successfully.";
+                } else {
+                    $errorMessage = "Error updating password: " . $conn->error;
+                }
+            } else {
+                $errorMessage = "Incorrect current password.";
+            }
+        } else {
+            $errorMessage = "User not found.";
+        }
+
+        // Close database connection
+        $conn->close();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Password - Expenses Management</title>
+    <title>Change Password</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
         }
 
         .container {
-            max-width: 400px;
-            margin: 50px auto;
-            background-color: #ffffff;
             padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #111;
+            padding-top: 20px;
+            height: 100%;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
         }
 
         h2 {
             color: #007bff;
-            margin-bottom: 20px;
         }
 
         form {
@@ -47,51 +131,37 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
-        .Form{
-            display: flex;
-        }
-        .add-expenses-container {
-            background: url('assets/images/navy-blue-concrete-wall-with-scratches.jpg') no-repeat center center fixed;
-            background-size: cover;
-        }
     </style>
 </head>
-
 <body>
-<div class="form-container add-expenses-container">
-<div class="Form">
-
-<?php include 'sidebar.php'; ?>
+<div class='sidebar'>
+            <?php include 'sidebar.php'; ?>
+        </div>
     <div class="container">
         <h2>Change Password</h2>
-
-        <!-- Change password form -->
-        <form>
+        <?php
+        if (isset($errorMessage)) {
+            echo "<div class='error-message'>$errorMessage</div>";
+        }
+        if (isset($successMessage)) {
+            echo "<div class='success-message'>$successMessage</div>";
+        }
+        ?>
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label for="currentPassword">Current Password</label>
-                <input type="password" class="form-control" id="currentPassword" placeholder="Enter current password" required>
+                <input type="password" class="form-control" name="currentPassword" id="currentPassword" required>
             </div>
-
             <div class="form-group">
                 <label for="newPassword">New Password</label>
-                <input type="password" class="form-control" id="newPassword" placeholder="Enter new password" required>
+                <input type="password" class="form-control" name="newPassword" id="newPassword" required>
             </div>
-
             <div class="form-group">
-                <label for="confirmNewPassword">Confirm New Password</label>
-                <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm new password" required>
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" required>
             </div>
-
             <button type="submit" class="btn btn-primary">Change Password</button>
         </form>
-
-        <!-- Button to go back or perform other actions -->
-        <a href="sidebar.php" class="btn btn-primary mt-3">Go Back</a>
     </div>
-    </div>
-    </div>
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
