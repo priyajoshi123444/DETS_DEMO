@@ -12,7 +12,7 @@
             background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
-            padding: 0;l
+            padding: 0;
             display: flex;
         }
 
@@ -93,49 +93,63 @@
     <div class="container">
         <h2>View Expenses</h2>
 
-        <?php if(!isset($_SESSION)) { session_start(); } ?>
+        <?php 
+        // Start session to access session variables
+        session_start();
 
-        <?php if (isset($_SESSION['email'])): ?>
-            <?php
-            $email = $_SESSION['email'];
-            $conn = mysqli_connect("localhost", "root", "", "Expense") or die("connection failed");
-            $sql = "SELECT * FROM expenses WHERE user_id = '$email'";
-            $result = $conn->query($sql);
-            ?>
+        // Include database connection
+        include 'db_connection.php';
 
-            <?php if ($result->num_rows > 0): ?>
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Amount</th>
-                        <th>Category</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Image</th>
-                        <th>Action</th>
-                    </tr>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo $row['expenseName']; ?></td>
-                            <td><?php echo $row['expenseAmount']; ?></td>
-                            <td><?php echo $row['expenseCategory']; ?></td>
-                            <td><?php echo $row['expenseDescription']; ?></td>
-                            <td><?php echo $row['expenseDate']; ?></td>
-                            <td><?php echo $row['billImage']; ?></td>
-                            <td>
-                                <a href='edit_expense.php?id=<?php echo $row['id']; ?>' class='btn-edit'>Edit</a>
-                                <a href='delete_expense.php?id=<?php echo $row['id']; ?>' class='btn-delete' onclick='return confirm("Are you sure you want to delete this record?");'>Delete</a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </table>
-            <?php else: ?>
-                <p>No expenses found.</p>
-            <?php endif; ?>
+        // Check if the user is logged in
+        if (!isset($_SESSION['email'])) {
+            // Redirect to login page or display an error message
+            header("Location: login.php");
+            exit();
+        }
 
-        <?php endif; ?>
+        // Get the logged-in user's email from the session
+        $email = $_SESSION['email'];
+
+        // Fetch expenses for the logged-in user
+        $sql = "SELECT * FROM expenses WHERE user_email = '$email'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            // Display expenses
+            echo "<table>";
+            echo "<tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>";
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+                        <td>{$row['id']}</td>
+                        <td>{$row['expenseName']}</td>
+                        <td>{$row['expenseAmount']}</td>
+                        <td>{$row['expenseCategory']}</td>
+                        <td>{$row['expenseDescription']}</td>
+                        <td>{$row['expenseDate']}</td>
+                        <td>{$row['billImage']}</td>
+                        <td>
+                            <a href='edit_expense.php?id={$row['id']}' class='btn-edit'>Edit</a>
+                            <a href='delete_expense.php?id={$row['id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
+                        </td>
+                    </tr>";
+            }
+            echo "</table>";
+        } else {
+            echo "<p>No expenses found for this user.</p>";
+        }
+
+        // Close database connection
+        $conn->close();
+        ?>
 
         <a href="sidebar.php" class="btn btn-primary">Go Back</a>
     </div>
