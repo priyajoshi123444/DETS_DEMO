@@ -67,17 +67,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $budgetId = $_POST["budgetId"];
     $budgetName = $_POST["budgetName"];
-    $amount = $_POST["amount"];
+    $actualamount = $_POST["actual_amount"];
+    $planedamount = $_POST["planned_amount"];
     $category = $_POST["category"];
-    $description = $_POST["description"];
     $startDate = $_POST["startDate"];
     $endDate = $_POST["endDate"];
 
     $sql = "UPDATE budget SET
             budget_name = ?,
-            amount = ?,
+            actual_amount = ?,
+            planned_amount = ?,
             category = ?,
-            description = ?,
             start_date = ?,
             end_date = ?
             WHERE budget_id = ?";
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        $stmt->bind_param("ssssssi", $budgetName, $amount, $category, $description, $startDate, $endDate, $budgetId);
+        $stmt->bind_param("ssssssi", $budgetName, $actualamount, $category, $planedamount, $startDate, $endDate, $budgetId);
 
         if ($stmt->execute()) {
             echo "Budget updated successfully.";
@@ -193,9 +193,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="number" class="form-control" name="amount" id="amount" value="<?php echo $budget["amount"]; ?>" required>
+                <label for="actualamount">Actual Amount</label>
+                <input type="number" class="form-control" name="actual_amount" id="actualamount" placeholder="Enter budget amount" required>
             </div>
+
+            <div class="form-group">
+    <label for="plannedAmount">Planned Amount</label>
+    <input type="number" class="form-control" name="planned_amount" id="plannedAmount" placeholder="Enter planned amount" required>
+</div>
 
             <div class="form-group">
                 <label for="category">Category</label>
@@ -205,11 +210,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <option value="transportation" <?php echo ($budget["category"] === "transportation") ? "selected" : ""; ?>>Transportation</option>
                     <option value="entertainment" <?php echo ($budget["category"] === "entertainment") ? "selected" : ""; ?>>Entertainment</option>
                 </select>
-            </div>
-
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Enter budget description"><?php echo $budget["description"]; ?></textarea>
             </div>
 
             <div class="form-group">
@@ -233,15 +233,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         ?>
 
-        <script>
+<script>
             function validateForm() {
                 var budgetName = document.getElementById('budgetName').value;
-                var amount = document.getElementById('amount').value;
+               var actualamount = document.getElementById('actual_amount').value;
+               var planedamount = document.getElementById('planned_amount').value;
                 var category = document.getElementById('category').value;
                 var startDate = document.getElementById('startDate').value;
                 var endDate = document.getElementById('endDate').value;
 
-                if (budgetName.trim() === '' || amount.trim() === '' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
+                if (budgetName.trim() === '' || actualamount.trim() === '' || planedamount.trim() ==='' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
                     alert('Please fill in all required fields.');
                     return false;
                 }
@@ -249,7 +250,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 return true;
             }
         </script>
-    </div>
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

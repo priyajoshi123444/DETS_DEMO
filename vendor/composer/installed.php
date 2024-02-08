@@ -3,7 +3,7 @@
         'name' => 'priya/my-awesome-project',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c40a6b7ed895b45ca931e631c687afceab2fb9cc',
+        'reference' => 'c6b66e9436a36d32284998254d8477f571569524',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'priya/my-awesome-project' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c40a6b7ed895b45ca931e631c687afceab2fb9cc',
+            'reference' => 'c6b66e9436a36d32284998254d8477f571569524',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

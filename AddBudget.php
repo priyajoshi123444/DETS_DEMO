@@ -86,9 +86,15 @@
             </div>
 
             <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="number" class="form-control" name="amount" id="amount" placeholder="Enter budget amount" required>
+                <label for="actualamount">Actual Amount</label>
+                <input type="number" class="form-control" name="actual_amount" id="actualamount" placeholder="Enter budget amount" required>
             </div>
+
+            <div class="form-group">
+    <label for="plannedAmount">Planned Amount</label>
+    <input type="number" class="form-control" name="planned_amount" id="plannedAmount" placeholder="Enter planned amount" required>
+</div>
+
 
             <div class="form-group">
                 <label for="category">Category</label>
@@ -101,10 +107,6 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Enter budget description"></textarea>
-            </div>
 
             <div class="form-group">
                 <label for="startDate">Start Date</label>
@@ -148,14 +150,14 @@
 
                 // Fetch other form data
                 $budgetName = $_POST["budget_name"];
-                $amount = $_POST["amount"];
+                $actualamount = $_POST["actual_amount"];
                 $category = $_POST["category"];
-                $description = $_POST["description"];
+                $planedamount = $_POST["planned_amount"];
                 $startDate = $_POST["start_date"];
                 $endDate = $_POST["end_date"];
 
                 // Construct SQL query to insert budget
-                $sql = "INSERT INTO budget (budget_name, amount, category, description, start_date, end_date, user_id) VALUES ('$budgetName', '$amount', '$category', '$description', '$startDate', '$endDate', '$user_id')";
+                $sql = "INSERT INTO budget (budget_name, actual_amount, category, planned_amount, start_date, end_date, user_id) VALUES ('$budgetName', '$actualamount', '$category', '$planedamount', '$startDate', '$endDate', '$user_id')";
 
                 // Execute SQL query to insert budget
                 if ($conn->query($sql) === TRUE) {
@@ -175,12 +177,13 @@
         <script>
             function validateForm() {
                 var budgetName = document.getElementById('budgetName').value;
-                var amount = document.getElementById('amount').value;
+               var actualamount = document.getElementById('actual_amount').value;
+               var planedamount = document.getElementById('planned_amount').value;
                 var category = document.getElementById('category').value;
                 var startDate = document.getElementById('startDate').value;
                 var endDate = document.getElementById('endDate').value;
 
-                if (budgetName.trim() === '' || amount.trim() === '' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
+                if (budgetName.trim() === '' || actualamount.trim() === '' || planedamount.trim() ==='' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
                     alert('Please fill in all required fields.');
                     return false;
                 }

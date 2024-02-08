@@ -405,18 +405,7 @@
 
     <!--====== FOOTER PART ENDS ======-->
     
-     <!-- Check if the user is logged in -->
-     <?php if (isset($_SESSION['username'])) : ?>
-        <!-- Display the username and profile image -->
-        <div class="user-profile" onclick="redirectToDashboard()">
-            <img src="<?php echo $profileImageSrc; ?>" alt="Profile Image">
-            <span><?php echo $username; ?></span>
-        </div>
-    <?php else : ?>
-        <!-- User is not logged in, display the login button -->
-        <a href="login.php">Login</a>
-    <?php endif; ?>
-
+   
     <!-- ... (your existing JavaScript and HTML code) ... -->
     
     <!--====== BACK TOP TOP PART START ======-->

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Budgets - Expenses Management</title>
+    <title>View Reports - Expenses & Income Management</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -83,6 +83,12 @@
             background-color: #007bff;
             color: #fff;
         }
+
+        .pdf-symbol {
+            font-size: 24px;
+            color: #007bff;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +97,7 @@
     </div>
 
     <div class="container">
-        <h2>View Budgets</h2>
+        <h2>Combined Expenses and Income Report</h2>
 
         <?php 
         // Start session to access session variables
@@ -113,42 +119,41 @@
         // Get the logged-in user's email from the session
         $email = $_SESSION['email'];
 
-        // Fetch budgets for the logged-in user
-        $sql = "SELECT * FROM budget WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
-        
+        // Fetch expenses and income for the logged-in user
+        $sql = "SELECT id, expenseName AS Name, expenseAmount AS Amount, expenseCategory AS Category, expenseDescription AS Description, expenseDate AS Date, billImage AS Image, 'Expense' AS Type FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email') UNION ALL SELECT id, incomeName AS Name, incomeAmount AS Amount, incomeCategory AS Category, incomeDescription AS Description, incomeDate AS Date, NULL AS Image, 'Income' AS Type FROM income WHERE user_id = (SELECT user_id FROM user WHERE email = '$email') ORDER BY Date DESC";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            // Display budgets
+            // Display combined report
             echo "<table>";
             echo "<tr>
                     <th>ID</th>
-                    <th>Budget Name</th>
-                    <th>Actual Amount</th>
-                    <th>Planed  Amount</th>
+                    <th>Name</th>
+                    <th>Amount</th>
                     <th>Category</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Action</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Image</th>
+                    <th>Type</th>
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>{$row['budget_id']}</td>
-                        <td>{$row['budget_name']}</td>
-                        <td>{$row['actual_amount']}</td>
-                        <td>{$row['planned_amount']}</td>
-                        <td>{$row['category']}</td>
-                        <td>{$row['start_date']}</td>
-                        <td>{$row['end_date']}</td>
-                        <td>
-                            <a href='editbudget.php?id={$row['budget_id']}' class='btn-edit'>Edit</a>
-                            <a href='delbudget.php?id={$row['budget_id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
-                        </td>
+                        <td>{$row['id']}</td>
+                        <td>{$row['Name']}</td>
+                        <td>{$row['Amount']}</td>
+                        <td>{$row['Category']}</td>
+                        <td>{$row['Description']}</td>
+                        <td>{$row['Date']}</td>
+                        <td>{$row['Image']}</td>
+                        <td>{$row['Type']}</td>
                     </tr>";
             }
             echo "</table>";
+
+            // PDF download link for combined report
+            echo "<a href='download_combined_report.php' class='btn btn-primary'><span class='pdf-symbol'>&#x1F4C4;</span>Download Combined Report (PDF)</a>";
         } else {
-            echo "<p>No budgets found for this user.</p>";
+            echo "<p>No data found for this user.</p>";
         }
 
         // Close database connection

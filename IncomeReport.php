@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Budgets - Expenses Management</title>
+    <title>View Income - Income Management</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -85,13 +86,14 @@
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <?php include 'sidebar1.php'; ?>
     </div>
 
     <div class="container">
-        <h2>View Budgets</h2>
+        <h2>Income Report</h2>
 
         <?php 
         // Start session to access session variables
@@ -113,52 +115,50 @@
         // Get the logged-in user's email from the session
         $email = $_SESSION['email'];
 
-        // Fetch budgets for the logged-in user
-        $sql = "SELECT * FROM budget WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+        // Fetch income for the logged-in user
+$sql = "SELECT * FROM income WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+
         
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            // Display budgets
+            // Display income
             echo "<table>";
             echo "<tr>
                     <th>ID</th>
-                    <th>Budget Name</th>
-                    <th>Actual Amount</th>
-                    <th>Planed  Amount</th>
+                    <th>Name</th>
+                    <th>Amount</th>
                     <th>Category</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Action</th>
+                    <th>Description</th>
+                    <th>Date</th>
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>{$row['budget_id']}</td>
-                        <td>{$row['budget_name']}</td>
-                        <td>{$row['actual_amount']}</td>
-                        <td>{$row['planned_amount']}</td>
-                        <td>{$row['category']}</td>
-                        <td>{$row['start_date']}</td>
-                        <td>{$row['end_date']}</td>
-                        <td>
-                            <a href='editbudget.php?id={$row['budget_id']}' class='btn-edit'>Edit</a>
-                            <a href='delbudget.php?id={$row['budget_id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
-                        </td>
-                    </tr>";
-            }
-            echo "</table>";
-        } else {
-            echo "<p>No budgets found for this user.</p>";
-        }
-
-        // Close database connection
-        $conn->close();
-        ?>
-
-        <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
-    </div>
-
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                        <td>{$row['id']}</td>
+                        <td>{$row['incomeName']}</td>
+                        <td>{$row['incomeAmount']}</td>
+                        <td>{$row['incomeCategory']}</td>
+                        <td>{$row['incomeDescription']}</td>
+                        <td>{$row['incomeDate']}</td>
+                        </tr>";
+                    }
+                    echo "</table>";
+        
+                    // PDF download link
+                    echo "<a href='download_income.php' class='btn btn-primary'><span class='pdf-symbol'>&#x1F4C4;</span>Download Income Report (PDF)</a>";
+                } else {
+                    echo "<p>No income found for this user.</p>";
+                }
+        
+                // Close database connection
+                $conn->close();
+                ?>
+        
+                <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
+            </div>
+        
+            <!-- Bootstrap JS and Popper.js -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        </body>
+        </html>
+        

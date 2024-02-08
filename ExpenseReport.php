@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Budgets - Expenses Management</title>
+    <title>View Expenses - Expenses Management</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -83,6 +83,12 @@
             background-color: #007bff;
             color: #fff;
         }
+
+        .pdf-symbol {
+            font-size: 24px;
+            color: #007bff;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +97,7 @@
     </div>
 
     <div class="container">
-        <h2>View Budgets</h2>
+        <h2>Expenses Report</h2>
 
         <?php 
         // Start session to access session variables
@@ -113,42 +119,39 @@
         // Get the logged-in user's email from the session
         $email = $_SESSION['email'];
 
-        // Fetch budgets for the logged-in user
-        $sql = "SELECT * FROM budget WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
-        
+        // Fetch expenses for the logged-in user
+        $sql = "SELECT * FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            // Display budgets
+            // Display expenses
             echo "<table>";
             echo "<tr>
                     <th>ID</th>
-                    <th>Budget Name</th>
-                    <th>Actual Amount</th>
-                    <th>Planed  Amount</th>
+                    <th>Name</th>
+                    <th>Amount</th>
                     <th>Category</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Action</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Image</th>
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>{$row['budget_id']}</td>
-                        <td>{$row['budget_name']}</td>
-                        <td>{$row['actual_amount']}</td>
-                        <td>{$row['planned_amount']}</td>
-                        <td>{$row['category']}</td>
-                        <td>{$row['start_date']}</td>
-                        <td>{$row['end_date']}</td>
-                        <td>
-                            <a href='editbudget.php?id={$row['budget_id']}' class='btn-edit'>Edit</a>
-                            <a href='delbudget.php?id={$row['budget_id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
-                        </td>
+                        <td>{$row['id']}</td>
+                        <td>{$row['expenseName']}</td>
+                        <td>{$row['expenseAmount']}</td>
+                        <td>{$row['expenseCategory']}</td>
+                        <td>{$row['expenseDescription']}</td>
+                        <td>{$row['expenseDate']}</td>
+                        <td>{$row['billImage']}</td>
                     </tr>";
             }
             echo "</table>";
+
+            // PDF download link
+            echo "<a href='download_expenses.php' class='btn btn-primary'><span class='pdf-symbol'>&#x1F4C4;</span>Download Expenses Report (PDF)</a>";
         } else {
-            echo "<p>No budgets found for this user.</p>";
+            echo "<p>No expenses found for this user.</p>";
         }
 
         // Close database connection
