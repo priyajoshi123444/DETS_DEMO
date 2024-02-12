@@ -136,7 +136,10 @@ if ($result->num_rows > 0) {
         </a>
         <div class="collapse" id="ui-basic-3">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="AddCategory.php">Add Category</a></li>
+            <li class="nav-item"> <a class="nav-link" href="AddExpenseCategory.php">Add Expense Category</a></li>
+          </ul>
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="AddIncomeCategory.php">Add Income Category</a></li>
           </ul>
         </div>
       </li>

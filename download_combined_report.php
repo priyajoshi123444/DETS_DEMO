@@ -18,6 +18,19 @@ if (!isset($_SESSION['email'])) {
 // Get the logged-in user's email from the session
 $email = $_SESSION['email'];
 
+// Fetch user information
+$userSql = "SELECT * FROM user WHERE email = '$email'";
+$userResult = $conn->query($userSql);
+
+// Check if user information was fetched successfully
+if ($userResult->num_rows > 0) {
+    $userData = $userResult->fetch_assoc();
+} else {
+    // Handle error if user information not found
+    echo "Error: User information not found.";
+    exit();
+}
+
 // Fetch combined expenses and income for the logged-in user
 $sql = "SELECT id, expenseName AS Name, expenseAmount AS Amount, expenseCategory AS Category, expenseDescription AS Description, expenseDate AS Date, billImage AS Image, 'Expense' AS Type FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email') UNION ALL SELECT id, incomeName AS Name, incomeAmount AS Amount, incomeCategory AS Category, incomeDescription AS Description, incomeDate AS Date, NULL AS Image, 'Income' AS Type FROM income WHERE user_id = (SELECT user_id FROM user WHERE email = '$email') ORDER BY Date DESC";
 $result = $conn->query($sql);
@@ -38,8 +51,12 @@ $pdf->SetFont('helvetica', '', 10);
 // Start PDF content
 $pdf->AddPage();
 
+// Add user information to PDF
+
+$html .= '<p><strong>User Name:</strong> ' . $userData['username'] . '</p>';
+$html .= '<p><strong>User Email:</strong> ' . $userData['email'] . '</p>';
+
 // Add combined expenses and income table to PDF
-$html = '<h2>Combined Expenses and Income Report</h2>';
 $html .= '<table border="1">
             <tr>
                 <th>ID</th>
@@ -68,8 +85,12 @@ $html .= '</table>';
 // Write HTML content to PDF
 $pdf->writeHTML($html, true, false, true, false, '');
 
-// Output PDF as download
-$pdf->Output('combined_report.pdf', 'D');
+// Set the PDF filename with the login username
+$username = $userData['username'];
+$pdf_filename = "Combined_report_$username.pdf";
+
+// Output PDF as download with the dynamically generated filename
+$pdf->Output($pdf_filename, 'D');
 
 // Close database connection
 $conn->close();

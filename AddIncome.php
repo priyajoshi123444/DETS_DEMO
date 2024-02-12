@@ -1,3 +1,32 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['email'])) {
+    // Redirect to login page or display an error message
+    header("Location: login.php");
+    exit();
+}
+
+// Get the logged-in user's email from the session
+$email = $_SESSION['email'];
+
+// Include database connection
+include 'Connection.php';
+
+// Fetch user ID based on email
+$sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
+$result_user_id = $conn->query($sql_user_id);
+
+if ($result_user_id->num_rows > 0) {
+    $row_user_id = $result_user_id->fetch_assoc();
+    $user_id = $row_user_id['user_id'];
+
+    // Fetch categories associated with the logged-in user
+    $categorySql = "SELECT * FROM income_categories WHERE user_id = '$user_id'";
+    $categoryResult = $conn->query($categorySql);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -94,10 +123,16 @@
                 <label for="incomeCategory">Income Category</label>
                 <select class="form-select" name="incomeCategory" id="incomeCategory" required>
                     <option value="" disabled selected>Select category</option>
-                    <option value="salary">Salary</option>
+                    <option value="job">Job</option>
                     <option value="business">Business</option>
                     <option value="freelance">Freelance</option>
                     <option value="other">Other</option>
+                    <?php
+                    // Loop through categories and generate options
+                    while ($row = $categoryResult->fetch_assoc()) {
+                        echo '<option value="' . $row['category_name'] . '">' . $row['category_name'] . '</option>';
+                    }
+                    ?>
                 </select>
             </div>
 
@@ -118,51 +153,22 @@
         <?php
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            session_start();
+            // Fetch other form data
+            $incomeName = $_POST["incomeName"];
+            $incomeAmount = $_POST["incomeAmount"];
+            $incomeCategory = $_POST["incomeCategory"];
+            $incomeDescription = $_POST["incomeDescription"];
+            $incomeDate = $_POST["incomeDate"];
 
-            // Check if the user is logged in
-            if (!isset($_SESSION['email'])) {
-                // Redirect to login page or display an error message
-                header("Location: login.php");
-                exit();
-            }
+            // Construct SQL query to insert income
+            $sql = "INSERT INTO income (incomeName, incomeAmount, incomeCategory, incomeDescription, incomeDate, user_id) VALUES ('$incomeName', '$incomeAmount', '$incomeCategory', '$incomeDescription', '$incomeDate', '$user_id')";
 
-            // Get the logged-in user's email from the session
-            $email = $_SESSION['email'];
-
-            // Include database connection
-            include 'Connection.php';
-
-            // Fetch user ID based on email
-            $sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
-            $result_user_id = $conn->query($sql_user_id);
-
-            if ($result_user_id->num_rows > 0) {
-                $row_user_id = $result_user_id->fetch_assoc();
-                $user_id = $row_user_id['user_id'];
-
-                // Fetch other form data
-                $incomeName = $_POST["incomeName"];
-                $incomeAmount = $_POST["incomeAmount"];
-                $incomeCategory = $_POST["incomeCategory"];
-                $incomeDescription = $_POST["incomeDescription"];
-                $incomeDate = $_POST["incomeDate"];
-
-                // Construct SQL query to insert income
-                $sql = "INSERT INTO income (incomeName, incomeAmount, incomeCategory, incomeDescription, incomeDate, user_id) VALUES ('$incomeName', '$incomeAmount', '$incomeCategory', '$incomeDescription', '$incomeDate', '$user_id')";
-
-                // Execute SQL query to insert income
-                if ($conn->query($sql) === TRUE) {
-                    echo "Income added successfully.";
-                } else {
-                    echo "Error: " . $sql . "<br>" . $conn->error;
-                }
+            // Execute SQL query to insert income
+            if ($conn->query($sql) === TRUE) {
+                echo "Income added successfully.";
             } else {
-                echo "<p>User not found.</p>";
+                echo "Error: " . $sql . "<br>" . $conn->error;
             }
-
-            // Close database connection
-            $conn->close();
         }
         ?>
 

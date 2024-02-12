@@ -5,7 +5,7 @@ require_once('TCPDF-main/tcpdf.php');
 // Start session to access session variables
 session_start();
 
-// Include database connection
+//Include database connection 
 include 'connection.php';
 
 // Check if the user is logged in
@@ -18,9 +18,22 @@ if (!isset($_SESSION['email'])) {
 // Get the logged-in user's email from the session
 $email = $_SESSION['email'];
 
+// Fetch user information
+$userSql = "SELECT * FROM user WHERE email = '$email'";
+$userResult = $conn->query($userSql);
+
+// Check if user information was fetched successfully
+if ($userResult->num_rows > 0) {
+    $userData = $userResult->fetch_assoc();
+} else {
+    // Handle error if user information not found
+    echo "Error: User information not found.";
+    exit();
+}
+
 // Fetch income for the logged-in user
-$sql = "SELECT * FROM income WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
-$result = $conn->query($sql);
+$incomeSql = "SELECT * FROM income WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+$incomeResult = $conn->query($incomeSql);
 
 // Create new TCPDF instance
 $pdf = new TCPDF();
@@ -38,8 +51,12 @@ $pdf->SetFont('helvetica', '', 10);
 // Start PDF content
 $pdf->AddPage();
 
+// Add user information to PDF
+
+$html .= '<p><strong>User Name:</strong> ' . $userData['username'] . '</p>';
+$html .= '<p><strong>User Email:</strong> ' . $userData['email'] . '</p>';
+
 // Add income table to PDF
-$html = '<h2>Income Report</h2>';
 $html .= '<table border="1">
             <tr>
                 <th>ID</th>
@@ -49,7 +66,7 @@ $html .= '<table border="1">
                 <th>Description</th>
                 <th>Date</th>
             </tr>';
-while ($row = $result->fetch_assoc()) {
+while ($row = $incomeResult->fetch_assoc()) {
     $html .= '<tr>
                 <td>'.$row['id'].'</td>
                 <td>'.$row['incomeName'].'</td>
@@ -64,8 +81,12 @@ $html .= '</table>';
 // Write HTML content to PDF
 $pdf->writeHTML($html, true, false, true, false, '');
 
-// Output PDF as download
-$pdf->Output('income_report.pdf', 'D');
+// Set the PDF filename with the login username
+$username = $userData['username'];
+$pdf_filename = "Income_report_$username.pdf";
+
+// Output PDF as download with the dynamically generated filename
+$pdf->Output($pdf_filename, 'D');
 
 // Close database connection
 $conn->close();

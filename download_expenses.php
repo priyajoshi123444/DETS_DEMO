@@ -18,9 +18,22 @@ if (!isset($_SESSION['email'])) {
 // Get the logged-in user's email from the session
 $email = $_SESSION['email'];
 
+// Fetch user information
+$userSql = "SELECT * FROM user WHERE email = '$email'";
+$userResult = $conn->query($userSql);
+
+// Check if user information was fetched successfully
+if ($userResult->num_rows > 0) {
+    $userData = $userResult->fetch_assoc();
+} else {
+    // Handle error if user information not found
+    echo "Error: User information not found.";
+    exit();
+}
+
 // Fetch expenses for the logged-in user
-$sql = "SELECT * FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
-$result = $conn->query($sql);
+$expenseSql = "SELECT * FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+$expenseResult = $conn->query($expenseSql);
 
 // Create new TCPDF instance
 $pdf = new TCPDF();
@@ -38,8 +51,12 @@ $pdf->SetFont('helvetica', '', 10);
 // Start PDF content
 $pdf->AddPage();
 
+// Add user information to PDF
+
+$html .= '<p><strong>User Name:</strong> ' . $userData['username'] . '</p>';
+$html .= '<p><strong>User Email:</strong> ' . $userData['email'] . '</p>';
+
 // Add expenses table to PDF
-$html = '<h2>Expenses Report</h2>';
 $html .= '<table border="1">
             <tr>
                 <th>ID</th>
@@ -50,7 +67,7 @@ $html .= '<table border="1">
                 <th>Date</th>
                 <th>Image</th>
             </tr>';
-while ($row = $result->fetch_assoc()) {
+while ($row = $expenseResult->fetch_assoc()) {
     $html .= '<tr>
                 <td>'.$row['id'].'</td>
                 <td>'.$row['expenseName'].'</td>
@@ -66,8 +83,12 @@ $html .= '</table>';
 // Write HTML content to PDF
 $pdf->writeHTML($html, true, false, true, false, '');
 
-// Output PDF as download
-$pdf->Output('expenses_report.pdf', 'D');
+// Set the PDF filename with the login username
+$username = $userData['username'];
+$pdf_filename = "Expenses_report_$username.pdf";
+
+// Output PDF as download with the dynamically generated filename
+$pdf->Output($pdf_filename, 'D');
 
 // Close database connection
 $conn->close();

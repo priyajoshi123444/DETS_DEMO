@@ -89,6 +89,16 @@
             color: #007bff;
             margin-right: 10px;
         }
+
+        /* Styling for expenses */
+        .expense {
+            color: red;
+        }
+
+        /* Styling for income */
+        .income {
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -137,7 +147,9 @@
                     <th>Type</th>
                 </tr>";
             while ($row = $result->fetch_assoc()) {
-                echo "<tr>
+                // Add specific class based on type (expense or income)
+                $typeClass = ($row['Type'] === 'Expense') ? 'expense' : 'income';
+                echo "<tr class='$typeClass'>
                         <td>{$row['id']}</td>
                         <td>{$row['Name']}</td>
                         <td>{$row['Amount']}</td>
@@ -156,8 +168,6 @@
             echo "<p>No data found for this user.</p>";
         }
 
-        // Close database connection
-        $conn->close();
         ?>
 
         <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
