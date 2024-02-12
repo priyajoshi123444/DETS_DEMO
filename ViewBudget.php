@@ -115,7 +115,6 @@
 
         // Fetch budgets for the logged-in user
         $sql = "SELECT * FROM budget WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
-        
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {

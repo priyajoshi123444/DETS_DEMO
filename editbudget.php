@@ -68,24 +68,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $budgetId = $_POST["budgetId"];
     $budgetName = $_POST["budgetName"];
     $actualamount = $_POST["actual_amount"];
-    $planedamount = $_POST["planned_amount"];
+    $plannedamount = $_POST["planned_amount"];
     $category = $_POST["category"];
     $startDate = $_POST["startDate"];
     $endDate = $_POST["endDate"];
 
+
     $sql = "UPDATE budget SET
-            budget_name = ?,
-            actual_amount = ?,
-            planned_amount = ?,
-            category = ?,
-            start_date = ?,
-            end_date = ?
-            WHERE budget_id = ?";
+        budget_name = ?,
+        actual_amount = ?,
+        planned_amount = ?,
+        category = ?,
+        start_date = ?,
+        end_date = ?
+        WHERE budget_id = ?";
 
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        $stmt->bind_param("ssssssi", $budgetName, $actualamount, $category, $planedamount, $startDate, $endDate, $budgetId);
+        $stmt->bind_param("sssissi", $budgetName, $actualamount, $plannedamount, $category, $startDate, $endDate, $budgetId);
+
 
         if ($stmt->execute()) {
             echo "Budget updated successfully.";
@@ -205,11 +207,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group">
                 <label for="category">Category</label>
                 <select class="form-select" name="category" id="category" required>
-                    <option value="food" <?php echo ($budget["category"] === "food") ? "selected" : ""; ?>>Food</option>
-                    <option value="utilities" <?php echo ($budget["category"] === "utilities") ? "selected" : ""; ?>>Utilities</option>
-                    <option value="transportation" <?php echo ($budget["category"] === "transportation") ? "selected" : ""; ?>>Transportation</option>
-                    <option value="entertainment" <?php echo ($budget["category"] === "entertainment") ? "selected" : ""; ?>>Entertainment</option>
-                </select>
+    <option value="food" <?php echo ($budget["category"] === "food") ? "selected" : ""; ?>>Food</option>
+    <option value="utilities" <?php echo ($budget["category"] === "utilities") ? "selected" : ""; ?>>Utilities</option>
+    <option value="transportation" <?php echo ($budget["category"] === "transportation") ? "selected" : ""; ?>>Transportation</option>
+    <option value="entertainment" <?php echo ($budget["category"] === "entertainment") ? "selected" : ""; ?>>Entertainment</option>
+</select>
+
             </div>
 
             <div class="form-group">
