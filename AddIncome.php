@@ -15,7 +15,7 @@ $email = $_SESSION['email'];
 include 'Connection.php';
 
 // Fetch user ID based on email
-$sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
+$sql_user_id = "SELECT user_id FROM users WHERE email = '$email'";
 $result_user_id = $conn->query($sql_user_id);
 
 if ($result_user_id->num_rows > 0) {
@@ -23,7 +23,7 @@ if ($result_user_id->num_rows > 0) {
     $user_id = $row_user_id['user_id'];
 
     // Fetch categories associated with the logged-in user
-    $categorySql = "SELECT * FROM income_categories WHERE user_id = '$user_id'";
+    $categorySql = "SELECT * FROM incomes_categories WHERE user_id = '$user_id'";
     $categoryResult = $conn->query($categorySql);
 }
 ?>
@@ -161,7 +161,7 @@ if ($result_user_id->num_rows > 0) {
             $incomeDate = $_POST["incomeDate"];
 
             // Construct SQL query to insert income
-            $sql = "INSERT INTO income (incomeName, incomeAmount, incomeCategory, incomeDescription, incomeDate, user_id) VALUES ('$incomeName', '$incomeAmount', '$incomeCategory', '$incomeDescription', '$incomeDate', '$user_id')";
+            $sql = "INSERT INTO incomes (incomeName, incomeAmount, incomeCategory, incomeDescription, incomeDate, user_id) VALUES ('$incomeName', '$incomeAmount', '$incomeCategory', '$incomeDescription', '$incomeDate', '$user_id')";
 
             // Execute SQL query to insert income
             if ($conn->query($sql) === TRUE) {

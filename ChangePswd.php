@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn = mysqli_connect("localhost", "root", "", "expense") or die("Connection failed");
 
         // Retrieve the user's current password from the database
-        $sql = "SELECT password FROM user WHERE email = '$email'";
+        $sql = "SELECT password FROM users WHERE email = '$email'";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
                 // Update the password in the database
-                $updateSql = "UPDATE user SET password = '$hashedNewPassword' WHERE email = '$email'";
+                $updateSql = "UPDATE users SET password = '$hashedNewPassword' WHERE email = '$email'";
                 if ($conn->query($updateSql) == TRUE) {
                     $successMessage = "Password updated successfully.";
                 } else {

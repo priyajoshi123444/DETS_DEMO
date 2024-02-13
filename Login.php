@@ -7,7 +7,7 @@ if (isset($_POST['Login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $select_query = "SELECT * FROM user WHERE email='$email'";
+    $select_query = "SELECT * FROM users WHERE email='$email'";
     $result = mysqli_query($conn, $select_query);
     $rows_count = mysqli_num_rows($result);
     $row_data = mysqli_fetch_assoc($result);

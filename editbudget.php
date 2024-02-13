@@ -29,7 +29,7 @@ if (isset($_GET["id"])) {
 
     // Fetch budget details from the database
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM budget WHERE budget_id = ?";
+    $sql = "SELECT * FROM budgets WHERE budget_id = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $endDate = $_POST["endDate"];
 
 
-    $sql = "UPDATE budget SET
+    $sql = "UPDATE budgets SET
         budget_name = ?,
         actual_amount = ?,
         planned_amount = ?,

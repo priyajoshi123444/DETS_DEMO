@@ -120,7 +120,7 @@
         $email = $_SESSION['email'];
 
         // Fetch expenses for the logged-in user
-        $sql = "SELECT * FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+        $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {

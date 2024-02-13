@@ -29,7 +29,7 @@ if (isset($_GET["id"])) {
 
     // Fetch expense details from the database
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM expense WHERE id = ?";
+    $sql = "SELECT * FROM expenses WHERE id = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $expenseDate = $_POST["expenseDate"];
     $billImage = isset($_FILES["billImage"]) ? $_FILES["billImage"]["name"] : $expense["billImage"]; // Use existing value if file is not uploaded
 
-    $sql = "UPDATE expense SET
+    $sql = "UPDATE expenses SET
             expenseName = ?,
             expenseAmount = ?,
             expenseCategory = ?,

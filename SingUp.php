@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $targetFilePath = $conn->real_escape_string($targetFilePath);
 
             // Insert data into the user table
-            $sql = "INSERT INTO user (username, email, password, mobile_number, gender, profile_image) 
+            $sql = "INSERT INTO users (username, email, password, mobile_number, gender, profile_image) 
                     VALUES ('$username', '$email', '$password', '$mobileNumber', '$gender', '$targetFilePath')";
 
             if ($conn->query($sql) == TRUE) {

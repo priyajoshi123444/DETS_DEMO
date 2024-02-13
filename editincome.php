@@ -29,7 +29,7 @@ if (isset($_GET["id"])) {
 
     // Fetch income details from the database
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM income WHERE id = ?";
+    $sql = "SELECT * FROM incomes WHERE id = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $incomeDescription = $_POST["incomeDescription"];
     $incomeDate = $_POST["incomeDate"];
 
-    $sql = "UPDATE income SET
+    $sql = "UPDATE incomes SET
             incomeName = ?,
             incomeAmount = ?,
             incomeCategory = ?,

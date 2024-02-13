@@ -15,7 +15,7 @@ $email = $_SESSION['email'];
 include 'Connection.php';
 
 // Fetch user ID based on email
-$sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
+$sql_user_id = "SELECT user_id FROM users WHERE email = '$email'";
 $result_user_id = $conn->query($sql_user_id);
 
 if ($result_user_id->num_rows > 0) {
@@ -23,7 +23,7 @@ if ($result_user_id->num_rows > 0) {
     $user_id = $row_user_id['user_id'];
 
     // Fetch expense categories associated with the logged-in user
-    $categorySql = "SELECT * FROM expense_categories WHERE user_id = '$user_id'";
+    $categorySql = "SELECT * FROM expenses_categories WHERE user_id = '$user_id'";
     $categoryResult = $conn->query($categorySql);
 ?>
 <!DOCTYPE html>
@@ -167,7 +167,7 @@ if ($result_user_id->num_rows > 0) {
             $billImage = isset($_FILES["billImage"]) ? $_FILES["billImage"]["name"] : "";
 
             // Construct SQL query to insert expense
-            $sql = "INSERT INTO expense (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, billImage, user_id) VALUES ('$expenseName', '$expenseAmount', '$expenseCategory', '$expenseDescription', '$expenseDate', '$billImage', '$user_id')";
+            $sql = "INSERT INTO expenses (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, billImage, user_id) VALUES ('$expenseName', '$expenseAmount', '$expenseCategory', '$expenseDescription', '$expenseDate', '$billImage', '$user_id')";
 
             // Execute SQL query to insert expense
             if ($conn->query($sql) === TRUE) {

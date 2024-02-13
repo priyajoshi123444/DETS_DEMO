@@ -116,7 +116,7 @@
         $email = $_SESSION['email'];
 
         // Fetch income for the logged-in user
-$sql = "SELECT * FROM income WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+$sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
 
         
         $result = $conn->query($sql);

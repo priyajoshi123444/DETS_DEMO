@@ -141,7 +141,7 @@
             include 'Connection.php';
 
             // Fetch user ID based on email
-            $sql_user_id = "SELECT user_id FROM user WHERE email = '$email'";
+            $sql_user_id = "SELECT user_id FROM users WHERE email = '$email'";
             $result_user_id = $conn->query($sql_user_id);
 
             if ($result_user_id->num_rows > 0) {
@@ -157,7 +157,7 @@
                 $endDate = $_POST["end_date"];
 
                 // Construct SQL query to insert budget
-                $sql = "INSERT INTO budget (budget_name, actual_amount, category, planned_amount, start_date, end_date, user_id) VALUES ('$budgetName', '$actualamount', '$category', '$planedamount', '$startDate', '$endDate', '$user_id')";
+                $sql = "INSERT INTO budgets (budget_name, actual_amount, category, planned_amount, start_date, end_date, user_id) VALUES ('$budgetName', '$actualamount', '$category', '$planedamount', '$startDate', '$endDate', '$user_id')";
 
                 // Execute SQL query to insert budget
                 if ($conn->query($sql) === TRUE) {

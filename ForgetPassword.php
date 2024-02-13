@@ -18,13 +18,13 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
 
-    $checkUserQuery = "SELECT * FROM user WHERE email = '$email'";
+    $checkUserQuery = "SELECT * FROM users WHERE email = '$email'";
     $checkUserResult = $conn->query($checkUserQuery);
 
     if ($checkUserResult->num_rows > 0) {
         $token = md5(uniqid(rand(), true));
 
-        $insertTokenQuery = $conn->prepare("UPDATE user SET reset_token = ?, reset_token_expiry = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email = ?");
+        $insertTokenQuery = $conn->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email = ?");
         $insertTokenQuery->bind_param("ss", $token, $email);
 
         if ($insertTokenQuery->execute()) {

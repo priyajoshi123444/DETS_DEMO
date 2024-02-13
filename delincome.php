@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     }
 
     // Delete the row from the database
-    $deleteSql = "DELETE FROM income WHERE id = $incomeId";
+    $deleteSql = "DELETE FROM incomes WHERE id = $incomeId";
 
     if ($conn->query($deleteSql) === TRUE) {
         echo "Income deleted successfully.";

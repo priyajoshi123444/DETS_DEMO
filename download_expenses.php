@@ -19,7 +19,7 @@ if (!isset($_SESSION['email'])) {
 $email = $_SESSION['email'];
 
 // Fetch user information
-$userSql = "SELECT * FROM user WHERE email = '$email'";
+$userSql = "SELECT * FROM users WHERE email = '$email'";
 $userResult = $conn->query($userSql);
 
 // Check if user information was fetched successfully
@@ -32,7 +32,7 @@ if ($userResult->num_rows > 0) {
 }
 
 // Fetch expenses for the logged-in user
-$expenseSql = "SELECT * FROM expense WHERE user_id = (SELECT user_id FROM user WHERE email = '$email')";
+$expenseSql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
 $expenseResult = $conn->query($expenseSql);
 
 // Create new TCPDF instance

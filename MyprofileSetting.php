@@ -145,7 +145,7 @@
 
             move_uploaded_file($_FILES["profileImage"]["tmp_name"], $targetFile);
 
-            $sql = "UPDATE user SET username='$name', email='$useremail', gender='$gender', mobile_number='$mobile', profile_Image='$targetFile' WHERE email='$email'";
+            $sql = "UPDATE users SET username='$name', email='$useremail', gender='$gender', mobile_number='$mobile', profile_Image='$targetFile' WHERE email='$email'";
 
             if ($conn->query($sql) == TRUE) {
                 echo "User data updated successfully.";

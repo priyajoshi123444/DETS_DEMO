@@ -22,14 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["new_password"])) {
         $password = $_POST["new_password"];
 
-        $checkTokenQuery = "SELECT * FROM user WHERE reset_token = '$token' AND reset_token_expiry > NOW()";
+        $checkTokenQuery = "SELECT * FROM users WHERE reset_token = '$token' AND reset_token_expiry > NOW()";
         $checkTokenResult = $conn->query($checkTokenQuery);
 
         if ($checkTokenResult->num_rows > 0) {
             $user = $checkTokenResult->fetch_assoc();
             $email = $user["email"];
 
-            $updatePasswordQuery = $conn->prepare("UPDATE user SET password = ?, reset_status = 1, last_password_change = NOW() WHERE email = ?");
+            $updatePasswordQuery = $conn->prepare("UPDATE users SET password = ?, reset_status = 1, last_password_change = NOW() WHERE email = ?");
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $updatePasswordQuery->bind_param("ss", $hashedPassword, $email);
 

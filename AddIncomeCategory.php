@@ -96,7 +96,7 @@ $email = $_SESSION['email'];
 include 'Connection.php';
 
 // Fetch user ID based on email
-$sql_id = "SELECT user_id FROM user WHERE email = '$email'";
+$sql_id = "SELECT user_id FROM users WHERE email = '$email'";
 $result_id = $conn->query($sql_id);
 
 if ($result_id->num_rows > 0) {
@@ -109,7 +109,7 @@ if ($result_id->num_rows > 0) {
         $categoryName = $_POST["categoryName"];
 
         // Construct SQL query to insert category
-        $sql = "INSERT INTO income_categories (category_name, user_id) VALUES ('$categoryName', '$user_id')";
+        $sql = "INSERT INTO incomes_categories (category_name, user_id) VALUES ('$categoryName', '$user_id')";
 
         // Execute SQL query to insert category
         if ($conn->query($sql) === TRUE) {
