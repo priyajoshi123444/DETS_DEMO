@@ -130,7 +130,7 @@
         $email = $_SESSION['email'];
 
         // Fetch expenses and income for the logged-in user
-        $sql = "SELECT id, expenseName AS Name, expenseAmount AS Amount, expenseCategory AS Category, expenseDescription AS Description, expenseDate AS Date, billImage AS Image, 'Expense' AS Type FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') UNION ALL SELECT id, incomeName AS Name, incomeAmount AS Amount, incomeCategory AS Category, incomeDescription AS Description, incomeDate AS Date, NULL AS Image, 'Income' AS Type FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') ORDER BY Date DESC";
+        $sql = "SELECT expense_id, expenseName AS Name, expenseAmount AS Amount, expenseCategory AS Category, expenseDescription AS Description, expenseDate AS Date, billImage AS Image, 'Expense' AS Type FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') UNION ALL SELECT income_id, incomeName AS Name, incomeAmount AS Amount, incomeCategory AS Category, incomeDescription AS Description, incomeDate AS Date, NULL AS Image, 'Income' AS Type FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') ORDER BY Date DESC";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -150,7 +150,7 @@
                 // Add specific class based on type (expense or income)
                 $typeClass = ($row['Type'] === 'Expense') ? 'expense' : 'income';
                 echo "<tr class='$typeClass'>
-                        <td>{$row['id']}</td>
+                        <td>{$row['expense_id']}</td>
                         <td>{$row['Name']}</td>
                         <td>{$row['Amount']}</td>
                         <td>{$row['Category']}</td>

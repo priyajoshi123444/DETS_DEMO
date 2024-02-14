@@ -32,7 +32,7 @@ if ($userResult->num_rows > 0) {
 }
 
 // Fetch combined expenses and income for the logged-in user
-$sql = "SELECT id, expenseName AS Name, expenseAmount AS Amount, expenseCategory AS Category, expenseDescription AS Description, expenseDate AS Date, billImage AS Image, 'Expense' AS Type FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') UNION ALL SELECT id, incomeName AS Name, incomeAmount AS Amount, incomeCategory AS Category, incomeDescription AS Description, incomeDate AS Date, NULL AS Image, 'Income' AS Type FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') ORDER BY Date DESC";
+$sql = "SELECT expense_id, expenseName AS Name, expenseAmount AS Amount, expenseCategory AS Category, expenseDescription AS Description, expenseDate AS Date, billImage AS Image, 'Expense' AS Type FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') UNION ALL SELECT income_id, incomeName AS Name, incomeAmount AS Amount, incomeCategory AS Category, incomeDescription AS Description, incomeDate AS Date, NULL AS Image, 'Income' AS Type FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') ORDER BY Date DESC";
 $result = $conn->query($sql);
 
 // Create new TCPDF instance

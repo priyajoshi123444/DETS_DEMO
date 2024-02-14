@@ -164,7 +164,7 @@ if ($result_user_id->num_rows > 0) {
             $sql = "INSERT INTO incomes (incomeName, incomeAmount, incomeCategory, incomeDescription, incomeDate, user_id) VALUES ('$incomeName', '$incomeAmount', '$incomeCategory', '$incomeDescription', '$incomeDate', '$user_id')";
 
             // Execute SQL query to insert income
-            if ($conn->query($sql) === TRUE) {
+            if ($conn->query($sql) == TRUE) {
                 echo "Income added successfully.";
             } else {
                 echo "Error: " . $sql . "<br>" . $conn->error;

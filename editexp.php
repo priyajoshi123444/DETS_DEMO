@@ -29,7 +29,7 @@ if (isset($_GET["id"])) {
 
     // Fetch expense details from the database
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM expenses WHERE id = ?";
+    $sql = "SELECT * FROM expenses WHERE expense_id = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             expenseDescription = ?,
             expenseDate = ?,
             billImage = ?
-            WHERE id = ?";
+            WHERE expense_id = ?";
 
     $stmt = $conn->prepare($sql);
 
@@ -193,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h2>Edit Expense</h2>
         <form method="post" action="" enctype="multipart/form-data" onsubmit="return validateForm()">
-            <input type="hidden" name="expenseId" value="<?php echo $expense["id"]; ?>">
+            <input type="hidden" name="expenseId" value="<?php echo $expense["expense_id"]; ?>">
 
             <!-- Your form fields for updating expense details -->
             <div class="form-group">

@@ -68,7 +68,7 @@ $html .= '<table border="1">
             </tr>';
 while ($row = $incomeResult->fetch_assoc()) {
     $html .= '<tr>
-                <td>'.$row['id'].'</td>
+                <td>'.$row['income_id'].'</td>
                 <td>'.$row['incomeName'].'</td>
                 <td>'.$row['incomeAmount'].'</td>
                 <td>'.$row['incomeCategory'].'</td>

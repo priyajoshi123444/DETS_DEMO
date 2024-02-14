@@ -69,7 +69,7 @@ $html .= '<table border="1">
             </tr>';
 while ($row = $expenseResult->fetch_assoc()) {
     $html .= '<tr>
-                <td>'.$row['id'].'</td>
+                <td>'.$row['expense_id'].'</td>
                 <td>'.$row['expenseName'].'</td>
                 <td>'.$row['expenseAmount'].'</td>
                 <td>'.$row['expenseCategory'].'</td>

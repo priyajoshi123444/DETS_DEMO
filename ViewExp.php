@@ -136,7 +136,7 @@ $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE 
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>{$row['id']}</td>
+                        <td>{$row['expense_id']}</td>
                         <td>{$row['expenseName']}</td>
                         <td>{$row['expenseAmount']}</td>
                         <td>{$row['expenseCategory']}</td>
@@ -144,8 +144,8 @@ $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE 
                         <td>{$row['expenseDate']}</td>
                         <td>{$row['billImage']}</td>
                         <td>
-                            <a href='editexp.php?id={$row['id']}' class='btn-edit'>Edit</a>
-                            <a href='delete_expense.php?id={$row['id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
+                            <a href='editexp.php?id={$row['expense_id']}' class='btn-edit'>Edit</a>
+                            <a href='delete_expense.php?id={$row['expense_id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
                         </td>
                     </tr>";
             }

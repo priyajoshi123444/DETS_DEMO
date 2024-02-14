@@ -134,7 +134,7 @@ $sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE e
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>{$row['id']}</td>
+                        <td>{$row['income_id']}</td>
                         <td>{$row['incomeName']}</td>
                         <td>{$row['incomeAmount']}</td>
                         <td>{$row['incomeCategory']}</td>

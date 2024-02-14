@@ -135,15 +135,15 @@ $sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE e
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>{$row['id']}</td>
+                        <td>{$row['income_id']}</td>
                         <td>{$row['incomeName']}</td>
                         <td>{$row['incomeAmount']}</td>
                         <td>{$row['incomeCategory']}</td>
                         <td>{$row['incomeDescription']}</td>
                         <td>{$row['incomeDate']}</td>
                         <td>
-                            <a href='editincome.php?id={$row['id']}' class='btn-edit'>Edit</a>
-                            <a href='delincome.php?id={$row['id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
+                            <a href='editincome.php?id={$row['income_id']}' class='btn-edit'>Edit</a>
+                            <a href='delincome.php?id={$row['income_id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
                         </td>
                     </tr>";
             }

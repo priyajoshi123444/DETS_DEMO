@@ -1,191 +1,177 @@
 <?php
-
-include('connection.php');
-
+// Start session to access session variables
 session_start();
 
+// Include database connection
+include 'connection.php';
+
 // Check if the user is logged in
-if (!isset($_SESSION['username'])) {
-    header("Location: SingUp.php"); // Redirect to login page if not logged in
+if (!isset($_SESSION['email'])) {
+    // Redirect to login page or display an error message
+    header("Location: login.php");
     exit();
-} 
-
-// Fetch user information from the database
-$username = $_SESSION['username'];
-$sql = "SELECT * FROM user WHERE username = '$username'";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-} else {
-    // Handle error if user not found
-    echo "User not found";
 }
 
-// Close the database connection after all necessary queries
+// Get the logged-in user's email from the session
+$email = $_SESSION['email'];
 
+// Fetch user ID based on email
+$user_id_sql = "SELECT user_id FROM users WHERE email = '$email'";
+$user_id_result = $conn->query($user_id_sql);
 
+// Check if user ID was fetched successfully
+if ($user_id_result->num_rows > 0) {
+    $user_id_row = $user_id_result->fetch_assoc();
+    $user_id = $user_id_row['user_id'];
+} else {
+    // Handle error if user ID not found
+    echo "Error: User ID not found.";
+    exit();
+}
+
+// Fetch income and expenses for the logged-in user
+$income_sql = "SELECT incomeAmount, incomeCategory FROM incomes WHERE user_id = '$user_id'";
+$income_result = $conn->query($income_sql);
+
+$expense_sql = "SELECT expenseAmount, expenseCategory FROM expenses WHERE user_id = '$user_id'";
+$expense_result = $conn->query($expense_sql);
+
+// Process income data
+$income_data = [];
+while ($row = $income_result->fetch_assoc()) {
+    $category = $row['incomeCategory'];
+    $amount = $row['incomeAmount'];
+    if (!isset($income_data[$category])) {
+        $income_data[$category] = $amount;
+    } else {
+        $income_data[$category] += $amount;
+    }
+}
+
+// Process expense data
+$expense_data = [];
+while ($row = $expense_result->fetch_assoc()) {
+    $category = $row['expenseCategory'];
+    $amount = $row['expenseAmount'];
+    if (!isset($expense_data[$category])) {
+        $expense_data[$category] = $amount;
+    } else {
+        $expense_data[$category] += $amount;
+    }
+}
+
+// Close database connection
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="_sidebar.scss">
-  <link rel="stylesheet" href="materialdesignicons.min.css">
-  <link rel="stylesheet" href="vendor.bundle.base.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.4.47/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.4.47/css/materialdesignicons.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.4.47/fonts/materialdesignicons-webfont.eot">
-  <!-- endinject -->
-  <!-- Plugin css for this page -->
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <!-- endinject -->
-  <!-- Layout styles -->
-  <link rel="stylesheet" href="style.css">
-  <!-- End layout styles -->
-  <link rel="shortcut icon" href="favicon.ico" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income and Expenses Analysis</title>
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      
+        .container {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            flex: 1;
+        }
+        </style>
 </head>
-
 <body>
-  
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
-    <ul class="nav">
-        <li class="nav-item nav-profile">
-            <a href="#" class="nav-link">
-                <div class="nav-profile-image">
-                    <!-- Use the user's profile image if available, otherwise use a default image -->
-                    <?php if (!empty($user['profile_image'])) : ?>
-                        <img src="<?php echo $user['profile_image']; ?>" alt="profile">
-                    <?php else : ?>
-                        <img src="assets/images/default_profile.jpg" alt="profile">
-                    <?php endif; ?>
-                    <span class="login-status online"></span>
-                    <!--change to offline or busy as needed-->
-                </div>
-                <div class="nav-profile-text d-flex flex-column">
-                    <span class="font-weight-bold mb-2"><?php echo $user['username']; ?></span>
-                    <span class="text-secondary text-small"><?php echo $user['email']; ?></span>
-                </div>
-                <span class="mdi mdi-bookmark-check text-success nav-profile-badge"></span>
-            </a>
-        </li>
-      <li class="nav-item">
-        <a class="nav-link" href="index.php">
-          <span class="menu-title">Dashboard</span>
-         <i class="mdi mdi-home menu-icon"></i>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-          <span class="menu-title">Expense</span>
-          <i class="menu-arrow"></i>
-          <i class=" mdi mdi-cash-multiple menu-icon"></i>
-        </a>
-        <div class="collapse show" id="ui-basic">
-          <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="AddExp.php">Add Expense</a></li>
-            <li class="nav-item"> <a class="nav-link" href="ViewExp.php">View Expense</a></li>
-            
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-1" aria-expanded="false" aria-controls="ui-basic">
-          <span class="menu-title">Income</span>
-          <i class="menu-arrow"></i>
-          <i class=" mdi mdi-cash menu-icon"></i>
-        </a>
-        <div class="collapse" id="ui-basic-1">
-          <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="AddIncome.php">Add Income</a></li>
-            <li class="nav-item"> <a class="nav-link" href="ViewIncome.php">View Income</a></li>
-            
-          </ul>
-        </div>
-        
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-2" aria-expanded="false" aria-controls="ui-basic">
-          <span class="menu-title">Budget</span>
-          <i class="menu-arrow"></i>
-          <i class=" mdi mdi-briefcase  menu-icon"></i>
-        </a>
-        <div class="collapse" id="ui-basic-2">
-          <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="AddBudget.php">Add Budget</a></li>
-            <li class="nav-item"> <a class="nav-link" href="viewbudget.php">View Budget</a></li>
-            
-          </ul>
-        </div>
-        
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-3" aria-expanded="false" aria-controls="ui-basic">
-          <span class="menu-title">Category</span>
-          <i class="menu-arrow"></i>
-          <i class=" mdi mdi-checkerboard  menu-icon"></i>
-        </a>
-        <div class="collapse" id="ui-basic-3">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="AddCategory.php">Add Category</a></li>
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-4" aria-expanded="false" aria-controls="ui-basic">
-          <span class="menu-title">Report</span>
-          <i class="menu-arrow"></i>
-          <i class=" mdi mdi-file-document menu-icon"></i>
-        </a>
-        <div class="collapse" id="ui-basic-4">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="ViewReport.php">View Report</a></li>
 
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-5" aria-expanded="false" aria-controls="ui-basic">
-          <span class="menu-title">Settings</span>
-          <i class="menu-arrow"></i>
-          <i class=" mdi mdi-account-settings  menu-icon"></i>
-        </a>
-        <div class="collapse" id="ui-basic-5">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="MyprofileSetting.php">My Profile</a></li>
-            <li class="nav-item"> <a class="nav-link" href="ChangePswd.php">Change Password</a></li>
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="logout.php">
-          <span class="menu-title">Logout</span>
-          <i class="mdi mdi-logout menu-icon"></i>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <script src="Chart.min.js"></script>
-    <script src="jquery.cookie.js" type="text/javascript"></script>
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="off-canvas.js"></script>
-    <script src="hoverable-collapse.js"></script>
-    <script src="misc.js"></script>
-    <!-- endinject -->
-    <!-- Custom js for this page -->
-    <script src="dashboard.js"></script>
-    <script src="todolist.js"></script>
-    <!-- End custom js for this page -->
+    <div class="container">
+    <h2>Income and Expenses Analysis</h2>
+    <div style="width: 50%;">
+        <canvas id="incomeExpensesBarChart"></canvas>
+    </div>
+    <div style="width: 50%;">
+        <canvas id="expensesPieChart"></canvas>
+    </div>
+
+    <script>
+        // Data for income and expenses bar chart
+        var incomeData = <?php echo json_encode(array_values($income_data)); ?>;
+        var expenseData = <?php echo json_encode(array_values($expense_data)); ?>;
+        var categories = <?php echo json_encode(array_keys($income_data)); ?>;
+
+        // Create bar chart
+        var ctx = document.getElementById('incomeExpensesBarChart').getContext('2d');
+        var incomeExpensesBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Income',
+                    data: incomeData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Expenses',
+                    data: expenseData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Data for expenses pie chart
+        var expenseCategories = Object.keys(<?php echo json_encode($expense_data); ?>);
+        var expenseAmounts = Object.values(<?php echo json_encode($expense_data); ?>);
+
+        // Create pie chart
+        var ctx2 = document.getElementById('expensesPieChart').getContext('2d');
+        var expensesPieChart = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: expenseCategories,
+                datasets: [{
+                    label: 'Expenses',
+                    data: expenseAmounts,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(255, 159, 64, 0.5)',
+                        'rgba(255, 205, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(201, 203, 207, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(201, 203, 207, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

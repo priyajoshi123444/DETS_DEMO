@@ -29,7 +29,7 @@ if (isset($_GET["id"])) {
 
     // Fetch income details from the database
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM incomes WHERE id = ?";
+    $sql = "SELECT * FROM incomes WHERE income_id = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             incomeCategory = ?,
             incomeDescription = ?,
             incomeDate = ?
-            WHERE id = ?";
+            WHERE income_id = ?";
 
     $stmt = $conn->prepare($sql);
 
@@ -182,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h2>Edit Income</h2>
         <form method="post" action="" onsubmit="return validateForm()">
-            <input type="hidden" name="incomeId" value="<?php echo $income["id"]; ?>">
+            <input type="hidden" name="incomeId" value="<?php echo $income["income_id"]; ?>">
 
             <!-- Your form fields for updating income details -->
             <div class="form-group">

@@ -16,7 +16,7 @@ if (!isset($_SESSION['email'])) {
 
 // Fetch user information from the database
 $email = $_SESSION['email'];
-$sql = "SELECT * FROM user WHERE email = '$email'";
+$sql = "SELECT * FROM users WHERE email = '$email'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -79,7 +79,7 @@ if ($result->num_rows > 0) {
             </a>
         </li>
       <li class="nav-item">
-        <a class="nav-link" href="index.php">
+        <a class="nav-link" href="demo.php">
           <span class="menu-title">Dashboard</span>
          <i class="mdi mdi-home menu-icon"></i>
         </a>

@@ -137,7 +137,7 @@
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>{$row['id']}</td>
+                        <td>{$row['expense_id']}</td>
                         <td>{$row['expenseName']}</td>
                         <td>{$row['expenseAmount']}</td>
                         <td>{$row['expenseCategory']}</td>
