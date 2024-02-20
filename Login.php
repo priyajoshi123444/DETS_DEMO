@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 $conn = mysqli_connect("localhost", "root", "", "Expense") or die("connection failed");
 
 // Validate the form submission

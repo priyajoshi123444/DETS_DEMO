@@ -58,6 +58,12 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
+        .warning-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
@@ -67,65 +73,80 @@
     </div>
     <div class="container">
         <h2>Add Income Category</h2>
-        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <form id="addCategoryForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label for="categoryName">Category Name</label>
                 <input type="text" class="form-control" name="categoryName" id="categoryName" placeholder="Enter category name" required>
+                <div id="warningMessage" class="warning-message"></div>
             </div>
 
             <button type="submit" class="btn btn-primary">Add Category</button>
         </form>
 
         <?php
-if(!isset($_SESSION)) 
-{ 
-    session_start(); 
-} 
-
-// Check if the user is logged in
-if (!isset($_SESSION['email'])) {
-    // Redirect to login page or display an error message
-    header("Location: login.php");
-    exit();
-}
-
-// Get the logged-in user's email from the session
-$email = $_SESSION['email'];
-
-// Include database connection
-include 'Connection.php';
-
-// Fetch user ID based on email
-$sql_id = "SELECT user_id FROM users WHERE email = '$email'";
-$result_id = $conn->query($sql_id);
-
-if ($result_id->num_rows > 0) {
-    $row_id = $result_id->fetch_assoc();
-    $user_id = $row_id['user_id'];
-
-    // PHP code for handling form submission and database insertion
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Fetch category name from the form
-        $categoryName = $_POST["categoryName"];
-
-        // Construct SQL query to insert category
-        $sql = "INSERT INTO incomes_categories (category_name, user_id) VALUES ('$categoryName', '$user_id')";
-
-        // Execute SQL query to insert category
-        if ($conn->query($sql) === TRUE) {
-            echo "Category added successfully.";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+        // Start the session if not already started
+        if (!isset($_SESSION)) {
+            session_start();
         }
-    }
-} else {
-    echo "<p>User not found.</p>";
-}
 
-// Close database connection
-$conn->close();
-?>
+        // Check if the user is logged in
+        if (!isset($_SESSION['email'])) {
+            // Redirect to login page or display an error message
+            header("Location: login.php");
+            exit();
+        }
 
+        // Get the logged-in user's email from the session
+        $email = $_SESSION['email'];
+
+        // Include database connection
+        include 'Connection.php';
+
+        // Fetch user ID based on email
+        $sql_id = "SELECT user_id, pricing_status FROM users WHERE email = '$email'";
+        $result_id = $conn->query($sql_id);
+
+        if ($result_id->num_rows > 0) {
+            $row_id = $result_id->fetch_assoc();
+            $user_id = $row_id['user_id'];
+            $pricing_status = $row_id['pricing_status'];
+
+            // Check if the user is subscribed
+            if ($pricing_status == 1) {
+                // The user is subscribed, allow them to add category
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    // Fetch category name from the form
+                    $categoryName = $_POST["categoryName"];
+
+                    // Construct SQL query to insert category
+                    $sql = "INSERT INTO incomes_categories (category_name, user_id) VALUES ('$categoryName', '$user_id')";
+
+                    // Execute SQL query to insert category
+                    if ($conn->query($sql) === TRUE) {
+                        echo "Category added successfully.";
+                    } else {
+                        echo "Error: " . $sql . "<br>" . $conn->error;
+                    }
+                }
+            } else {
+                // The user is not subscribed, display a warning message
+                ?>
+                <script>
+                    document.getElementById('addCategoryForm').addEventListener('submit', function(event) {
+                        document.getElementById('warningMessage').innerText = 'You are not subscribed to access this feature. Please subscribe to add categories.';
+                        event.preventDefault(); // Prevent form submission
+                    });
+                </script>
+                <?php
+            }
+        } else {
+            // User not found
+            echo "<p>User not found.</p>";
+        }
+
+        // Close database connection
+        $conn->close();
+        ?>
 
     </div>
     <!-- Bootstrap JS and Popper.js -->

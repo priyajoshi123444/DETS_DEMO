@@ -1,7 +1,5 @@
-
 <!doctype html>
 <html class="no-js" lang="en">
-
 <head>
     <meta charset="utf-8">
     
@@ -290,31 +288,30 @@
                 <div class="col-lg-4 col-md-8 col-sm-10">
                     <div class="single_pricing text-center mt-30 wow fadeInUp" data-wow-duration="1.3s"
                         data-wow-delay="0.2s">
-                        <h4 class="pricing_title">Startup</h4>
-                        <span class="price">$240</span>
+                        <h4 class="pricing_title">Basic Plane</h4>
+                        <span class="price">Free</span>
                         <ul class="pricing_list">
-                            <li>Startup Business</li>
-                            <li>Business Consulting</li>
-                            <li>Business Analysis</li>
-                            <li>Corporate Business</li>
-                            <li>Business Investment</li>
+                            <li>Here, Free Basic Plane</li>
+                            <li>Get started for free expense manage</li>
+                            <li>Access basic expense tools</li>
+                            <li>Start your journey with our Basic Plan today</li>
+
                         </ul>
-                        <a href="#0" class="mian-btn">Order Now</a>
+                        <a href="pricing.php" class="mian-btn">Know More</a>
                     </div> <!-- single pricing -->
                 </div>
                 <div class="col-lg-4 col-md-8 col-sm-10">
                     <div class="single_pricing text-center mt-30 active wow fadeInUp" data-wow-duration="1.3s"
                         data-wow-delay="0.3s">
-                        <h4 class="pricing_title">Agency</h4>
-                        <span class="price">$340</span>
+                        <h4 class="pricing_title">Premium Plane</h4>
+                        <span class="price">₹100</span>
                         <ul class="pricing_list">
-                            <li>Startup Business</li>
-                            <li>Business Consulting</li>
-                            <li>Business Analysis</li>
-                            <li>Corporate Business</li>
-                            <li>Business Investment</li>
+                            <li>Upgrade to our Premium Plan</li>
+                            <li>Gain access to exclusive tools</li>
+                            <li>Unlock premium features</li>
+                            <li>Elevate your financial management</li>
                         </ul>
-                        <a href="#0" class="mian-btn">Order Now</a>
+                        <a href="pricing.php" class="mian-btn">know more</a>
                     </div> <!-- single pricing -->
                 </div>
                

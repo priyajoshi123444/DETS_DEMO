@@ -60,7 +60,7 @@ if ($result->num_rows > 0) {
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item nav-profile">
-            <a href="#" class="nav-link">
+            <a href="MyprofileSetting.php" class="nav-link">
                 <div class="nav-profile-image">
                     <!-- Use the user's profile image if available, otherwise use a default image -->
                     <?php if (!empty($user['profile_image'])) : ?>
@@ -78,10 +78,16 @@ if ($result->num_rows > 0) {
                 <span class="mdi mdi-bookmark-check text-success nav-profile-badge"></span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="index.php">
+                <span class="menu-title">Home</span>
+                <i class="mdi mdi-home menu-icon"></i>
+            </a>
+        </li>
       <li class="nav-item">
-        <a class="nav-link" href="demo.php">
+        <a class="nav-link" href="index.php">
           <span class="menu-title">Dashboard</span>
-         <i class="mdi mdi-home menu-icon"></i>
+         <i class="mdi mdi-checkerboard menu-icon"></i>
         </a>
       </li>
       <li class="nav-item">
@@ -126,28 +132,35 @@ if ($result->num_rows > 0) {
             
           </ul>
         </div>
-        
+        <li class="nav-item">
+        <a class="nav-link" href="calender.php">
+          <span class="menu-title">Calender</span>
+         <i class="mdi mdi-calendar-multiple menu-icon"></i>
+        </a>
+      </li>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-3" aria-expanded="false" aria-controls="ui-basic">
-          <span class="menu-title">Category</span>
-          <i class="menu-arrow"></i>
-          <i class=" mdi mdi-checkerboard  menu-icon"></i>
-        </a>
-        <div class="collapse" id="ui-basic-3">
-          <ul class="nav flex-column sub-menu">
+    <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-3" aria-expanded="false" aria-controls="ui-basic">
+        <span class="menu-title">Category</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-checkerboard menu-icon"></i>
+        <span class="badge badge-danger">Premium</span> <!-- Add a badge indicating subscription requirement -->
+    </a>
+    <div class="collapse" id="ui-basic-3">
+        <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="AddExpenseCategory.php">Add Expense Category</a></li>
-          </ul>
-          <ul class="nav flex-column sub-menu">
+        </ul>
+        <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="AddIncomeCategory.php">Add Income Category</a></li>
-          </ul>
-        </div>
-      </li>
+        </ul>
+    </div>
+</li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-4" aria-expanded="false" aria-controls="ui-basic">
           <span class="menu-title">Report</span>
           <i class="menu-arrow"></i>
           <i class=" mdi mdi-file-document menu-icon"></i>
+          <span class="badge badge-danger">Premium</span> <!-- Add a badge indicating subscription requirement -->
         </a>
         <div class="collapse" id="ui-basic-4">
           <ul class="nav flex-column sub-menu">
@@ -157,6 +170,12 @@ if ($result->num_rows > 0) {
 
           </ul>
         </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="subscription.php">
+          <span class="menu-title">Subscription Details</span>
+         <i class="mdi mdi-bell menu-icon"></i>
+        </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-5" aria-expanded="false" aria-controls="ui-basic">
