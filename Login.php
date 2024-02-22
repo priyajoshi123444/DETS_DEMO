@@ -20,7 +20,7 @@ if (isset($_POST['Login'])) {
             $_SESSION['email'] = $email;
 
             // Redirect to the dashboard or any other page
-            header("Location: sidebar1.php");
+            header("Location: demo.php");
             exit();
         } else {
             echo "<script>alert('Invalid Credentials for password')</script>";

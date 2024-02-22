@@ -85,7 +85,7 @@ if ($result->num_rows > 0) {
             </a>
         </li>
       <li class="nav-item">
-        <a class="nav-link" href="index.php">
+        <a class="nav-link" href="demo.php">
           <span class="menu-title">Dashboard</span>
          <i class="mdi mdi-checkerboard menu-icon"></i>
         </a>
@@ -131,19 +131,13 @@ if ($result->num_rows > 0) {
             <li class="nav-item"> <a class="nav-link" href="viewbudget.php">View Budget</a></li>
             
           </ul>
-        </div>
-        <li class="nav-item">
-        <a class="nav-link" href="calender.php">
-          <span class="menu-title">Calender</span>
-         <i class="mdi mdi-calendar-multiple menu-icon"></i>
-        </a>
-      </li>
+       
       </li>
       <li class="nav-item">
     <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic-3" aria-expanded="false" aria-controls="ui-basic">
         <span class="menu-title">Category</span>
         <i class="menu-arrow"></i>
-        <i class="mdi mdi-checkerboard menu-icon"></i>
+        <i class="mdi mdi-microsoft menu-icon"></i>
         <span class="badge badge-danger">Premium</span> <!-- Add a badge indicating subscription requirement -->
     </a>
     <div class="collapse" id="ui-basic-3">

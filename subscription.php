@@ -1,223 +1,204 @@
 <?php
-// Start the session
 session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['email'])) {
-    // Redirect to the login page if the user is not logged in
-    header('Location: login.php');
+    // Redirect to login page or display an error message
+    header("Location: login.php");
     exit();
 }
 
-// Database connection parameters
-$hostname = 'localhost'; // Change this if your database is hosted on a different server
-$username = 'root';
-$password = '';
-$database = 'expense';
+// Include database connection
+include 'Connection.php';
 
-// Establish connection to the database
-$connection = mysqli_connect($hostname, $username, $password, $database);
+// Get the logged-in user's email from the session
+$email = $_SESSION['email'];
 
-// Check if the connection was successful
-if (!$connection) {
-    // If connection fails, display an error message and exit
-    die("Connection failed: " . mysqli_connect_error());
-}
+// Fetch user ID based on email
+$sql_user_id = "SELECT user_id FROM users WHERE email = '$email'";
+$result_user_id = $conn->query($sql_user_id);
 
-// Get user's subscription details from the database
-// Replace this with your actual database query to fetch subscription details for the logged-in user
-$user_email = $_SESSION['email'];
+// Check if user ID was fetched successfully
+if ($result_user_id->num_rows > 0) {
+    $row_user_id = $result_user_id->fetch_assoc();
+    $user_id = $row_user_id['user_id'];
 
-// Example subscription data (replace with actual fetched data)
-$subscription = array(
-    'start_date' => '2024-02-20',
-    'end_date' => '2024-03-20',
-    'amount_paid' => '50.00', // assuming the currency is in USD
-    'status' => 'Active', // you can have statuses like Active, Expired, etc.
-    'plan' => 'Premium', // subscription plan name
-    'frequency' => 'Monthly', // subscription billing frequency
-    'payment_method' => 'By UPI'
-);
+    // Fetch subscription details associated with the logged-in user
+    $subscriptionSql = "SELECT * FROM subscription WHERE user_id = '$user_id'";
+    $subscriptionResult = $conn->query($subscriptionSql);
 
-// Example user data (replace with actual fetched data)
-// Let's assume you have a database table named 'users' that stores user details
-// Replace 'users' with your actual table name
-$query = "SELECT * FROM users WHERE email = '$user_email'";
-$result = mysqli_query($connection, $query);
-
-// Check if the query was successful
-if ($result) {
-    // Fetch user data
-    $user_data = mysqli_fetch_assoc($result);
-    $user_name = $user_data['username']; // Assuming the column for the user's name is 'username'
-} else {
-    // If query fails, display an error message and exit
-    die("Error: " . mysqli_error($connection));
-}
+    // Check if subscription details were fetched successfully
+    if ($subscriptionResult) {
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription Plan Details</title>
-    <!-- Add CSS styles -->
+    <title>Subscription Details</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* General styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-image: url('assets/images/istockphoto-1342223620-612x612.jpg'); /* Replace 'background.jpg' with your actual background image path */
-    background-size: cover;
-    background-position: center;
-    color: #333;
-    display: flex;
-}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('assets/images/istockphoto-1342223620-612x612.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #333;
+            display: flex;
+        }
 
-.container {
-    max-width: 800px;
-    margin: auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column; /* Change flex direction to column */
-}
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            margin-top: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
 
-.sidebar {
-    width: 250px;
-    background-color: #111;
-    padding-top: 20px;
-    color: #818181;
-}
+        .sidebar {
+            width: 250px;
+            background-color: #111;
+            padding-top: 20px;
+            color: #fff;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
 
-.sidebar a {
-    padding: 15px 20px;
-    text-decoration: none;
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .subscription-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .subscription-column {
+            flex: 1 0 50%;
+        }
+
+        .subscription-item {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .subscription-column h3 {
+            font-size: 20px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .subscription-item div {
+            margin-bottom: 15px;
+        }
+
+        .subscription-item strong {
+    font-weight: bold;
     font-size: 18px;
-    color: #818181;
+    color: #333;
+    float: left;
+    width: 200px; /* Increase label width */
+}
+
+.subscription-item span {
+    font-size: 18px;
+    color: #666;
+    margin-left: 220px; /* Increase space between label and detail */
     display: block;
-    transition: 0.3s;
 }
+        
 
-.sidebar a:hover {
-    color: #f1f1f1;
-}
+        .renew-button {
+            margin-top: 20px;
+            text-align: center;
+        }
 
-.user-details {
-    margin-bottom: 20px;
-    text-align: center; /* Center align user details */
-}
+        .renew-button button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-.user-details h3 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-}
-
-.user-details p {
-    margin: 5px 0;
-    font-size: 16px;
-    color: #555;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    color: #333;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-.renew-button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 12px 24px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%; /* Make button width 100% */
-    box-sizing: border-box; /* Include padding and border in button width */
-}
-
-.renew-button:hover {
-    background-color: #45a049;
-}
-
+        .renew-button button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Sidebar -->
-    <?php include 'sidebar1.php'; ?>
-
-    <div class="container">
-        <div class="user-details">
-            <!-- <h3>User Details</h3> -->
-            <p><strong>Name:</strong> <?php echo $user_name; ?></p>
-            <p><strong>Email:</strong> <?php echo $user_email; ?></p>
-        </div>
-        <h2>Subscription Plan Details</h2>
-        <table>
-            <tr>
-                <th>Start Date</th>
-                <td><?php echo $subscription['start_date']; ?></td>
-            </tr>
-            <tr>
-                <th>End Date</th>
-                <td><?php echo $subscription['end_date']; ?></td>
-            </tr>
-            <tr>
-                <th>Amount Paid</th>
-                <td>$<?php echo $subscription['amount_paid']; ?></td>
-            </tr>
-            <tr>
-                <th>Subscription Plan</th>
-                <td><?php echo $subscription['plan']; ?></td>
-            </tr>
-            <tr>
-                <th>Billing Frequency</th>
-                <td><?php echo $subscription['frequency']; ?></td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td><?php echo $subscription['status']; ?></td>
-            </tr>
-            <tr>
-                <th>Payment Method</th>
-                <td><?php echo $subscription['payment_method']; ?></td>
-            </tr>
-            <tr>
-                <th>Renewal</th>
-                <td><?php echo ($subscription['status'] === 'Active') ? '<button class="renew-button">Renew Subscription</button>' : 'N/A'; ?></td>
-            </tr>
-            <!-- Add more subscription details here if needed -->
-        </table>
+    <div class="sidebar">
+        <?php include 'sidebar1.php'; ?>
     </div>
+    <div class="container">
+        <h2>Subscription Details</h2>
+        <div class="subscription-details">
+            <?php
+            // Display subscription details
+            if ($subscriptionResult->num_rows > 0) {
+                while ($row = $subscriptionResult->fetch_assoc()) {
+            ?>
+            <div class='subscription-column'>
+                <div class='subscription-item'>
+                    <strong>Start Date:</strong> <span><?= $row['start_date'] ?></span><br>
+                    <strong>End Date:</strong> <span><?= $row['end_date'] ?></span><br>
+                    <strong>Amount Paid:</strong> <span>$<?= $row['amount'] ?></span><br>
+                    <strong>Subscription Plan:</strong> <span><?= $row['subscription_plan'] ?></span><br>
+                    <strong>Billing Frequency:</strong> <span><?= $row['billing_frequency'] ?></span><br>
+                    <strong>Payment Method:</strong> <span><?= $row['payment_method'] ?></span><br>
+                    <strong>Status:</strong> <span><?= $row['status'] ?></span><br>
+                </div>
+            </div>
+            <?php
+                }
+            } else {
+                echo "<p>No subscription found.</p>";
+            }
+            ?>
+        </div>
+        <div class="renew-button">
+            <button>Renew Subscription</button>
+        </div>
+    </div>
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
+<?php
+    } else {
+        echo "Error fetching subscription details: " . $conn->error;
+    }
+} else {
+    echo "<p>User not found.</p>";
+}
+?>

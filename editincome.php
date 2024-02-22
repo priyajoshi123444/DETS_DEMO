@@ -110,23 +110,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
-            background-size: cover;
+         body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-image: url('assets/images/istockphoto-1342223620-612x612.jpg');
+            /* Replace 'background.jpg' with your actual background image path */
+            background-size: cover;
+            background-position: center;
+            color: #333;
             display: flex;
         }
 
         .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
-            flex: 1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            /* Change flex direction to column */
         }
+
 
         .sidebar {
             width: 250px;

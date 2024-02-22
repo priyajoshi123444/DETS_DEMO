@@ -327,58 +327,55 @@
     
     <!--====== CONTACT PART START ======-->
 
-    <section id="contact" class="contact_area bg_cover pt-120 pb-130" style="background-image: url(assets/images/young-asian-woman-worried-need-help-stress-home-accounting-debt-bills-bank-papers-expenses-payments-feeling-desperate-bad-financial-situation-top-view_164138-726.jpg)">
+    <section id="contact" class="contact_area bg_cover pt-120 pb-130"
+        style="background-image: url(assets/images/young-asian-woman-worried-need-help-stress-home-accounting-debt-bills-bank-papers-expenses-payments-feeling-desperate-bad-financial-situation-top-view_164138-726.jpg)">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
                     <div class="section_title section_title_2 text-center pb-25">
                         <h4 class="title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">Contact Us</h4>
-                        <p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">Have questions or need assistance? 
-                            Reach out to us easily through our Contact Us page – we're here to help!</p>
-                    </div> <!-- section title -->
+                        <p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">Have questions or need assistance? Reach out to us easily through our Contact Us page – we're here to help!</p>
+                    </div>
                 </div>
-            </div> <!-- row -->
-            
-            <form id="contact-form" action="assets/contact.php" method="post" class="wow fadeInUp"
-                data-wow-duration="1.3s" data-wow-delay="0.4s">
+            </div>
+            <form id="contact-form" action="send_email1.php" method="post" class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="single_form">
                             <input type="text" placeholder="Name" name="name" id="name" required>
-                        </div> <!-- single form -->
+                        </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="single_form">
                             <input type="email" placeholder="Email" name="email" id="email" required>
-                        </div> <!-- single form -->
+                        </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="single_form">
                             <input type="text" placeholder="Phone Number" name="number" id="number" required>
-                        </div> <!-- single form -->
+                        </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="single_form">
                             <input type="text" placeholder="Subject" name="subject" id="subject" required>
-                        </div> <!-- single form -->
+                        </div>
                     </div>
                     <div class="col-lg-12">
                         <div class="single_form">
                             <textarea placeholder="Message" name="message" id="message" required></textarea>
-                        </div> <!-- single form -->
+                        </div>
                     </div>
-                    
                     <p class="form-message"></p>
-                    
                     <div class="col-lg-12">
                         <div class="single_form text-center">
                             <button class="main-btn" type="submit">SUBMIT</button>
-                        </div> <!-- single form -->
+                        </div>
                     </div>
-                </div> <!-- row -->
+                </div>
             </form>
-        </div> <!-- container -->
+        </div>
     </section>
+
 
     <!--====== CONTACT PART ENDS ======-->
     

@@ -15,12 +15,13 @@ $email = $_SESSION['email'];
 include 'Connection.php';
 
 // Fetch user ID based on email
-$sql_user_id = "SELECT user_id FROM users WHERE email = '$email'";
+$sql_user_id = "SELECT user_id, pricing_status FROM users WHERE email = '$email'";
 $result_user_id = $conn->query($sql_user_id);
 
 if ($result_user_id->num_rows > 0) {
     $row_user_id = $result_user_id->fetch_assoc();
     $user_id = $row_user_id['user_id'];
+    $pricing_status = $row_user_id['pricing_status'];
 
     // Fetch expense categories associated with the logged-in user
     $categorySql = "SELECT * FROM expenses_categories WHERE user_id = '$user_id'";
@@ -37,21 +38,28 @@ if ($result_user_id->num_rows > 0) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
-            background-size: cover;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-image: url('assets/images/istockphoto-1342223620-612x612.jpg');
+            /* Replace 'background.jpg' with your actual background image path */
+            background-size: cover;
+            background-position: center;
+            color: #333;
             display: flex;
         }
 
         .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
-            flex: 1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            /* Change flex direction to column */
         }
 
         .sidebar {
@@ -107,7 +115,7 @@ if ($result_user_id->num_rows > 0) {
     </div>
     <div class="container">
         <h2>Add Expenses</h2>
-        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return validateForm()">
             <div class="form-group">
                 <label for="expenseName">Expense Name</label>
                 <input type="text" class="form-control" name="expenseName" id="expenseName" placeholder="Enter expense name" required>
@@ -125,7 +133,7 @@ if ($result_user_id->num_rows > 0) {
                     <option value="food">Food</option>
                     <option value="utilities">Utilities</option>
                     <option value="transportation">Transport</option>
-                    <option value="entertainment">entertainment</option>
+                    <option value="entertainment">Entertainment</option>
                     <?php
                     // Loop through categories and generate options
                     while ($row = $categoryResult->fetch_assoc()) {
@@ -145,10 +153,11 @@ if ($result_user_id->num_rows > 0) {
                 <input type="date" class="form-control" name="expenseDate" id="expenseDate" required>
             </div>
 
-            <div class="form-group">
-                <label for="billImage">Bill Image</label>
-                <input type="file" class="form-control" name="billImage" id="billImage">
-                <small class="form-text text-muted">Upload a photo of your bill.</small>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="1" id="notificationCheckbox" name="notificationCheckbox">
+                    Receive daily notifications and reminders
+                </label>
             </div>
 
             <a href="sidebar1.php" class="btn btn-secondary btn-go-back">Go Back</a>
@@ -158,25 +167,28 @@ if ($result_user_id->num_rows > 0) {
         <?php
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Fetch other form data
-            $expenseName = $_POST["expenseName"];
-            $expenseAmount = $_POST["expenseAmount"];
-            $expenseCategory = $_POST["expenseCategory"];
-            $expenseDescription = $_POST["expenseDescription"];
-            $expenseDate = $_POST["expenseDate"];
-            $billImage = isset($_FILES["billImage"]) ? $_FILES["billImage"]["name"] : "";
+            // Check if the required fields are filled
+            if (!empty($_POST["expenseName"]) && !empty($_POST["expenseAmount"]) && !empty($_POST["expenseCategory"]) && !empty($_POST["expenseDate"])) {
+                // Fetch other form data
+                $expenseName = $_POST["expenseName"];
+                $expenseAmount = $_POST["expenseAmount"];
+                $expenseCategory = $_POST["expenseCategory"];
+                $expenseDescription = $_POST["expenseDescription"];
+                $expenseDate = $_POST["expenseDate"];
+                $receiveNotifications = isset($_POST["notificationCheckbox"]) ? 1 : 0;
 
-            // Construct SQL query to insert expense
-            $sql = "INSERT INTO expenses (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, billImage, user_id) VALUES ('$expenseName', '$expenseAmount', '$expenseCategory', '$expenseDescription', '$expenseDate', '$billImage', '$user_id')";
+                // Construct SQL query to insert expense
+                $sql = "INSERT INTO expenses (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, user_id, receive_notifications) VALUES ('$expenseName', '$expenseAmount', '$expenseCategory', '$expenseDescription', '$expenseDate', '$user_id', '$receiveNotifications')";
 
-            // Execute SQL query to insert expense
-            if ($conn->query($sql) === TRUE) {
-                echo "Expense added successfully.";
+                // Execute SQL query to insert expense
+                if ($conn->query($sql) === TRUE) {
+                    echo "Expense added successfully.";
+                } else {
+                    echo "Error: " . $sql . "<br>" . $conn->error;
+                }
             } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
+                echo '<p>Please fill in all required fields.</p>';
             }
-
-            // Handle file upload here...
         }
         ?>
     </div>

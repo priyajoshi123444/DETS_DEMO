@@ -9,21 +9,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background: url('background.jpg') no-repeat center center fixed;
-            background-size: cover;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-image: url('assets/images/istockphoto-1342223620-612x612.jpg'); /* Replace 'background.jpg' with your actual background image path */
+            background-size: cover;
+            background-position: center;
+            color: #333;
             display: flex;
         }
 
         .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
-            flex: 1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column; /* Change flex direction to column */
         }
 
         .sidebar {
@@ -83,25 +88,26 @@
             <!-- Add your user data fields here -->
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" value="<?php echo isset($user["username"]) ? $user["username"] : ''; ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="<?php echo isset($user["email"]) ? $user["email"] : ''; ?>" required>
             </div>
 
-            <div class="form-group"><label for="gender">Gender</label>
+            <div class="form-group">
+                <label for="gender">Gender</label>
                 <div class="gender-radio">
-                    <label><input type="radio" name="gender" value="male" required> Male</label>
-                    <label><input type="radio" name="gender" value="female" required> Female</label>
-                    <label><input type="radio" name="gender" value="other" required> Other</label>
+                    <label><input type="radio" name="gender" value="male" <?php if (isset($user["gender"]) && $user["gender"] === "male") echo "checked"; ?> required> Male</label>
+                    <label><input type="radio" name="gender" value="female" <?php if (isset($user["gender"]) && $user["gender"] === "female") echo "checked"; ?> required> Female</label>
+                    <label><input type="radio" name="gender" value="other" <?php if (isset($user["gender"]) && $user["gender"] === "other") echo "checked"; ?> required> Other</label>
                 </div>
+            </div>
 
-                
             <div class="form-group">
                 <label for="mobile">Mobile Number</label>
-                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Enter mobile number" required>
+                <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Enter mobile number" value="<?php echo isset($user["mobile_number"]) ? $user["mobile_number"] : ''; ?>" required>
             </div>
 
             <div class="form-group">
@@ -113,21 +119,22 @@
         </form>
 
         <?php
-        
-        if(!isset($_SESSION)) 
-        { 
-            session_start(); 
-        } 
-
+       if(!isset($_SESSION)) 
+       { 
+           session_start(); 
+       } 
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Database connection details
             $servername = "localhost";
             $username = "root";
             $password = "";
             $dbname = "Expense";
 
+            // Create connection
             $conn = new mysqli($servername, $username, $password, $dbname);
 
+            // Check connection
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
