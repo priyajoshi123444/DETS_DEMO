@@ -9,76 +9,66 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-image: url('assets/images/istockphoto-1342223620-612x612.jpg');
-            /* Replace 'background.jpg' with your actual background image path */
-            background-size: cover;
-            background-position: center;
-            color: #333;
-            display: flex;
-        }
+       body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('assets/images/istockphoto-1342223620-612x612.jpg');
+    /* Replace 'background.jpg' with your actual background image path */
+    background-size: cover;
+    background-position: center;
+    color: #333;
+    display: flex;
+    justify-content: center; /* Center align the container */
+    align-items: center; /* Center align the container */
+    height: 100vh; /* Make the container full height of the viewport */
+}
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 800px;
-            margin: 50px auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #111;
-            padding-top: 20px;
-            height: 100%;
-        }
+.container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%; /* Full width container */
+}
 
-        .sidebar a {
-            padding: 15px 20px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
+.sidebar {
+    width: 250px;
+    background-color: #111;
+    padding-top: 20px;
+    height: 100%;
+}
 
-        .sidebar a:hover {
-            color: #f1f1f1;
-        }
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
 
+.sidebar a:hover {
+    color: #f1f1f1;
+}
 
-        h3 {
-            margin: 10px 0;
-            text-align: center;
-        }
+.total-box {
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-        .total-box {
-            background-color: #e9ecef;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            justify-content: space-between;
-        }
+.chart-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
 
-        .chart-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .chart-container {
+.chart-container {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -90,19 +80,50 @@
     width: 100% !important;
     height: auto !important;
 }
+/* Add this CSS to the existing style block */
+.total-box table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.total-box th, .total-box td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.total-box th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+}
+
+.total-box tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.total-box tr:hover {
+    background-color: #ddd;
+}
+
+.total-box td {
+    text-align: center;
+}
+
+
     </style>
 </head>
 <body>
 <div class="sidebar">
-        <?php include 'sidebar1.php'; ?>
-    </div>
+    <?php include 'sidebar1.php'; ?>
+</div>
 <div class="container">
     <?php
     // Start session to access session variables
-   if(!isset($_SESSION)) 
-   { 
-       session_start(); 
-   } 
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
     // Include database connection
     include 'connection.php';
 
@@ -115,42 +136,31 @@
         $email = $_SESSION['email'];
 
         // Fetch income data for the logged-in user
-        $sql_income = "SELECT SUM(incomeAmount) AS totalIncome FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
+        $sql_income = "SELECT DATE_FORMAT(incomeDate, '%Y-%m') AS month, SUM(incomeAmount) AS totalIncome FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') GROUP BY month";
         $result_income = $conn->query($sql_income);
-        $row_income = $result_income->fetch_assoc();
-        $totalIncome = $row_income['totalIncome'];
-
-        // Fetch expenses data for the logged-in user
-        $sql_expenses = "SELECT SUM(expenseAmount) AS totalExpenses FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
-        $result_expenses = $conn->query($sql_expenses);
-        $row_expenses = $result_expenses->fetch_assoc();
-        $totalExpenses = $row_expenses['totalExpenses'];
-
-        // Fetch income data for the logged-in user by category
-        $sql_income_category = "SELECT incomeCategory, SUM(incomeAmount) AS totalIncome FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') GROUP BY incomeCategory";
-        $result_income_category = $conn->query($sql_income_category);
-
-        // Fetch expenses data for the logged-in user by category
-        $sql_expenses_category = "SELECT expenseCategory, SUM(expenseAmount) AS totalExpenses FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') GROUP BY expenseCategory";
-        $result_expenses_category = $conn->query($sql_expenses_category);
-
-        // Prepare data for charts
-        $incomeData = [];
-        $expensesData = [];
-
-        // Convert fetched data into JavaScript format
-        while ($row = $result_income_category->fetch_assoc()) {
-            $incomeData[$row['incomeCategory']] = $row['totalIncome'];
+        $incomeDataMonthly = [];
+        while ($row_income = $result_income->fetch_assoc()) {
+            $incomeDataMonthly[$row_income['month']] = $row_income['totalIncome'];
         }
 
-        while ($row = $result_expenses_category->fetch_assoc()) {
-            $expensesData[$row['expenseCategory']] = $row['totalExpenses'];
+        // Fetch expenses data for the logged-in user
+        $sql_expenses = "SELECT DATE_FORMAT(expenseDate, '%Y-%m') AS month, SUM(expenseAmount) AS totalExpenses FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') GROUP BY month";
+        $result_expenses = $conn->query($sql_expenses);
+        $expensesDataMonthly = [];
+        while ($row_expenses = $result_expenses->fetch_assoc()) {
+            $expensesDataMonthly[$row_expenses['month']] = $row_expenses['totalExpenses'];
         }
 
         // Output income and expenses data in JavaScript format
         echo '<div class="total-box">';
-        echo "<h3>Total Income: $totalIncome</h3>";
-        echo "<h3>Total Expenses: $totalExpenses</h3>";
+        echo '<h3>Monthly Total Income and Expenses</h3>';
+        echo '<table>';
+        echo '<tr><th>Month</th><th>Total Income</th><th>Total Expenses</th></tr>';
+        foreach ($incomeDataMonthly as $month => $income) {
+            $expenses = isset($expensesDataMonthly[$month]) ? $expensesDataMonthly[$month] : 0;
+            echo "<tr><td>$month</td><td>$income</td><td>$expenses</td></tr>";
+        }
+        echo '</table>';
         echo '</div>';
 
         // Bar Chart (Horizontal)
@@ -184,10 +194,10 @@
     var barChart = new Chart(barChartCtx, {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode(array_keys($expensesData)); ?>,
+            labels: <?php echo json_encode(array_keys($expensesDataMonthly)); ?>,
             datasets: [{
                 label: 'Expenses',
-                data: <?php echo json_encode(array_values($expensesData)); ?>,
+                data: <?php echo json_encode(array_values($expensesDataMonthly)); ?>,
                 backgroundColor: 'rgba(255, 99, 132, 0.6)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
@@ -208,10 +218,10 @@
     var pieChart = new Chart(pieChartCtx, {
         type: 'pie',
         data: {
-            labels: <?php echo json_encode(array_keys($expensesData)); ?>,
+            labels: <?php echo json_encode(array_keys($expensesDataMonthly)); ?>,
             datasets: [{
                 label: 'Expenses',
-                data: <?php echo json_encode(array_values($expensesData)); ?>,
+                data: <?php echo json_encode(array_values($expensesDataMonthly)); ?>,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.6)',
                     'rgba(54, 162, 235, 0.6)',
@@ -245,17 +255,17 @@
     var lineChart = new Chart(lineChartCtx, {
         type: 'line',
         data: {
-            labels: <?php echo json_encode(array_keys($incomeData)); ?>,
+            labels: <?php echo json_encode(array_keys($incomeDataMonthly)); ?>,
             datasets: [{
                 label: 'Income',
-                data: <?php echo json_encode(array_values($incomeData)); ?>,
+                data: <?php echo json_encode(array_values($incomeDataMonthly)); ?>,
                 backgroundColor: 'rgba(75, 192, 192, 0.6)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
                 fill: false
             }, {
                 label: 'Expenses',
-                data: <?php echo json_encode(array_values($expensesData)); ?>,
+                data: <?php echo json_encode(array_values($expensesDataMonthly)); ?>,
                 backgroundColor: 'rgba(255, 99, 132, 0.6)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1,
@@ -279,7 +289,7 @@
             labels: ['Income', 'Expenses'],
             datasets: [{
                 label: 'Budget',
-                data: [<?php echo $totalIncome; ?>, <?php echo $totalExpenses; ?>],
+                data: [<?php echo array_sum(array_values($incomeDataMonthly)); ?>, <?php echo array_sum(array_values($expensesDataMonthly)); ?>],
                 backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)'],
                 borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
                 borderWidth: 1

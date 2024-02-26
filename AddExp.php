@@ -29,7 +29,6 @@ if ($result_user_id->num_rows > 0) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,14 +107,13 @@ if ($result_user_id->num_rows > 0) {
         }
     </style>
 </head>
-
 <body>
     <div class="sidebar">
         <?php include 'sidebar1.php'; ?>
     </div>
     <div class="container">
         <h2>Add Expenses</h2>
-        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return validateForm()">
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return validateForm()" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="expenseName">Expense Name</label>
                 <input type="text" class="form-control" name="expenseName" id="expenseName" placeholder="Enter expense name" required>
@@ -153,6 +151,11 @@ if ($result_user_id->num_rows > 0) {
                 <input type="date" class="form-control" name="expenseDate" id="expenseDate" required>
             </div>
 
+            <div class="form-group">
+                <label for="billImage">Bill Image</label>
+                <input type="file" class="form-control" name="billImage" id="billImage">
+            </div>
+
             <div class="form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" type="checkbox" value="1" id="notificationCheckbox" name="notificationCheckbox">
@@ -160,7 +163,7 @@ if ($result_user_id->num_rows > 0) {
                 </label>
             </div>
 
-            <a href="sidebar1.php" class="btn btn-secondary btn-go-back">Go Back</a>
+            <a href="demo.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Expense</button>
         </form>
 
@@ -177,8 +180,16 @@ if ($result_user_id->num_rows > 0) {
                 $expenseDate = $_POST["expenseDate"];
                 $receiveNotifications = isset($_POST["notificationCheckbox"]) ? 1 : 0;
 
+                // Upload bill image
+                $billImage = '';
+                if ($_FILES['billImage']['error'] === UPLOAD_ERR_OK) {
+                    $tmp_name = $_FILES["billImage"]["tmp_name"];
+                    $billImage = "uploads/" . $_FILES["billImage"]["name"];
+                    move_uploaded_file($tmp_name, $billImage);
+                }
+
                 // Construct SQL query to insert expense
-                $sql = "INSERT INTO expenses (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, user_id, receive_notifications) VALUES ('$expenseName', '$expenseAmount', '$expenseCategory', '$expenseDescription', '$expenseDate', '$user_id', '$receiveNotifications')";
+                $sql = "INSERT INTO expenses (expenseName, expenseAmount, expenseCategory, expenseDescription, expenseDate, user_id, receive_notifications, billimage) VALUES ('$expenseName', '$expenseAmount', '$expenseCategory', '$expenseDescription', '$expenseDate', '$user_id', '$receiveNotifications', '$billImage')";
 
                 // Execute SQL query to insert expense
                 if ($conn->query($sql) === TRUE) {
@@ -210,11 +221,9 @@ if ($result_user_id->num_rows > 0) {
         }
     </script>
 </body>
-
 </html>
 <?php
 } else {
     echo "<p>User not found.</p>";
 }
-
 ?>

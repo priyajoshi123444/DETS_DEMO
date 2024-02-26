@@ -151,7 +151,7 @@ if ($result_user_id->num_rows > 0) {
                 <input type="date" class="form-control" name="incomeDate" id="incomeDate" required>
             </div>
 
-            <a href="sidebar1.php" class="btn btn-secondary btn-go-back">Go Back</a>
+            <a href="demo.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Income</button>
         </form>
 

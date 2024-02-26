@@ -165,6 +165,7 @@ if ($result->num_rows > 0) {
           </ul>
         </div>
       </li>
+      
       <li class="nav-item">
         <a class="nav-link" href="subscription.php">
           <span class="menu-title">Subscription Details</span>

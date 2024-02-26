@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Send email
         $mail->send();
         echo "Your message has been sent successfully!";
+        header("Location:index.php");
     } catch (Exception $e) {
         echo "Failed to send your message. Error: {$mail->ErrorInfo}";
     }

@@ -23,6 +23,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
             flex: 1;
+            position: relative; /* Set position to relative */
         }
 
         .sidebar {
@@ -83,7 +84,41 @@
             background-color: #007bff;
             color: #fff;
         }
-        
+
+        /* Style for the filter dropdown */
+        .filter-form {
+            margin-bottom: 20px;
+            position: absolute; /* Position the form absolutely */
+            top: 20px; /* Adjust top position */
+            right: 20px; /* Align to the right */
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-form label {
+            margin-right: 10px;
+        }
+
+        .filter-form select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .filter-form button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -93,6 +128,17 @@
 
     <div class="container">
         <h2>View Expenses</h2>
+
+        <!-- Filter for Monthly and Yearly Expenses -->
+        <form action="" method="GET" class="filter-form">
+            <label for="filter">Filter by:</label>
+            <select name="filter" id="filter">
+              <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="all">All</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </form>
 
         <?php 
         // Start session to access session variables
@@ -114,10 +160,18 @@
         // Get the logged-in user's email from the session
         $email = $_SESSION['email'];
 
-        // Fetch expenses for the logged-in user
-      // Fetch expenses for the logged-in user
-$sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
-
+        // Fetch expenses for the logged-in user based on filter selection
+        $filter = isset($_GET['filter']) ? $_GET['filter'] : 'monthly';
+        if ($filter == 'all') {
+            // Fetch all expenses
+            $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
+        } elseif ($filter == 'monthly') {
+            // Fetch monthly expenses
+            $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') AND MONTH(expenseDate) = MONTH(CURRENT_DATE()) AND YEAR(expenseDate) = YEAR(CURRENT_DATE())";
+        } else {
+            // Fetch yearly expenses
+            $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') AND YEAR(expenseDate) = YEAR(CURRENT_DATE())";
+        }
         
         $result = $conn->query($sql);
 
@@ -158,7 +212,7 @@ $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE 
         $conn->close();
         ?>
 
-        <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
+        <a href="demo.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

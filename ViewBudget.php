@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+       body {
             font-family: 'Arial', sans-serif;
             background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
             background-size: cover;
@@ -23,6 +24,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
             flex: 1;
+            position: relative; /* Set position to relative */
         }
 
         .sidebar {
@@ -83,8 +85,44 @@
             background-color: #007bff;
             color: #fff;
         }
+
+        /* Style for the filter dropdown */
+        .filter-form {
+            margin-bottom: 20px;
+            position: absolute; /* Position the form absolutely */
+            top: 20px; /* Adjust top position */
+            right: 20px; /* Align to the right */
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-form label {
+            margin-right: 10px;
+        }
+
+        .filter-form select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .filter-form button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <?php include 'sidebar1.php'; ?>
@@ -92,6 +130,19 @@
 
     <div class="container">
         <h2>View Budgets</h2>
+
+        <!-- Filter for Budgets by Category -->
+        <form action="" method="GET" class="filter-form">
+            <label for="category">Filter by Category:</label>
+            <select name="category" id="category">
+                <option value="all">All</option>
+                <option value="food">Food</option>
+                <option value="housing">Housing</option>
+                <option value="transportation">Transportation</option>
+                <!-- Add more options as needed -->
+            </select>
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </form>
 
         <?php 
         // Start session to access session variables
@@ -113,18 +164,23 @@
         // Get the logged-in user's email from the session
         $email = $_SESSION['email'];
 
-        // Fetch budgets for the logged-in user
-        $sql = "SELECT * FROM budgets WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
+        // Fetch budgets for the logged-in user based on category filter
+        $category = isset($_GET['category']) ? $_GET['category'] : 'all';
+        if ($category == 'all') {
+            $sql = "SELECT * FROM budgets WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
+        } else {
+            $sql = "SELECT * FROM budgets WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') AND category = '$category'";
+        }
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            // Display budgets
+            // Display budgets table
             echo "<table>";
             echo "<tr>
                     <th>ID</th>
                     <th>Budget Name</th>
                     <th>Actual Amount</th>
-                    <th>Planed  Amount</th>
+                    <th>Planned Amount</th>
                     <th>Category</th>
                     <th>Start Date</th>
                     <th>End Date</th>
@@ -154,10 +210,11 @@
         $conn->close();
         ?>
 
-        <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
+        <a href="demo.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

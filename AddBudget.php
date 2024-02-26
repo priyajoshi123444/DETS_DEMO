@@ -123,7 +123,7 @@
                 <input type="date" class="form-control" name="end_date" id="endDate" required>
             </div>
 
-            <a href="sidebar1.php" class="btn btn-secondary btn-go-back">Go Back</a>
+            <a href="demo.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Add Budget</button>
         </form>
 

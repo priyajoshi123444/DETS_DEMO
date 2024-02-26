@@ -24,6 +24,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
             flex: 1;
+            position: relative; /* Set position to relative */
         }
 
         .sidebar {
@@ -84,6 +85,41 @@
             background-color: #007bff;
             color: #fff;
         }
+
+        /* Style for the filter dropdown */
+        .filter-form {
+            margin-bottom: 20px;
+            position: absolute; /* Position the form absolutely */
+            top: 20px; /* Adjust top position */
+            right: 20px; /* Align to the right */
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-form label {
+            margin-right: 10px;
+        }
+
+        .filter-form select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .filter-form button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -95,6 +131,18 @@
     <div class="container">
         <h2>View Income</h2>
 
+        <!-- Filter Form -->
+        <form action="" method="GET" class="filter-form">
+            <label for="filter">Filter by:</label>
+            <select name="filter" id="filter">
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="all">All</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </form>
+
+        <!-- Income Table -->
         <?php 
         // Start session to access session variables
         if(!isset($_SESSION)) 
@@ -103,7 +151,7 @@
         } 
 
         // Include database connection
-        include  'connection.php';
+        include 'connection.php';
 
         // Check if the user is logged in
         if (!isset($_SESSION['email'])) {
@@ -115,14 +163,23 @@
         // Get the logged-in user's email from the session
         $email = $_SESSION['email'];
 
-        // Fetch income for the logged-in user
-$sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
-
+        // Fetch income for the logged-in user based on filter selection
+        $filter = isset($_GET['filter']) ? $_GET['filter'] : 'monthly';
+        if ($filter == 'all') {
+            // Fetch all income
+            $sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
+        } elseif ($filter == 'monthly') {
+            // Fetch monthly income
+            $sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') AND MONTH(incomeDate) = MONTH(CURRENT_DATE()) AND YEAR(incomeDate) = YEAR(CURRENT_DATE())";
+        } else {
+            // Fetch yearly income
+            $sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') AND YEAR(incomeDate) = YEAR(CURRENT_DATE())";
+        }
         
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            // Display income
+            // Display income table
             echo "<table>";
             echo "<tr>
                     <th>ID</th>
@@ -156,7 +213,7 @@ $sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE e
         $conn->close();
         ?>
 
-        <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
+        <a href="demo.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
