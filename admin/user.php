@@ -203,7 +203,7 @@ foreach ($users as &$user) {
                   </td>
                   <td>
                     <?php echo $user['total_expense']; ?>
-                  </td>
+                  </td>cd
                   <td>
                     <?php echo $user['total_income']; ?>
                   </td>
