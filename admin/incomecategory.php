@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +30,9 @@ session_start();
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
         } */
+        .exceeded {
+            color: red;
+        }
     </style>
 </head>
 <body> 
@@ -41,7 +45,7 @@ session_start();
             <?php include("sidebar.php"); ?>
         </sidebar>
         <div class="container mt-5">
-            <h2>Update Admin Profile</h2>
+            <h2>View category</h2>
             
             <?php
             // Database connection details
@@ -58,42 +62,56 @@ session_start();
                 die("Connection failed: " . $conn->connect_error);
             }
             
-            // Get the admin's ID from the session
-            $adminId = $_SESSION['id'];
-            
-            // SQL query to fetch the admin's current information
-            $sql = "SELECT * FROM admins WHERE id = $adminId";
-            $result = $conn->query($sql);
-            
-            // Check if the admin exists
-            if ($result->num_rows > 0) {
-                // Output the form for updating the admin's profile
-                while ($row = $result->fetch_assoc()) {
-                    echo "<form action='update_admin_profile.php' method='post' enctype='multipart/form-data'>";
-                    echo "<div class='form-group'>";
-                    echo "<label for='name'>Name:</label>";
-                    echo "<input type='text' class='form-control' id='name' name='name' value='" . $row['username'] . "'>";
-                    echo "</div>";
-                    echo "<div class='form-group'>";
-                    echo "<label for='email'>Email:</label>";
-                    echo "<input type='email' class='form-control' id='email' name='email' value='" . $row['email'] . "'>";
-                    echo "</div>";
-                    echo "<div class='form-group'>";
-                    echo "<label for='mobile'>Mobile Number:</label>";
-                    echo "<input type='text' class='form-control' id='mobile' name='mobile' value='" . $row['mobile_number'] . "'>";
-                    echo "</div>";
-                    echo "<div class='form-group'>";
-                    echo "<label for='profile_image'>Profile Image:</label>";
-                    echo "<input type='file' class='form-control-file' id='profile_image' name='profile_image'>";
-                    echo "</div>";
-                    echo "<button type='submit' class='btn btn-primary'>Update Profile</button>";
-                    echo "<button type='submit' class='btn btn-primary'>Back</button>";
-                    echo "</form>";
-                }
+            // SQL query to fetch users who have set budgets
+            $sql = "SELECT * FROM incomes_categories";
+$result = $conn->query($sql);
+
+// Check if any categories exist
+if ($result->num_rows > 0) {
+    // Output table for categories
+    // echo "<h3>Categories</h3>";
+    echo "<table class='table table-bordered table-hover'>"; 
+    echo "<thead class='thead-sucess'>";
+    echo "<tr>";
+    echo "<th>Category ID</th>";
+    echo "<th>Name</th>";
+    echo "<th>Action</th>";
+    echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
+
+    // Output data of each category
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . $row["category_id"] . "</td>";
+        echo "<td>" . $row["category_name"] . "</td>";
+        echo "<td><a href='edit_category.php?id=" . $row["category_id"] . "'>Edit</a></td>";
+        echo "<td><a href='delete_category.php?id=" . $row["category_id"] . "'>Delete</a></td>";
+        echo "</tr>";
+    }
+
+    echo "</tbody>";
+    echo "</table>";
+} else {
+    echo "<p>No categories found.</p>";
+}
+            $results_per_page = 10; // Set the desired number of results per page
+            if (!isset($_GET['page'])) {
+                $page = 1;
             } else {
-                echo "<p>No admin found.</p>";
+                $page = $_GET['page'];
             }
+            $offset = ($page - 1) * $results_per_page;
+          
             ?>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+            <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
         </div>
     </div>
 

@@ -1,9 +1,45 @@
 <?php
+  if(!isset($_SESSION)) 
+  { 
+      session_start(); 
+  } 
 
-if(!isset($_SESSION)) 
-{ 
-    session_start(); 
-} 
+// Check if the user is logged in
+if (!isset($_SESSION['id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
+// Include your database connection file
+// include('database.php'); // Replace with the actual filename
+
+// Connect to the database (replace these variables with your actual database credentials)
+$host = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'expense_db';
+
+$conn = new mysqli($host, $username, $password, $database);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Retrieve user details from the database
+$admin_id = $_SESSION['id'];
+$sql = "SELECT * FROM admins WHERE id = $admin_id"; // Modify the query based on your database schema
+
+$result = $conn->query($sql);
+
+if ($result !== false && $result->num_rows > 0) {
+    $adminDetails = $result->fetch_assoc();
+} else {
+    // Handle the case where user details are not found
+    $adminDetails = array(); // Empty array if user not found
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -41,19 +77,26 @@ if(!isset($_SESSION))
 
       <ul class="navbar-nav navbar-nav-right">
         <li class="nav-item nav-profile dropdown">
-          <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
+          <a class="nav-link dropdown-toggle" id="profileDropdown" href="" data-bs-toggle="dropdown"
             aria-expanded="false">
             <div class="nav-profile-img">
-              <img src="assets/images/faces/face1.jpg" alt="image">
-              <span class="availability-status online"></span>
+            <?php
+                    // Check if the 'profile_image' column exists and is not empty
+                    if (isset($adminDetails['profile_image']) && !empty($adminDetails['profile_image'])) {
+                        echo '<img src="uploads/' . $adminDetails['profile_image'] . '" alt="profile">';
+                    } else {
+                        // Display a default image if the 'profile_image' column is empty or not found
+                        echo '<img src="assets\images\faces\face1.jpg" alt="default-profile">';
+                    }
+                    ?>
             </div>
             <div class="nav-profile-text">
-              <p class="mb-1 text-black">David Greymaax</p>
+            <span class="font-weight-bold mb-2 "><?php echo isset($adminDetails['username']) ? $adminDetails['username'] : ''; ?></span>
             </div>
           </a>
           <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" href="logout.php">
               <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
           </div>
         </li>

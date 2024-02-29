@@ -17,7 +17,7 @@
             background-color: #f8f9fa;
         }
 
-        .container {
+        /* .container {
             max-width: 800px;
             margin: 50px auto;
             background-color: #ffffff;
@@ -25,7 +25,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
-        }
+        } */
 
         h2 {
             color: blueviolet;
@@ -98,7 +98,7 @@
             }
             
             // SQL query to fetch users who have added expenses
-            $sql = "SELECT DISTINCT users.id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN expenses ON users.id = expenses.user_id";
+            $sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN expenses ON users.user_id = expenses.user_id";
             $result = $conn->query($sql);
             
             // Check if any users exist
@@ -147,15 +147,28 @@
                     } else {
                         echo "<p>No expenses found for user: $username ($email)</p>";
                     }
+                    echo "<br><br><br>";
                 }
             } else {
                 echo "<p>No users found.</p>";
             }
-           
+            $results_per_page = 10; // Set the desired number of results per page
+            if (!isset($_GET['page'])) {
+                $page = 1;
+            } else {
+                $page = $_GET['page'];
+            }
+            $offset = ($page - 1) * $results_per_page;
            
             ?>
             
-
+            <ul class="pagination">
+  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+  <li class="page-item"><a class="page-link" href="#">1</a></li>
+  <li class="page-item"><a class="page-link" href="#">2</a></li>
+  <li class="page-item"><a class="page-link" href="#">3</a></li>
+  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+</ul>
         <!-- Button to go back or perform other actions -->
         <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
     </div>

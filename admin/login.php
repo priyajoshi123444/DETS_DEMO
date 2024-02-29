@@ -4,7 +4,7 @@
       session_start(); 
   } 
 
-if (!isset($_SESSION["user_id"])) {
+if (!isset($_SESSION["admin_id"])) {
     // Redirect to the login page if the user is not logged in
     // header("Location: login.php");
     // exit();
@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
     $password = trim($_POST["password"]);
 
     // Retrieve hashed password from the database
-    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $sql = "SELECT * FROM admins WHERE email = '$email'";
     $result = $conn->query($sql);
 
     if ($result !== false && $result->num_rows > 0) {
@@ -51,7 +51,7 @@ if (isset($_POST['submit'])) {
             echo "Incorrect email or password";
         }
     } else {
-        echo "User not found";
+        echo "Admin not found";
     }
 }
 
@@ -65,7 +65,7 @@ if (isset($_POST['submit'])) {
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Budget Buddy</title>
+  <title>Daily Expense Tracker System</title>
   <script>
         function validateForm() {
             var email = document.getElementById("exampleInputEmail1").value;

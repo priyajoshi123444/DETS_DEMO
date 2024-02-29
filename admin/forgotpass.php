@@ -3,7 +3,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require 'C:\xampp\htdocs\DETS(main)\vendor\autoload.php';
-
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -18,17 +17,18 @@ if ($conn->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
 
-    $checkUserQuery = "SELECT * FROM users WHERE email = '$email'";
+    $checkUserQuery = "SELECT * FROM admins WHERE email = '$email'";
     $checkUserResult = $conn->query($checkUserQuery);
 
     if ($checkUserResult->num_rows > 0) {
         $token = md5(uniqid(rand(), true));
 
-        $insertTokenQuery = $conn->prepare("UPDATE users SET reset_token = ?, reset_token_expiry = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email = ?");
+        $insertTokenQuery = $conn->prepare("UPDATE admins SET reset_token = ?, reset_token_expiry = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email = ?");
         $insertTokenQuery->bind_param("ss", $token, $email);
 
         if ($insertTokenQuery->execute()) {
             $resetLink = "http://localhost/DETS(main)/admin/resetpass.php?token=$token";
+
 
             $mail = new PHPMailer(true);
             try {
@@ -39,15 +39,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->Password = 'qmqe rosa rkev qlcw';
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 587;
- // Additional configuration...
- $mail->SMTPSecure = 'tls';
- $mail->SMTPOptions = [
-     'ssl' => [
-         'verify_peer' => false,
-         'verify_peer_name' => false,
-         'allow_self_signed' => true,
-     ],
- ];
+                // Additional configuration...
+                $mail->SMTPSecure = 'tls';
+                $mail->SMTPOptions = [
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true,
+                    ],
+                ];
 
                 $mail->setFrom('your_email@gmail.com', 'Your Name');
                 $mail->addAddress($email);
@@ -78,83 +78,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.overlay {
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
+        .overlay {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
 
-h2 {
-    text-align: center;
-    color: #333;
-}
+        h2 {
+            text-align: center;
+            color: #333;
+        }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
+        form {
+            display: flex;
+            flex-direction: column;
+        }
 
-label {
-    margin-bottom: 5px;
-    color: #555;
-}
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
 
-input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
+        input {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
 
-button {
-    padding: 10px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
+        button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
 
-button:hover {
-    background-color: #45a049;
-}
+        button:hover {
+            background-color: #45a049;
+        }
 
-.reset-message {
-    color: green;
-    text-align: center;
-    margin-top: 10px;
-}
+        .reset-message {
+            color: green;
+            text-align: center;
+            margin-top: 10px;
+        }
 
-.error-message {
-    color: red;
-    text-align: center;
-    margin-top: 10px;
-}
-</style>
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="overlay">
         <h2>Forgot Password</h2>
         <?php if (isset($reset_message)): ?>
-            <p class="reset-message"><?php echo $reset_message; ?></p>
+            <p class="reset-message">
+                <?php echo $reset_message; ?>
+            </p>
         <?php else: ?>
             <form action="" method="post" id="forgetPasswordForm">
                 <label for="email">Email:</label>
@@ -181,4 +185,5 @@ button:hover {
         <?php endif; ?>
     </div> <!-- Closing div for the overlay -->
 </body>
+
 </html>
