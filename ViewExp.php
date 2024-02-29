@@ -133,7 +133,7 @@
         <form action="" method="GET" class="filter-form">
             <label for="filter">Filter by:</label>
             <select name="filter" id="filter">
-              <option value="monthly">Monthly</option>
+                <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
                 <option value="all">All</option>
             </select>
@@ -148,7 +148,7 @@
         } 
 
         // Include database connection
-        include  'connection.php';
+        include 'connection.php';
 
         // Check if the user is logged in
         if (!isset($_SESSION['email'])) {
@@ -159,6 +159,18 @@
 
         // Get the logged-in user's email from the session
         $email = $_SESSION['email'];
+
+        // Fetch user's subscription status from the database
+        $sql = "SELECT pricing_status FROM users WHERE email = '$email'";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $pricing_status = $row['pricing_status'];
+        } else {
+            // Default value if user's subscription status is not found
+            $pricing_status = 0;
+        }
 
         // Fetch expenses for the logged-in user based on filter selection
         $filter = isset($_GET['filter']) ? $_GET['filter'] : 'monthly';
@@ -184,9 +196,11 @@
                     <th>Amount</th>
                     <th>Category</th>
                     <th>Description</th>
-                    <th>Date</th>
-                    <th>Image</th>
-                    <th>Action</th>
+                    <th>Date</th>";
+            if ($pricing_status == 1) {
+                echo "<th>Bill Image</th>";
+            }
+            echo "<th>Action</th>
                 </tr>";
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
@@ -195,12 +209,14 @@
                         <td>{$row['expenseAmount']}</td>
                         <td>{$row['expenseCategory']}</td>
                         <td>{$row['expenseDescription']}</td>
-                        <td>{$row['expenseDate']}</td>
-                        <td>{$row['billImage']}</td>
-                        <td>
-                            <a href='editexp.php?id={$row['expense_id']}' class='btn-edit'>Edit</a>
-                            <a href='delete_expense.php?id={$row['expense_id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
-                        </td>
+                        <td>{$row['expenseDate']}</td>";
+                if ($pricing_status == 1) {
+                    echo "<td>{$row['billImage']}</td>";
+                }
+                echo "<td>
+                        <a href='editexp.php?id={$row['expense_id']}' class='btn-edit'>Edit</a>
+                        <a href='delete_expense.php?id={$row['expense_id']}' class='btn-delete' onclick='return confirm(\"Are you sure you want to delete this record?\");'>Delete</a>
+                    </td>
                     </tr>";
             }
             echo "</table>";
@@ -212,7 +228,7 @@
         $conn->close();
         ?>
 
-        <a href="demo.php" class="btn btn-primary">Go Back</a>
+        <a href="AddExp.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

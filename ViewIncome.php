@@ -213,7 +213,7 @@
         $conn->close();
         ?>
 
-        <a href="demo.php" class="btn btn-primary">Go Back</a>
+        <a href="AddIncome.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

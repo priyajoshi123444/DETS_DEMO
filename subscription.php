@@ -186,8 +186,9 @@ if ($result_user_id->num_rows > 0) {
             ?>
         </div>
         <div class="renew-button">
-            <button>Renew Subscription</button>
-        </div>
+    <a href="pricing.php"><button>Renew Subscription</button></a>
+</div>
+
     </div>
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

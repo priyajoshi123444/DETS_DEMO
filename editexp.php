@@ -61,54 +61,29 @@ if (isset($_GET["id"])) {
     exit();
 }
 
-// Check if the form is submitted for updating the expense
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = connectToDatabase();
+// Check if the user is subscribed
+$subscription_status = 0; // Assume user is not subscribed by default
 
-    $expenseId = $_POST["expenseId"];
-    $expenseName = $_POST["expenseName"];
-    $expenseAmount = $_POST["expenseAmount"];
-    $expenseCategory = $_POST["expenseCategory"];
-    $expenseDescription = $_POST["expenseDescription"];
-    $expenseDate = $_POST["expenseDate"];
-    $billImage = isset($_FILES["billImage"]) ? $_FILES["billImage"]["name"] : $expense["billImage"]; // Use existing value if file is not uploaded
+if (isset($_SESSION['email'])) {
+    // Get the user's email from the session
+    $email = $_SESSION['email'];
 
-    $sql = "UPDATE expenses SET
-            expenseName = ?,
-            expenseAmount = ?,
-            expenseCategory = ?,
-            expenseDescription = ?,
-            expenseDate = ?,
-            billImage = ?
-            WHERE expense_id = ?";
+    // Include database connection
+    include 'Connection.php';
 
-    $stmt = $conn->prepare($sql);
+    // Fetch subscription status based on email
+    $sql_subscription = "SELECT pricing_status FROM users WHERE email = '$email'";
+    $result_subscription = $conn->query($sql_subscription);
 
-    if ($stmt) {
-        $stmt->bind_param("ssssssi", $expenseName, $expenseAmount, $expenseCategory, $expenseDescription, $expenseDate, $billImage, $expenseId);
-
-        if ($stmt->execute()) {
-            echo "Expense updated successfully.";
-        } else {
-            echo "Error updating expense: " . $stmt->error;
-        }
-
-        $stmt->close();
+    if ($result_subscription->num_rows > 0) {
+        $row_subscription = $result_subscription->fetch_assoc();
+        $subscription_status = $row_subscription['pricing_status'];
     } else {
-        echo "Error preparing statement: " . $conn->error;
+        echo "User not found.";
+        exit();
     }
-
-    // Handle file upload
-    if (!empty($_FILES["billImage"]["tmp_name"])) {
-        $targetDir = "uploads/"; // Specify the directory where you want to store uploaded files
-        $targetFile = $targetDir . basename($_FILES["billImage"]["name"]);
-
-        move_uploaded_file($_FILES["billImage"]["tmp_name"], $targetFile);
-        echo "File uploaded successfully.";
-    }
-
-    $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -191,6 +166,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .btn-primary:hover {
             background-color: #0056b3;
         }
+
+        .hide {
+            display: none;
+        }
     </style>
 </head>
 
@@ -234,13 +213,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="date" class="form-control" name="expenseDate" id="expenseDate" value="<?php echo $expense["expenseDate"]; ?>" required>
             </div>
 
-            <div class="form-group">
-                <label for="billImage">Bill Image</label>
-                <input type="file" class="form-control" name="billImage" id="billImage">
-                <small class="form-text text-muted">Upload a new photo of your bill or leave it blank to keep the existing one.</small>
-            </div>
+            <!-- Display the bill image upload field only if the user is subscribed -->
+            <?php if ($subscription_status == 1) : ?>
+                <div class="form-group">
+                    <label for="billImage">Bill Image</label>
+                    <input type="file" class="form-control" name="billImage" id="billImage">
+                    <small class="form-text text-muted">Upload a new photo of your bill or leave it blank to keep the existing one.</small>
+                </div>
+            <?php else : ?>
+                <div class="form-group">
+                    <label for="billImage">Bill Image</label>
+                    <input type="file" class="form-control" name="billImage" id="billImage" disabled>
+                    <small class="form-text text-muted">You need to subscribe to upload bill images.</small>
+                </div>
+            <?php endif; ?>
 
             <!-- Your submit button -->
+            <a href="ViewExp.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Update Expense</button>
         </form>
 

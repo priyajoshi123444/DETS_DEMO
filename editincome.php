@@ -224,6 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <!-- Your submit button -->
+            <a href="ViewIncome.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Update Income</button>
         </form>
 

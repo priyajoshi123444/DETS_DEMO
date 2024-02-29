@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-       body {
+        body {
             font-family: 'Arial', sans-serif;
             background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
             background-size: cover;
@@ -120,6 +120,11 @@
         .filter-form button:hover {
             background-color: #0056b3;
         }
+
+        /* Red color for total expenses exceeding planned amount */
+        .over-budget {
+            color: red;
+        }
     </style>
 </head>
 
@@ -137,7 +142,7 @@
             <select name="category" id="category">
                 <option value="all">All</option>
                 <option value="food">Food</option>
-                <option value="housing">Housing</option>
+                <option value="housing">Utilities</option>
                 <option value="transportation">Transportation</option>
                 <!-- Add more options as needed -->
             </select>
@@ -147,12 +152,11 @@
         <?php 
         // Start session to access session variables
         if(!isset($_SESSION)) 
-        { 
-            session_start(); 
-        } 
-
+            { 
+                session_start(); 
+            } 
         // Include database connection
-        include  'connection.php';
+        include 'connection.php';
 
         // Check if the user is logged in
         if (!isset($_SESSION['email'])) {
@@ -166,11 +170,26 @@
 
         // Fetch budgets for the logged-in user based on category filter
         $category = isset($_GET['category']) ? $_GET['category'] : 'all';
+
         if ($category == 'all') {
-            $sql = "SELECT * FROM budgets WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
+            $sql = "SELECT b.budget_id, b.planned_amount, b.category, b.start_date, b.end_date, 
+                    COALESCE(SUM(e.expenseAmount), 0) AS total_expenses
+                    FROM budgets b
+                    LEFT JOIN expenses e ON b.category = e.expenseCategory
+                    WHERE b.user_id = (SELECT user_id FROM users WHERE email = '$email')
+                    AND e.user_id = (SELECT user_id FROM users WHERE email = '$email')
+                    GROUP BY b.budget_id";
         } else {
-            $sql = "SELECT * FROM budgets WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') AND category = '$category'";
+            $sql = "SELECT b.budget_id, b.planned_amount, b.category, b.start_date, b.end_date, 
+                    COALESCE(SUM(e.expenseAmount), 0) AS total_expenses
+                    FROM budgets b
+                    LEFT JOIN expenses e ON b.category = e.expenseCategory
+                    WHERE b.user_id = (SELECT user_id FROM users WHERE email = '$email') 
+                    AND b.category = '$category'
+                    AND e.user_id = (SELECT user_id FROM users WHERE email = '$email')
+                    GROUP BY b.budget_id";
         }
+
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -178,21 +197,21 @@
             echo "<table>";
             echo "<tr>
                     <th>ID</th>
-                    <th>Budget Name</th>
-                    <th>Actual Amount</th>
                     <th>Planned Amount</th>
                     <th>Category</th>
+                    <th>Total Expenses</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Action</th>
                 </tr>";
             while ($row = $result->fetch_assoc()) {
+                // Add conditional class based on whether total expenses exceed planned amount
+                $totalExpensesClass = ($row['total_expenses'] > $row['planned_amount']) ? 'over-budget' : '';
                 echo "<tr>
                         <td>{$row['budget_id']}</td>
-                        <td>{$row['budget_name']}</td>
-                        <td>{$row['actual_amount']}</td>
                         <td>{$row['planned_amount']}</td>
                         <td>{$row['category']}</td>
+                        <td class='{$totalExpensesClass}'>{$row['total_expenses']}</td>
                         <td>{$row['start_date']}</td>
                         <td>{$row['end_date']}</td>
                         <td>
@@ -210,7 +229,7 @@
         $conn->close();
         ?>
 
-        <a href="demo.php" class="btn btn-primary">Go Back</a>
+        <a href="AddBudget.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

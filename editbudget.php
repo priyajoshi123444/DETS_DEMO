@@ -66,17 +66,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn = connectToDatabase();
 
     $budgetId = $_POST["budgetId"];
-    $budgetName = $_POST["budgetName"];
-    $actualamount = $_POST["actual_amount"];
     $plannedamount = $_POST["planned_amount"];
     $category = $_POST["category"];
     $startDate = $_POST["startDate"];
     $endDate = $_POST["endDate"];
 
-
     $sql = "UPDATE budgets SET
-        budget_name = ?,
-        actual_amount = ?,
         planned_amount = ?,
         category = ?,
         start_date = ?,
@@ -86,13 +81,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        $stmt->bind_param("sssissi", $budgetName, $actualamount, $plannedamount, $category, $startDate, $endDate, $budgetId);
-
+        $stmt->bind_param("ssssi", $plannedamount, $category, $startDate, $endDate, $budgetId);
 
         if ($stmt->execute()) {
-            echo "Budget updated successfully.";
+            echo "<script>document.getElementById('updateMessage').innerHTML = 'Budget updated successfully.';</script>";
         } else {
-            echo "Error updating budget: " . $stmt->error;
+            echo "<script>document.getElementById('updateMessage').innerHTML = 'Error updating budget: " . $stmt->error . "';</script>";
         }
 
         $stmt->close();
@@ -138,7 +132,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             flex-direction: column;
             /* Change flex direction to column */
         }
-
 
         .sidebar {
             width: 250px;
@@ -198,29 +191,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <!-- Your form fields for updating budget details -->
             <div class="form-group">
-                <label for="budgetName">Budget Name</label>
-                <input type="text" class="form-control" name="budgetName" id="budgetName" value="<?php echo $budget["budget_name"]; ?>" required>
+                <label for="plannedAmount">Planned Amount</label>
+                <input type="number" class="form-control" name="planned_amount" id="plannedAmount" placeholder="Enter planned amount" required>
             </div>
-
-            <div class="form-group">
-                <label for="actualamount">Actual Amount</label>
-                <input type="number" class="form-control" name="actual_amount" id="actualamount" placeholder="Enter budget amount" required>
-            </div>
-
-            <div class="form-group">
-    <label for="plannedAmount">Planned Amount</label>
-    <input type="number" class="form-control" name="planned_amount" id="plannedAmount" placeholder="Enter planned amount" required>
-</div>
 
             <div class="form-group">
                 <label for="category">Category</label>
                 <select class="form-select" name="category" id="category" required>
-    <option value="food" <?php echo ($budget["category"] === "food") ? "selected" : ""; ?>>Food</option>
-    <option value="utilities" <?php echo ($budget["category"] === "utilities") ? "selected" : ""; ?>>Utilities</option>
-    <option value="transportation" <?php echo ($budget["category"] === "transportation") ? "selected" : ""; ?>>Transportation</option>
-    <option value="entertainment" <?php echo ($budget["category"] === "entertainment") ? "selected" : ""; ?>>Entertainment</option>
-</select>
-
+                    <option value="food" <?php echo ($budget["category"] === "food") ? "selected" : ""; ?>>Food</option>
+                    <option value="utilities" <?php echo ($budget["category"] === "utilities") ? "selected" : ""; ?>>Utilities</option>
+                    <option value="transportation" <?php echo ($budget["category"] === "transportation") ? "selected" : ""; ?>>Transportation</option>
+                    <option value="entertainment" <?php echo ($budget["category"] === "entertainment") ? "selected" : ""; ?>>Entertainment</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -234,8 +216,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <!-- Your submit button -->
+            <a href="ViewBudget.php" class="btn btn-secondary btn-go-back">Go Back</a>
             <button type="submit" class="btn btn-primary">Update Budget</button>
+            
         </form>
+
+        <!-- Div for displaying update message -->
+        <div id="updateMessage"></div>
 
         <?php
         // PHP code for handling form submission and database insertion
@@ -244,16 +231,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         ?>
 
-<script>
+        <script>
             function validateForm() {
-                var budgetName = document.getElementById('budgetName').value;
-               var actualamount = document.getElementById('actual_amount').value;
-               var planedamount = document.getElementById('planned_amount').value;
+                var plannedAmount = document.getElementById('plannedAmount').value;
                 var category = document.getElementById('category').value;
                 var startDate = document.getElementById('startDate').value;
                 var endDate = document.getElementById('endDate').value;
 
-                if (budgetName.trim() === '' || actualamount.trim() === '' || planedamount.trim() ==='' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
+                if (plannedAmount.trim() === '' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
                     alert('Please fill in all required fields.');
                     return false;
                 }
@@ -261,6 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 return true;
             }
         </script>
+    </div>
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

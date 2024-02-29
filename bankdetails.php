@@ -123,7 +123,7 @@ label span {
       <p><strong>UPI:</strong> xyz@upi</p>
       <!-- Add more details as needed -->
     </div>
-    <form method="post" action="send_email.php">
+    <form id="paymentForm" method="post" action="send_email.php">
        <div class="payment-method-text">Please select a payment method:</div>
       <label><input type="radio" name="paymentMethod" value="bankTransfer" checked> Bank Account Transfer</label><br>
       <label><input type="radio" name="paymentMethod" value="upiPayment"> UPI ID Payment</label><br>
@@ -138,8 +138,10 @@ label span {
     // Function to display an alert after the payment is confirmed
     function paymentConfirmed() {
       alert("Payment confirmed! Email sent successfully.");
+      // Redirect to thank you page after displaying the alert
+      window.location.href = "thank_you.php";
+      return false; // Prevent form submission
     }
   </script>
 </body>
 </html>
-

@@ -14,14 +14,14 @@ $email = $_SESSION['email'];
 // Include database connection
 include 'Connection.php';
 
-// Fetch user ID based on email
-$sql_user_id = "SELECT user_id, pricing_status FROM users WHERE email = '$email'";
-$result_user_id = $conn->query($sql_user_id);
+// Fetch user ID and pricing status based on email
+$sql_user_info = "SELECT user_id, pricing_status FROM users WHERE email = '$email'";
+$result_user_info = $conn->query($sql_user_info);
 
-if ($result_user_id->num_rows > 0) {
-    $row_user_id = $result_user_id->fetch_assoc();
-    $user_id = $row_user_id['user_id'];
-    $pricing_status = $row_user_id['pricing_status'];
+if ($result_user_info->num_rows > 0) {
+    $row_user_info = $result_user_info->fetch_assoc();
+    $user_id = $row_user_info['user_id'];
+    $pricing_status = $row_user_info['pricing_status'];
 
     // Fetch expense categories associated with the logged-in user
     $categorySql = "SELECT * FROM expenses_categories WHERE user_id = '$user_id'";
@@ -131,7 +131,10 @@ if ($result_user_id->num_rows > 0) {
                     <option value="food">Food</option>
                     <option value="utilities">Utilities</option>
                     <option value="transportation">Transport</option>
-                    <option value="entertainment">Entertainment</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="education">Education</option>
+                    <option value="selfcare">Self Care</option>
+                   
                     <?php
                     // Loop through categories and generate options
                     while ($row = $categoryResult->fetch_assoc()) {
@@ -153,12 +156,13 @@ if ($result_user_id->num_rows > 0) {
 
             <div class="form-group">
                 <label for="billImage">Bill Image</label>
-                <input type="file" class="form-control" name="billImage" id="billImage">
+                <input type="file" class="form-control" name="billImage" id="billImage" <?php if ($pricing_status != 1) echo 'disabled'; ?>>
+                <small class="form-text text-muted">You need to subscribe to upload bill images.</small>
             </div>
 
             <div class="form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="1" id="notificationCheckbox" name="notificationCheckbox">
+                    <input class="form-check-input" type="checkbox" value="1" id="notificationCheckbox" name="notificationCheckbox" <?php if ($pricing_status != 1) echo 'disabled'; ?>>
                     Receive daily notifications and reminders
                 </label>
             </div>
@@ -180,9 +184,9 @@ if ($result_user_id->num_rows > 0) {
                 $expenseDate = $_POST["expenseDate"];
                 $receiveNotifications = isset($_POST["notificationCheckbox"]) ? 1 : 0;
 
-                // Upload bill image
+                // Upload bill image if pricing status is 1
                 $billImage = '';
-                if ($_FILES['billImage']['error'] === UPLOAD_ERR_OK) {
+                if ($pricing_status == 1 && $_FILES['billImage']['error'] === UPLOAD_ERR_OK) {
                     $tmp_name = $_FILES["billImage"]["tmp_name"];
                     $billImage = "uploads/" . $_FILES["billImage"]["name"];
                     move_uploaded_file($tmp_name, $billImage);

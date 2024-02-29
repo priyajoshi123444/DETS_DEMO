@@ -85,16 +85,9 @@
     <div class="container">
         <h2>Add Budget</h2>
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return validateForm()">
-            <div class="form-group">
-                <label for="budgetName">Budget Name</label>
-                <input type="text" class="form-control" name="budget_name" id="budgetName" placeholder="Enter budget name" required>
-            </div>
+            
 
-            <div class="form-group">
-                <label for="actualamount">Actual Amount</label>
-                <input type="number" class="form-control" name="actual_amount" id="actualamount" placeholder="Enter budget amount" required>
-            </div>
-
+          
             <div class="form-group">
     <label for="plannedAmount">Planned Amount</label>
     <input type="number" class="form-control" name="planned_amount" id="plannedAmount" placeholder="Enter planned amount" required>
@@ -109,6 +102,10 @@
                     <option value="utilities">Utilities</option>
                     <option value="transportation">Transportation</option>
                     <option value="entertainment">Entertainment</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="education">Education</option>
+                    <option value="selfcare">Self Care</option>
+                   
                 </select>
             </div>
 
@@ -130,7 +127,12 @@
         <?php
         // PHP code for handling form submission and database insertion
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            session_start();
+            if(!isset($_SESSION)) 
+            { 
+                session_start(); 
+            } 
+          
+          
 
             // Check if the user is logged in
             if (!isset($_SESSION['email'])) {
@@ -154,15 +156,15 @@
                 $user_id = $row_user_id['user_id'];
 
                 // Fetch other form data
-                $budgetName = $_POST["budget_name"];
-                $actualamount = $_POST["actual_amount"];
+               
+                
                 $category = $_POST["category"];
                 $planedamount = $_POST["planned_amount"];
                 $startDate = $_POST["start_date"];
                 $endDate = $_POST["end_date"];
 
                 // Construct SQL query to insert budget
-                $sql = "INSERT INTO budgets (budget_name, actual_amount, category, planned_amount, start_date, end_date, user_id) VALUES ('$budgetName', '$actualamount', '$category', '$planedamount', '$startDate', '$endDate', '$user_id')";
+                $sql = "INSERT INTO budgets ( category, planned_amount, start_date, end_date, user_id) VALUES ( '$category', '$planedamount', '$startDate', '$endDate', '$user_id')";
 
                 // Execute SQL query to insert budget
                 if ($conn->query($sql) === TRUE) {
@@ -181,14 +183,14 @@
 
         <script>
             function validateForm() {
-                var budgetName = document.getElementById('budgetName').value;
-               var actualamount = document.getElementById('actual_amount').value;
+               
+            
                var planedamount = document.getElementById('planned_amount').value;
                 var category = document.getElementById('category').value;
                 var startDate = document.getElementById('startDate').value;
                 var endDate = document.getElementById('endDate').value;
 
-                if (budgetName.trim() === '' || actualamount.trim() === '' || planedamount.trim() ==='' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
+                if ( planedamount.trim() ==='' || category.trim() === '' || startDate.trim() === '' || endDate.trim() === '') {
                     alert('Please fill in all required fields.');
                     return false;
                 }

@@ -170,7 +170,7 @@
 
         ?>
 
-        <a href="sidebar1.php" class="btn btn-primary">Go Back</a>
+        <a href="demo.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
