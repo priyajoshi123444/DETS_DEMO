@@ -19,20 +19,10 @@ session_start();
         h2 {
             color: blueviolet;
         }
-
-        tr {
-            color: blue;
-        }
-
-        /* .container {
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        } */
+       tr{
+        color: black;
+       }
+    
     </style>
 </head>
 
@@ -131,7 +121,7 @@ session_start();
                         echo "<h3>User: $username ($email)</h3>";
                         // Output table for income
                         echo "<table class='table table-bordered table-hover'>";
-                        echo "<thead class='thead-sucess'>";
+                        echo "<thead class='thead'>";
                         echo "<tr>";
                         echo "<th>User ID</th>";
                         echo "<th>Income Name</th>";
