@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $updateSql = "UPDATE admins SET password = '$hashedNewPassword' WHERE id = '$adminID'";
                 if ($conn->query($updateSql) === TRUE) {
                     echo "Password changed successfully!";
-                    header('Location:index.php');
+                    include("Location:accountsetting.php");
                 } else {
                     echo "Error updating password: " . $conn->error;
                 }
@@ -61,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,41 +79,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- End layout styles -->
     <!-- <link rel="shortcut icon" href="assets/images/favicon.ico" /> -->
+    <style>
+        .box {
+            margin-top: -220px !important;
+        }
+    </style>
+
 </head>
 
 <body>
     <div class="container-scroller">
-        <div class="container-fluid page-body-wrapper full-page-wrapper">
-            <div class="content-wrapper d-flex align-items-center auth">
-                <div class="row flex-grow">
-                    <div class="col-lg-4 mx-auto">
-                        <div class="auth-form-light text-left p-5">
-                            <div class="brand-logo">
-                                <img src="assets/images/logo.png">
-                            </div>
-                            <h4>Want to Change Password?</h4>
-                            <form class="pt-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
-                                method="post">
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg" id="exampleInputOld1"
-                                        name="currentPassword" placeholder="Old Password" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg" id="exampleInputNew1"
-                                        name="newPassword" placeholder="New Password" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg"
-                                        id="exampleInputConfirm1" name="confirmPassword" placeholder="Confirm Password"
-                                        required>
-                                </div>
+        <!-- Header -->
+        <?php include("header.php"); ?>
+        <!-- End Header -->
 
-                                <div class="mt-3 text-center">
-                                    <button type="submit"
-                                        class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SAVE</button>
-                                    <a class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
-                                        href="index.php">BACK</a>
-                                </div>
+        <div class="container-fluid page-body-wrapper full-page-wrapper">
+            <!-- Sidebar -->
+            <?php include("sidebar.php"); ?>
+            <!-- End Sidebar -->
+
+            <div class="content-wrapper d-flex align-items-center auth">
+                <div class="row flex-grow justify-content-center">
+                    <div class="col-md-6">
+                        <div class="box">
+                            <div class="auth-form-light text-left p-5">
+
+                                <h4>Want to Change Password?</h4>
+                                <form class="pt-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
+                                    method="post">
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-lg"
+                                            id="exampleInputOld1" name="currentPassword" placeholder="Old Password"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-lg"
+                                            id="exampleInputNew1" name="newPassword" placeholder="New Password"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-lg"
+                                            id="exampleInputConfirm1" name="confirmPassword"
+                                            placeholder="Confirm Password" required>
+                                    </div>
+
+                                    <div class="mt-3 text-center">
+                                        <button type="submit"
+                                            class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SAVE</button>
+                                        <a class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"
+                                            href="index.php">BACK</a>
+                                    </div>
+                            </div>
                         </div>
                         </form>
                     </div>
@@ -136,6 +151,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="assets/js/hoverable-collapse.js"></script>
     <script src="assets/js/misc.js"></script>
     <!-- endinject -->
+    <!-- Footer -->
+    <?php include("footer.php"); ?>
+    <!-- End Footer -->
 </body>
 
 </html>

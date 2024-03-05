@@ -54,7 +54,8 @@ foreach ($users as &$user) {
   <title>Daily Expense Tracker System</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">>
+
 
   <style>
     .main {
@@ -63,19 +64,17 @@ foreach ($users as &$user) {
     }
 
     h2 {
-      color: blueviolet;
+      color: black;
     }
 
-    th {
-      color: blue;
-    }
 
-  
 
-    .stretch-card .card .card-body{
+
+    .stretch-card .card .card-body {
       width: 68%;
-    min-width: 65%;
-  }
+      min-width: 65%;
+    }
+
     .card-title {
       margin-bottom: 20px;
     }
@@ -140,6 +139,28 @@ foreach ($users as &$user) {
       height: 39px;
 
     }
+
+    tr {
+      color: black;
+    }
+
+    .thead {
+      background-color: #b66dff;
+
+    }
+
+    th {
+      color: white;
+    }
+
+    .pagination .page-item .page-link {
+      color: black;
+    }
+    .mdi-icon {
+    font-size: 24px;
+   
+    margin-right: 10px; 
+}
   </style>
 </head>
 
@@ -152,85 +173,90 @@ foreach ($users as &$user) {
     <sidebar>
       <?php include("sidebar.php"); ?>
     </sidebar>
-    <div class="col-md-6 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">User Details</h4>
-          <!-- <p class="card-description"> Add class <code>.table-hover</code>
-          </p> -->
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Profile Image</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Gender</th>
-                <th>Mobile Number</th>
-                <th>Current Status</th>
-                <th>Total Expense</th>
-                <th>Total Income</th>
-                <th>Action</th>
-                <!-- <th>Registration Date</th> -->
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($users as $user): ?>
-                <tr>
-                  <td><img src="<?php echo $user['profile_image']; ?>" alt="Profile Image"
-                      style="width: 50px; height: 50px;"></td>
-                  <td>
-                    <?php echo $user['username']; ?>
-                  </td>
-                  <td>
-                    <?php echo $user['email']; ?>
-                  </td>
-                  <td>
-                    <?php echo $user['gender']; ?>
-                  </td>
-                  <td>
-                    <?php echo $user['mobile_number']; ?>
-                  </td>
-                  <td>
-                    <?php
-                    if ($user['pricing_status'] == 0) {
-                      echo "Inactive";
-                    } else if ($user['pricing_status'] == 1) {
-                      echo "Active";
-                    } else if ($user['pricing_status'] == 2) {
-                      echo "Pending";
-                    }
-                    ?>
-                  </td>
-                  <td>
-                    <?php echo $user['total_expense']; ?>
-                  </td>cd
-                  <td>
-                    <?php echo $user['total_income']; ?>
-                  </td>
-                  <td>
-                    <form method="post" action="update_pricing_status.php">
-                      <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                      <input type="hidden" name="pricing_status" id="pricing_status">
-                      <button id="active" type="submit" name="pricing_status" value="active">
-  <i class="fas fa-check-circle"></i>
-</button>
-<button id="inactive" type="submit" name="pricing_status" value="inactive" >
-  <i class="fas fa-times-circle"></i>
-</button>
-<button id="pending" type="submit" name="pricing_status" value="pending" >
-  <i class="fas fa-question-circle"></i>
-</button>
+    <div class="container mt-5">
+      <h2> User Details</h2>
+      <div class="table-wrapper" style="height: 1000px; width: 980px; overflow-y:auto" ;>
+        <table class=" table table-bordered table-hover">
+          <thead class="thead">
+            <tr>
+              <th>Profile Image</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Gender</th>
+              <th>Mobile Number</th>
+              <th>Current Status</th>
+              <th>Total Expense</th>
+              <th>Total Income</th>
+              <th>Action</th>
 
-                    </form>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($users as $user): ?>
+              <tr>
+                <td><img src="<?php echo $user['profile_image']; ?>" alt="Profile Image"
+                    style="width: 50px; height: 50px;"></td>
+                <td>
+                  <?php echo $user['username']; ?>
+                </td>
+                <td>
+                  <?php echo $user['email']; ?>
+                </td>
+                <td>
+                  <?php echo $user['gender']; ?>
+                </td>
+                <td>
+                  <?php echo $user['mobile_number']; ?>
+                </td>
+                <td>
+                  <?php
+                  if ($user['pricing_status'] == 0) {
+                    echo "Inactive";
+                  } else if ($user['pricing_status'] == 1) {
+                    echo "Active";
+                  } else if ($user['pricing_status'] == 2) {
+                    echo "Pending";
+                  }
+                  ?>
+                </td>
+                <td>
+                  <?php echo isset($user['total_expense']) ? $user['total_expense'] : 0; ?>
+                </td>
+                <td>
+                  <?php echo isset($user['total_income']) ? $user['total_income'] : 0; ?>
+                </td>
+                <td>
+                  <form method="post" action="update_pricing_status.php">
+                    <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                    <input type="hidden" name="pricing_status" id="pricing_status">
+                    <i id="active" class="mdi mdi-check-circle mdi-icon" style="cursor: pointer;"
+                      onclick="document.getElementById('pricing_status').value = 'active'; this.closest('form').submit();"></i>
+                    <i id="inactive" class="mdi mdi-close-circle mdi-icon" style="cursor: pointer;"
+                      onclick="document.getElementById('pricing_status').value = 'inactive'; this.closest('form').submit();"></i>
+                    <i id="pending" class="mdi mdi-help-circle mdi-icon" style="cursor: pointer;"
+                      onclick="document.getElementById('pricing_status').value = 'pending'; this.closest('form').submit();"></i>
+                  </form>
+
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+        <!-- Button to go back or perform other actions -->
+        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
       </div>
     </div>
   </div>
+  </div>
+  </div>
+
   <!-- Bootstrap JS and Popper.js -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

@@ -32,6 +32,7 @@ $result_users = $conn->query($sql_users);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +44,8 @@ $result_users = $conn->query($sql_users);
             font-family: 'Arial', sans-serif;
             background-color: #f8f9fa;
         }
-/* 
+
+        /* 
         .container {
             max-width: 800px;
             margin: 50px auto;
@@ -75,35 +77,51 @@ $result_users = $conn->query($sql_users);
         }
 
         .expense-row {
-            color: red; /* Set text color to red for expense rows */
+            color: red;
+            /* Set text color to red for expense rows */
         }
 
         .income-row {
-            color: green; /* Set text color to green for income rows */
+            color: green;
+            /* Set text color to green for income rows */
         }
-        .main{
+
+        .main {
             display: flex;
-            padding-top: 70px ;
+            padding-top: 70px;
+        }
+
+        /* tr{
+            color: black;
+        } */
+        .thead {
+            background-color: #b66dff;
+
+        }
+
+        .pagination .page-item .page-link {
+            color: black;
         }
     </style>
 </head>
-<body> 
+
+<body>
     <header>
         <?php include("header.php"); ?>
     </header>
-    
+
     <div class="main">
         <sidebar>
             <?php include("sidebar.php"); ?>
         </sidebar>
         <div class="container mt-5">
             <h2>Combined Expense and Income Report</h2>
-            <!-- Tab navigation for expenses and income reports -->
-        <ul class="nav nav-tabs">
-          
-          <!-- PDF icon for generating PDF report -->
-          <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-      </ul>
+
+            <ul class="nav nav-tabs">
+
+
+                <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
+            </ul>
 
             <?php
             // Loop through each user who has added both expenses and income
@@ -125,7 +143,7 @@ $result_users = $conn->query($sql_users);
 
                 // Table to display combined report
                 echo "<table class='table table-bordered '> 
-                        <thead class='thead-sucess'>
+                        <thead class='thead'>
                             <tr>
                                 <th>Type</th>
                                 <th>Name</th>
@@ -171,15 +189,15 @@ $result_users = $conn->query($sql_users);
                 $page = $_GET['page'];
             }
             $offset = ($page - 1) * $results_per_page;
-          
+
             ?>
-                     <ul class="pagination">
-  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-  <li class="page-item"><a class="page-link" href="#">1</a></li>
-  <li class="page-item"><a class="page-link" href="#">2</a></li>
-  <li class="page-item"><a class="page-link" href="#">3</a></li>
-  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-</ul>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
             <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
         </div>
     </div>
@@ -193,4 +211,5 @@ $result_users = $conn->query($sql_users);
         <?php include("footer.php"); ?>
     </footer>
 </body>
+
 </html>

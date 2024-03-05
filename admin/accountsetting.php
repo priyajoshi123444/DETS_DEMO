@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,32 +12,30 @@ session_start();
             padding-top: 70px ;
         }
         h2{
-            color: blueviolet;
+            color: black;
         }
-        tr{
-            color: blue;
+       
+        .box{
+            margin-top: -220px !important;
         }
-        /* .container {
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        } */
     </style>
 </head>
 <body> 
-    <header>
+<div class="container-scroller">
+        <!-- Header -->
         <?php include("header.php"); ?>
-    </header>
-    
-    <div class="main">
-        <sidebar>
+        <!-- End Header -->
+
+        <div class="container-fluid page-body-wrapper full-page-wrapper">
+            <!-- Sidebar -->
             <?php include("sidebar.php"); ?>
-        </sidebar>
-        <div class="container mt-5">
+            <!-- End Sidebar -->
+
+            <div class="content-wrapper d-flex align-items-center auth">
+                <div class="row flex-grow justify-content-center">
+                    <div class="col-md-6">
+                        <div class="box">
+                        <div class="auth-form-light text-left p-5">
             <h2>Update Admin Profile</h2>
             
             <?php
@@ -86,8 +81,8 @@ session_start();
                     echo "<label for='profile_image'>Profile Image:</label>";
                     echo "<input type='file' class='form-control-file' id='profile_image' name='profile_image'>";
                     echo "</div>";
-                    echo "<button type='submit' class='btn btn-primary'>Update Profile</button>";
-                    echo "<button type='submit' class='btn btn-primary'>Back</button>";
+                    echo "<button type='submit' class='btn btn-primary mr-2'>Update Profile</button>";
+                    echo "<a href='index.php' class='btn btn-primary'>Back</a>";
                     echo "</form>";
                 }
             } else {
@@ -95,15 +90,27 @@ session_start();
             }
             ?>
         </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
     </div>
-
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    <footer>
-        <?php include("footer.php"); ?>
-    </footer>
+    <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="assets/js/off-canvas.js"></script>
+    <script src="assets/js/hoverable-collapse.js"></script>
+    <script src="assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Footer -->
+    <?php include("footer.php"); ?>
+    <!-- End Footer -->
 </body>
+
 </html>

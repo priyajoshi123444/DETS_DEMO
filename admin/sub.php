@@ -10,14 +10,14 @@ $dbname = "expense_db";
 $conn = new mysqli($servername, $db_username, $db_password, $dbname);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
 // Check if the admin is logged in
 if (!isset($_SESSION['id'])) {
-    // Redirect to the login page or display an error message
-    // header("Location: login.php");
-    // exit(); // Stop further execution
+  // Redirect to the login page or display an error message
+  // header("Location: login.php");
+  // exit(); // Stop further execution
 }
 
 // Retrieve the admin's current details from the database
@@ -52,12 +52,24 @@ $subscriptions = $resultSub->fetch_all(MYSQLI_ASSOC);
       display: flex;
       padding-top: 70px;
     }
-    h2{
-            color: blueviolet;
-        }
-        th{
-          color: blue;
-        }
+
+    h2 {
+      color: black;
+    }
+
+    th {
+      color: white;
+    }
+
+    tr {
+      color: black;
+    }
+
+    .thead {
+      background-color: #b66dff;
+
+    }
+
     /* .container {
       max-width: 800px;
       margin: 50px auto;
@@ -67,15 +79,21 @@ $subscriptions = $resultSub->fetch_all(MYSQLI_ASSOC);
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       position: relative;
     } */
-    .active{
+    .active {
       background-color: green;
 
     }
-    .inactive{
+
+    .inactive {
       background-color: red;
     }
-    .pending{
+
+    .pending {
       background-color: yellow;
+    }
+
+    .pagination .page-item .page-link {
+      color: black;
     }
   </style>
 </head>
@@ -91,45 +109,65 @@ $subscriptions = $resultSub->fetch_all(MYSQLI_ASSOC);
     </sidebar>
     <div class="container mt-5">
       <h2>Subscription Details</h2>
-      <div class="table-responsive">
-      <table class="table">
-        <tr>
-            <th>Subscription ID</th>
-            <th>User ID</th>
-            <th>Subscription Plan</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Billing Frequency</th>
-            <th>Amount</th>
-            <th>Payment Method</th>
-            <th>Status</th>
-           
-        </tr>
-        <?php foreach ($subscriptions as $subscription) : ?>
+      <div class="table table-bordered table-hover">
+        <table class="table">
+          <thead class="thead">
             <tr>
-                <td><?php echo $subscription['subscription_id']; ?></td>
-                <td><?php echo $subscription['user_id']; ?></td>
-                <td><?php echo $subscription['subscription_plan']; ?></td>
-                <td><?php echo $subscription['start_date']; ?></td>
-                <td><?php echo $subscription['end_date']; ?></td>
-                <td><?php echo $subscription['billing_frequency']; ?></td>
-                <td><?php echo $subscription['amount']; ?></td>
-                <td><?php echo $subscription['payment_method']; ?></td>
-                <td><?php echo $subscription['status']; ?></td>
-                <td>
-                  <!-- <form action="update_subscription_status.php" method="post">
-                    <input type="hidden" name="subscription_id" value="<?php echo $subscription['subscription_id']; ?>">
-                    <select name="status">
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                      <option value="pending">Pending</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">Update Status</button>
-                  </form> -->
-                </td>
+              <th>Subscription ID</th>
+              <th>User ID</th>
+              <th>Subscription Plan</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Billing Frequency</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Status</th>
+
             </tr>
-        <?php endforeach; ?>
-    </table>
+          </thead>
+          <?php foreach ($subscriptions as $subscription): ?>
+            <tr>
+              <td>
+                <?php echo $subscription['subscription_id']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['user_id']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['subscription_plan']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['start_date']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['end_date']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['billing_frequency']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['amount']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['payment_method']; ?>
+              </td>
+              <td>
+                <?php echo $subscription['status']; ?>
+              </td>
+
+            </tr>
+          <?php endforeach; ?>
+        </table>
+
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+        <!-- Button to go back or perform other actions -->
+        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
       </div>
     </div>
   </div>

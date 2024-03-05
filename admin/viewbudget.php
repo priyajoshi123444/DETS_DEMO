@@ -4,6 +4,7 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,36 +12,49 @@ session_start();
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
-        .main{
+        .main {
             display: flex;
-            padding-top: 70px ;
+            padding-top: 70px;
         }
-        h2{
-            color: blueviolet;
+
+        h2 {
+            color: black;
         }
-        tr{
-            color: blue;
+
+        tr {
+            color: black;
         }
-        /* .container {
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        } */
+
+        .thead {
+            background-color: #b66dff;
+
+        }
+
+        th {
+            color: white;
+        }
+
+        .icon {
+            float: right;
+            margin-right: 10px;
+        }
+
+        .pagination .page-item .page-link {
+            color: black;
+        }
+
         .exceeded {
-    color: red;
-    font-weight: bold;
-}
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
-<body> 
+
+<body>
     <header>
         <?php include("header.php"); ?>
     </header>
-    
+
     <div class="main">
         <sidebar>
             <?php include("sidebar.php"); ?>
@@ -48,48 +62,48 @@ session_start();
         <div class="container mt-5">
             <h2>View Budget</h2>
             <div class="icon">
-    <div class="filter-dropdown">
-        <label for="filter">Filter by:</label>
-        <select id="filter" name="filter">
-            <option value="all">All</option>
-            <option value="yearly">Yearly</option>
-            <option value="monthly">Monthly</option>
-        </select>
-        <input type="submit" value="Apply" onclick="applyFilter()">
-    </div>
-</div>
-<script>
-    function applyFilter() {
-        var filterValue = document.getElementById('filter').value;
-        var budgets = document.querySelectorAll('.budget-row');
+                <div class="filter-dropdown">
+                    <label for="filter">Filter by:</label>
+                    <select id="filter" name="filter">
+                        <option value="all">All</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                    <input type="submit" value="Apply" onclick="applyFilter()">
+                </div>
+            </div>
+            <script>
+                function applyFilter() {
+                    var filterValue = document.getElementById('filter').value;
+                    var budgets = document.querySelectorAll('.budget-row');
 
-        budgets.forEach(function(budget) {
-            if (filterValue === 'all') {
-                budget.style.display = 'table-row';
-            } else if (filterValue === 'yearly') {
-                var startDate = new Date(budget.querySelector('.start-date').textContent);
-                var endDate = new Date(budget.querySelector('.end-date').textContent);
-                var currentDate = new Date();
+                    budgets.forEach(function (budget) {
+                        if (filterValue === 'all') {
+                            budget.style.display = 'table-row';
+                        } else if (filterValue === 'yearly') {
+                            var startDate = new Date(budget.querySelector('.start-date').textContent);
+                            var endDate = new Date(budget.querySelector('.end-date').textContent);
+                            var currentDate = new Date();
 
-                if (startDate.getFullYear() <= currentDate.getFullYear() && endDate.getFullYear() >= currentDate.getFullYear()) {
-                    budget.style.display = 'table-row';
-                } else {
-                    budget.style.display = 'none';
+                            if (startDate.getFullYear() <= currentDate.getFullYear() && endDate.getFullYear() >= currentDate.getFullYear()) {
+                                budget.style.display = 'table-row';
+                            } else {
+                                budget.style.display = 'none';
+                            }
+                        } else if (filterValue === 'monthly') {
+                            var startDate = new Date(budget.querySelector('.start-date').textContent);
+                            var endDate = new Date(budget.querySelector('.end-date').textContent);
+                            var currentDate = new Date();
+
+                            if (startDate.getMonth() <= currentDate.getMonth() && endDate.getMonth() >= currentDate.getMonth()) {
+                                budget.style.display = 'table-row';
+                            } else {
+                                budget.style.display = 'none';
+                            }
+                        }
+                    });
                 }
-            } else if (filterValue === 'monthly') {
-                var startDate = new Date(budget.querySelector('.start-date').textContent);
-                var endDate = new Date(budget.querySelector('.end-date').textContent);
-                var currentDate = new Date();
-
-                if (startDate.getMonth() <= currentDate.getMonth() && endDate.getMonth() >= currentDate.getMonth()) {
-                    budget.style.display = 'table-row';
-                } else {
-                    budget.style.display = 'none';
-                }
-            }
-        });
-    }
-</script>
+            </script>
 
             <?php
             // Database connection details
@@ -97,19 +111,19 @@ session_start();
             $username = 'root';
             $password = '';
             $database = 'expense_db';
-            
+
             // Create connection
             $conn = new mysqli($host, $username, $password, $database);
-            
+
             // Check connection
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
-            
+
             // SQL query to fetch users who have set budgets
             $sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN budgets ON users.user_id = budgets.user_id";
             $result = $conn->query($sql);
-            
+
             // Check if any users exist
             if ($result->num_rows > 0) {
                 // Output data of each user
@@ -117,17 +131,17 @@ session_start();
                     $userId = $row["user_id"];
                     $username = $row["username"];
                     $email = $row["email"];
-                    
+
                     // SQL query to fetch budget for the current user
                     $budgetSql = "SELECT * FROM budgets WHERE user_id = $userId";
                     $budgetResult = $conn->query($budgetSql);
-                    
+
                     // Check if any budget exist for the current user
                     if ($budgetResult->num_rows > 0) {
                         echo "<h3>User: $username ($email)</h3>";
                         // Output table for budget
-                        echo "<table class='table table-bordered table-hover'>"; 
-                        echo "<thead class='thead-sucess'>";
+                        echo "<table class='table table-bordered table-hover'>";
+                        echo "<thead class='thead'>";
                         echo "<tr>";
                         echo "<th>User ID</th>";
                         echo "<th>Category</th>";
@@ -138,20 +152,20 @@ session_start();
                         echo "</tr>";
                         echo "</thead>";
                         echo "<tbody>";
-                        
+
                         // Output data of each budget
                         while ($budgetRow = $budgetResult->fetch_assoc()) {
                             echo "<tr>";
                             echo "<td>" . $budgetRow["user_id"] . "</td>";
                             echo "<td>" . $budgetRow["category"] . "</td>";
                             echo "<td>" . $budgetRow["planned_amount"] . "</td>";
-                        
+
                             // SQL query to fetch total expense for the current category
                             $totalExpenseSql = "SELECT SUM(expenseAmount) AS totalExpense FROM expenses WHERE user_id = $userId AND expenseCategory = '" . $budgetRow["category"] . "'";
                             $totalExpenseResult = $conn->query($totalExpenseSql);
                             $totalExpenseRow = $totalExpenseResult->fetch_assoc();
                             $totalExpense = $totalExpenseRow["totalExpense"];
-                        
+
                             // Check if total expense exceeds planned amount
                             if ($totalExpense > $budgetRow["planned_amount"]) {
                                 // If exceeded, add class for styling
@@ -161,12 +175,12 @@ session_start();
                             } else {
                                 echo "<td>" . $totalExpense . "</td>";
                             }
-                        
+
                             echo "<td>" . $budgetRow["start_date"] . "</td>";
                             echo "<td>" . $budgetRow["end_date"] . "</td>";
                             echo "</tr>";
                         }
-                        
+
                         echo "</tbody>";
                         echo "</table>";
                     } else {
@@ -177,7 +191,7 @@ session_start();
             } else {
                 echo "<p>No users found.</p>";
             }
-           
+
             $results_per_page = 10; // Set the desired number of results per page
             if (!isset($_GET['page'])) {
                 $page = 1;
@@ -185,7 +199,7 @@ session_start();
                 $page = $_GET['page'];
             }
             $offset = ($page - 1) * $results_per_page;
-          
+
             ?>
             <ul class="pagination">
                 <li class="page-item"><a class="page-link" href="#">Previous</a></li>
@@ -207,4 +221,5 @@ session_start();
         <?php include("footer.php"); ?>
     </footer>
 </body>
+
 </html>

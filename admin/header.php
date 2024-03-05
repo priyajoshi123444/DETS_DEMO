@@ -11,8 +11,7 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-// Include your database connection file
-// include('database.php'); // Replace with the actual filename
+
 
 // Connect to the database (replace these variables with your actual database credentials)
 $host = 'localhost';
@@ -62,6 +61,12 @@ if ($result !== false && $result->num_rows > 0) {
   <link rel="stylesheet" href="assets/css/style.css">
   <!-- End layout styles -->
   <link rel="shortcut icon" href="assets/images/favicon.ico" />
+  <style>
+    .p-3{
+      margin: 10px !important;
+      padding: 10px !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -111,30 +116,30 @@ if ($result !== false && $result->num_rows > 0) {
             <div class="dropdown-divider"></div>
             <a class="dropdown-item preview-item">
               <div class="preview-thumbnail">
-                <img src="assets/images/faces/face4.jpg" alt="image" class="profile-pic">
+                <!-- <img src="assets/images/faces/face4.jpg" alt="image" class="profile-pic"> -->
               </div>
               <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
+                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">New User Added</h6>
                 <p class="text-gray mb-0"> 1 Minutes ago </p>
               </div>
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item preview-item">
               <div class="preview-thumbnail">
-                <img src="assets/images/faces/face2.jpg" alt="image" class="profile-pic">
+                <!-- <img src="C:\xampp\htdocs\DETS(main)\admin\assets\images\faces\face1.jpg" alt="image" class="profile-pic"> -->
               </div>
               <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
+                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Priya is now your subscriber</h6>
                 <p class="text-gray mb-0"> 15 Minutes ago </p>
               </div>
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item preview-item">
               <div class="preview-thumbnail">
-                <img src="assets/images/faces/face3.jpg" alt="image" class="profile-pic">
+                <!-- <img src="assets/images/faces/face3.jpg" alt="image" class="profile-pic"> -->
               </div>
               <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
+                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">User has added Expense</h6>
                 <p class="text-gray mb-0"> 18 Minutes ago </p>
               </div>
             </a>
@@ -191,11 +196,19 @@ if ($result !== false && $result->num_rows > 0) {
             <h6 class="p-3 mb-0 text-center">See all notifications</h6>
           </div>
         </li>
-        <li class="nav-item nav-login  ">
-          <a class="nav-link" href="login.php">
-            <i class="mdi mdi-login"></i>
-          </a>
-        </li>
+        <li class="nav-item nav-login">
+  <?php
+  // Check if the user's email is set in the session
+  if (isset($_SESSION['id'])) {
+    // User is logged in, display Logout option with an icon
+    echo '<a class="nav-link" href="logout.php"><i class="mdi mdi-logout"></i></a>';
+  } else {
+    // User is not logged in, display Login option with an icon
+    echo '<a class="nav-link" href="login.php"><i class="mdi mdi-login"></i></a>';
+  }
+  ?>
+</li>
+
      
 
 

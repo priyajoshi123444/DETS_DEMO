@@ -17,12 +17,30 @@ session_start();
         }
 
         h2 {
-            color: blueviolet;
+            color: black;
         }
-       tr{
-        color: black;
-       }
-    
+
+        tr {
+            color: black;
+        }
+
+        .thead {
+            background-color: #b66dff;
+
+        }
+
+        th {
+            color: white;
+        }
+
+        .icon {
+            float: right;
+            margin-right: 10px;
+        }
+
+        .pagination .page-item .page-link {
+            color: black;
+        }
     </style>
 </head>
 

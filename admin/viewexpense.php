@@ -17,24 +17,29 @@ session_start();
         }
 
         h2 {
-            color: blueviolet;
+            color: black;
         }
 
         tr {
-            color: blue;
+            color: black;
         }
 
-        /* .container {
-            max-width: 800px;
-            margin: 50px auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        } */
+        .thead {
+            background-color: #b66dff;
+
+        }
+
+        th {
+            color: white;
+        }
+
         .icon {
-            display: flex;
+            float: right;
+            margin-right: 10px;
+        }
+
+        .pagination .page-item .page-link {
+            color: black;
         }
     </style>
 </head>
@@ -117,21 +122,21 @@ session_start();
                     $userId = $row["user_id"];
                     $username = $row["username"];
                     $email = $row["email"];
-                
+
                     // SQL query to fetch expenses for the current user
                     $expenseSql = "SELECT * FROM expenses WHERE user_id = $userId";
                     $expenseResult = $conn->query($expenseSql);
-                
+
                     // SQL query to fetch income for the current user
                     $incomeSql = "SELECT * FROM incomes WHERE user_id = $userId";
                     $incomeResult = $conn->query($incomeSql);
-                
+
                     // Check if any expenses exist for the current user
                     if ($expenseResult->num_rows > 0) {
                         echo "<h3>User: $username ($email)</h3>";
                         // Output table for expenses
                         echo "<table class='table table-bordered table-hover'>";
-                        echo "<thead class='thead-sucess'>";
+                        echo "<thead class='thead'>";
                         echo "<tr>";
                         echo "<th>User ID</th>";
                         echo "<th>Expense Name</th>";
@@ -142,7 +147,7 @@ session_start();
                         echo "</tr>";
                         echo "</thead>";
                         echo "<tbody>";
-                
+
                         // Output data of each expense
                         $totalExpense = 0; // Initialize total expense for the user
                         while ($expenseRow = $expenseResult->fetch_assoc()) {
@@ -154,32 +159,32 @@ session_start();
                             echo "<td>" . $expenseRow["expenseDescription"] . "</td>";
                             echo "<td class='expense-date'>" . $expenseRow["expenseDate"] . "</td>";
                             echo "</tr>";
-                
+
                             // Add the expense amount to the total expense
                             $totalExpense += $expenseRow["expenseAmount"];
                         }
-                
+
                         // Output data of each income
                         $totalIncome = 0; // Initialize total income for the user
                         while ($incomeRow = $incomeResult->fetch_assoc()) {
                             // Add the income amount to the total income
                             $totalIncome += $incomeRow["incomeAmount"];
                         }
-                
+
                         // Display the total expense for the user
                         echo "<tr>";
                         echo "<td colspan='2'>Total Expense</td>";
                         echo "<td>$totalExpense</td>";
                         echo "<td colspan='3'></td>"; // colspan='3' to span the remaining columns
                         echo "</tr>";
-                
+
                         // Display the total income for the user
                         echo "<tr>";
                         echo "<td colspan='2'>Total Income</td>";
                         echo "<td>$totalIncome</td>";
                         echo "<td colspan='3'></td>"; // colspan='3' to span the remaining columns
                         echo "</tr>";
-                
+
                         // Check if total expense is greater than total income
                         if ($totalExpense > $totalIncome) {
                             echo "<tr>";
@@ -187,7 +192,7 @@ session_start();
                             echo "</tr>";
                             echo "<script>alert('Warning: Total Expense is greater than Total Income for user: $username!');</script>";
                         }
-                
+
                         echo "</tbody>";
                         echo "</table>";
                     } else {

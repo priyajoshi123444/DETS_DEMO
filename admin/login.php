@@ -4,13 +4,11 @@
       session_start(); 
   } 
 
-if (!isset($_SESSION["admin_id"])) {
-    // Redirect to the login page if the user is not logged in
-    // header("Location: login.php");
-    // exit();
+if (!isset($_SESSION["id"])) {
+    
 }
 
-// Continue with the rest of your code here
+
 
 
 
@@ -37,7 +35,7 @@ if (isset($_POST['submit'])) {
     // Retrieve hashed password from the database
     $sql = "SELECT * FROM admins WHERE email = '$email'";
     $result = $conn->query($sql);
-
+    $error = 0;
     if ($result !== false && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
 
@@ -48,7 +46,8 @@ if (isset($_POST['submit'])) {
             header("Location: index.php");
             exit();
         } else {
-            echo "Incorrect email or password";
+          $error=1;
+            //echo "Incorrect email or password";
         }
     } else {
         echo "Admin not found";
@@ -111,6 +110,10 @@ return true;
               </div>
               <h4>Hello! let's get started</h4>
               <h6 class="font-weight-light">Sign in to continue.</h6>
+              <?php 
+              if (isset($error) && $error == 1) {
+                echo "<span style='color:#f00000;'>Invalid user name and password</span>";
+              }?>
               <form class="pt-3" method="post" onsubmit="return validateForm()">
                 <div class="form-group">
                   <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email" name="email">

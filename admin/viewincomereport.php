@@ -50,6 +50,16 @@
             display: flex;
             padding-top: 70px ;
         }
+        tr{
+            color: black;
+        }
+        .thead {
+        background-color: #b66dff;
+
+       }
+       .pagination .page-item .page-link {
+            color: black;
+        }
     </style>
 </head>
 
@@ -61,27 +71,20 @@
         ?>
     </header>
     <div class="main">
-    <sidebar>
-    <?php
-        include("sidebar.php");
-        ?>
-    </sidebar>
-    <div class="container">
-    
-        <h2>View Income Reports</h2>
+        <sidebar>
+            <?php include("sidebar.php"); ?>
+        </sidebar>
+        <div class="container mt-5">
+            <h2>View Income Report</h2>
 
-        <!-- Tab navigation for expenses and income reports -->
-        <ul class="nav nav-tabs">
-          
-            <!-- PDF icon for generating PDF report -->
-            <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-        </ul>
+            <ul class="nav nav-tabs">
 
-        <!-- Tab content for expenses and income reports -->
-        <div class="tab-content">
-            <!-- Expenses Report -->
-            <div class="tab-pane fade show active" id="expenses">
-                <!-- <h3>Expenses Report</h3> -->
+
+                <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
+            </ul>
+
+
+       
                 <?php
             // Database connection details
             $host = 'localhost';
@@ -119,8 +122,8 @@ $sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, us
                     if ($incomeResult->num_rows > 0) {
                         echo "<h3>User: $username ($email)</h3>";
                         // Output table for income
-                        echo "<table class='table table-bordered table-striped'>"; 
-                        echo "<thead class='thead-sucess'>";
+                        echo "<table class='table table-bordered'>"; 
+                        echo "<thead class='thead'>";
                         echo "<tr>";
                         echo "<th>User ID</th>";
                         echo "<th>Income Name</th>";
@@ -171,32 +174,17 @@ $sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, us
   <li class="page-item"><a class="page-link" href="#">3</a></li>
   <li class="page-item"><a class="page-link" href="#">Next</a></li>
 </ul>
-        <!-- Button to go back or perform other actions -->
-        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
-    </div>
+<a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+        </div>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Font Awesome JS -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <script>
-        function generatePDF() {
-            // Create a new jsPDF instance
-            var doc = new jsPDF();
-
-            // Add content to the PDF
-            doc.text('Expense Report', 10, 10);
-            // ... Add more content as needed ...
-
-            // Save the PDF with a specific name
-            doc.save('expense_report.pdf');
-        }
-    </script>
     <footer>
-        <?php include('footer.php'); ?>
+        <?php include("footer.php"); ?>
     </footer>
 </body>
-
 </html>

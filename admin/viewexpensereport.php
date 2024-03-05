@@ -46,61 +46,69 @@
             transform: translateY(-50%);
             cursor: pointer;
         }
-        .main{
+
+        .main {
             display: flex;
-            padding-top: 70px ;
+            padding-top: 70px;
+        }
+
+        tr {
+            color: black;
+        }
+
+        .thead {
+            background-color: #b66dff;
+
+        }
+
+        .pagination .page-item .page-link {
+            color: black;
         }
     </style>
 </head>
 
 <body>
-    
-<header>
+
+    <header>
         <?php
         include("header.php");
         ?>
     </header>
     <div class="main">
-    <sidebar>
-    <?php
-        include("sidebar.php");
-        ?>
-    </sidebar>
-    <div class="container">
-    
-        <h2>View Expenses Reports</h2>
+        <sidebar>
+            <?php
+            include("sidebar.php");
+            ?>
+        </sidebar>
+        <div class="container mt-5">
 
-        <!-- Tab navigation for expenses and income reports -->
-        <ul class="nav nav-tabs">
-          
-            <!-- PDF icon for generating PDF report -->
-            <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-        </ul>
+            <h2>View Expenses Reports</h2>
 
-        <!-- Tab content for expenses and income reports -->
-        <div class="tab-content">
-            <!-- Expenses Report -->
-            <div class="tab-pane fade show active" id="expenses">
-                <!-- <h3>Expenses Report</h3> -->
-                <?php
+            <!-- Tab navigation for expenses and income reports -->
+            <ul class="nav nav-tabs">
+
+                <!-- PDF icon for generating PDF report -->
+                <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
+            </ul>
+            <?php
             // Database connection details
             $host = 'localhost';
             $username = 'root';
             $password = '';
             $database = 'expense_db';
-            
+
             // Create connection
             $conn = new mysqli($host, $username, $password, $database);
-            
+
             // Check connection
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
-            
+
             // SQL query to fetch users who have added expenses
             $sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN expenses ON users.user_id = expenses.user_id";
             $result = $conn->query($sql);
-            
+
             // Check if any users exist
             if ($result->num_rows > 0) {
                 // Output data of each user
@@ -108,17 +116,17 @@
                     $userId = $row["user_id"];
                     $username = $row["username"];
                     $email = $row["email"];
-                    
+
                     // SQL query to fetch expenses for the current user
                     $expenseSql = "SELECT * FROM expenses WHERE user_id = $userId";
                     $expenseResult = $conn->query($expenseSql);
-                    
+
                     // Check if any expenses exist for the current user
                     if ($expenseResult->num_rows > 0) {
                         echo "<h3>User: $username ($email)</h3>";
                         // Output table for expenses
-                        echo "<table class='table table-bordered table-striped'>"; 
-                        echo "<thead class='thead-sucess'>";
+                        echo "<table class='table table-bordered table-striped'>";
+                        echo "<thead class='thead'>";
                         echo "<tr>";
                         echo "<th>User ID</th>";
                         echo "<th>Expense Name</th>";
@@ -129,7 +137,7 @@
                         echo "</tr>";
                         echo "</thead>";
                         echo "<tbody>";
-                        
+
                         // Output data of each expense
                         while ($expenseRow = $expenseResult->fetch_assoc()) {
                             echo "<tr>";
@@ -141,7 +149,7 @@
                             echo "<td>" . $expenseRow["expenseDate"] . "</td>";
                             echo "</tr>";
                         }
-                        
+
                         echo "</tbody>";
                         echo "</table>";
                     } else {
@@ -159,19 +167,19 @@
                 $page = $_GET['page'];
             }
             $offset = ($page - 1) * $results_per_page;
-           
+
             ?>
-            
+
             <ul class="pagination">
-  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-  <li class="page-item"><a class="page-link" href="#">1</a></li>
-  <li class="page-item"><a class="page-link" href="#">2</a></li>
-  <li class="page-item"><a class="page-link" href="#">3</a></li>
-  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-</ul>
-        <!-- Button to go back or perform other actions -->
-        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
-    </div>
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+            <!-- Button to go back or perform other actions -->
+            <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+        </div>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

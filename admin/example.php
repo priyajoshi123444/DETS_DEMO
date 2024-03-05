@@ -1,66 +1,89 @@
 <?php
-// Include your database connection file
-// include('db_connection.php'); // Replace with the actual filename
+// Establish a connection to your database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "expense_db";
 
-// Check if the user is logged in (you can modify this based on your authentication logic)
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    // header("Location: login.php");
-    exit();
-}
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
 
-// Connect to the database (replace these variables with your actual database credentials)
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'expense_db';
-
-$conn = new mysqli($host, $username, $password, $database);
-
-// Check the connection
+// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
-// Retrieve user details from the database
-$user_id = $_SESSION['user_id'];
-$sql = "SELECT * FROM users WHERE id = $user_id"; // Modify the query based on your database schema
+// SQL query to fetch data from the users table
+$sql = "SELECT * FROM users";
 
+// Execute the query
 $result = $conn->query($sql);
 
+// Check if there are any users
 if ($result->num_rows > 0) {
-    $userDetails = $result->fetch_assoc();
+  // Fetch user details and populate the $users array
+  $users = array();
+  while ($row = $result->fetch_assoc()) {
+    $users[] = $row;
+  }
 } else {
-    // Handle the case where user details are not found
-    $userDetails = array(); // Empty array if user not found
+  $users = array(); // If no users found, initialize an empty array
 }
 
+// Close the database connection
 $conn->close();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <!-- Add your CSS styles here -->
-</head>
-<body>
-
-<!-- Sidebar with user details -->
-<aside>
-    <h2>User Profile</h2>
-    <p>ID: <?php echo isset($userDetails['id']) ? $userDetails['id'] : ''; ?></p>
-    <p>Username: <?php echo isset($userDetails['username']) ? $userDetails['username'] : ''; ?></p>
-    <p>Email: <?php echo isset($userDetails['email']) ? $userDetails['email'] : ''; ?></p>
-    <!-- Add other user details as needed -->
-</aside>
-
-<!-- Main content of your page goes here -->
-<main>
-    <!-- Add your main content here -->
-</main>
-
-</body>
-</html>
+     <!DOCTYPE html>
+     <html lang="en">
+     <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+     </head>
+     <body>
+      
+     </body>
+     </html>
+     <li class="nav-item dropdown">
+          <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="mdi mdi-email-outline"></i>
+            <span class="count-symbol bg-warning"></span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
+            <h6 class="p-3 mb-0">Messages</h6>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <img src="assets/images/faces/face4.jpg" alt="image" class="profile-pic">
+              </div>
+              <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
+                <p class="text-gray mb-0"> 1 Minutes ago </p>
+              </div>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <img src="assets/images/faces/face2.jpg" alt="image" class="profile-pic">
+              </div>
+              <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
+                <p class="text-gray mb-0"> 15 Minutes ago </p>
+              </div>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <img src="assets/images/faces/face3.jpg" alt="image" class="profile-pic">
+              </div>
+              <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
+                <p class="text-gray mb-0"> 18 Minutes ago </p>
+              </div>
+            </a>
+            <div class="dropdown-divider"></div>
+            <h6 class="p-3 mb-0 text-center">4 new messages</h6>
+          </div>
+        </li>
