@@ -27,65 +27,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mobileNumber = $_POST["mobile_number"];
     $gender = $_POST["gender"];
 
-    // Validate name
-   // if (!preg_match("/^[a-zA-Z ]{1,10}$/", $username)) {
-       // $error_message = "Name should only contain letters and have a maximum length of 50 characters.";
-    //}
+    // Validate password and confirm password match
+    if ($password !== $confirmPassword) {
+        $error_message = "Passwords do not match.";
+    } else {
+        // Validate file upload for the profile picture
+        $profilePicture = $_FILES["profile_picture"];
 
-    // Validate mobile number
-    //if (!preg_match("/^\d{10}$/", $mobileNumber)) {
-        //$error_message = "Mobile number should have exactly 10 digits.";
-   // }
+        // Check if a file was uploaded successfully
+        if ($profilePicture["error"] == UPLOAD_ERR_OK) {
+            // Check if the uploaded file is an image
+            $allowedFormats = ['jpg', 'jpeg', 'png', 'gif'];
+            $fileExtension = pathinfo($profilePicture["name"], PATHINFO_EXTENSION);
 
-    // Validate file upload for the profile picture
-    $profilePicture = $_FILES["profile_picture"];
-
-    // Check if a file was uploaded successfully
-    if ($profilePicture["error"] == UPLOAD_ERR_OK) {
-        // Check if the uploaded file is an image
-        $allowedFormats = ['jpg', 'jpeg', 'png', 'gif'];
-        $fileExtension = pathinfo($profilePicture["name"], PATHINFO_EXTENSION);
-
-        if (!in_array(strtolower($fileExtension), $allowedFormats)) {
-            $error_message = "Invalid file format. Accepted formats: JPG, JPEG, PNG, GIF.";
-        }
-
-        // Move the uploaded file to a destination folder (adjust the folder path as needed)
-        $uploadPath = "uploads/";
-        $uploadedFileName = $profilePicture["name"];
-        $targetFilePath = $uploadPath . $uploadedFileName;
-
-        if (move_uploaded_file($profilePicture["tmp_name"], $targetFilePath)) {
-            // File upload successful, continue with other data processing
-
-            // Add user to the database
-            $conn = connectToDatabase();
-
-            // Escape and sanitize user input to prevent SQL injection
-            $username = $conn->real_escape_string($username);
-            $email = $conn->real_escape_string($email);
-            $password = password_hash($conn->real_escape_string($password), PASSWORD_DEFAULT); // Hash the password
-            $mobileNumber = $conn->real_escape_string($mobileNumber);
-            $gender = $conn->real_escape_string($gender);
-            $targetFilePath = $conn->real_escape_string($targetFilePath);
-
-            // Insert data into the user table
-            $sql = "INSERT INTO users (username, email, password, mobile_number, gender, profile_image) 
-                    VALUES ('$username', '$email', '$password', '$mobileNumber', '$gender', '$targetFilePath')";
-
-            if ($conn->query($sql) == TRUE) {
-                header("Location: login.php");
-        exit();
-            } else {
-                $error_message = "Error: " . $sql . "<br>" . $conn->error;
+            if (!in_array(strtolower($fileExtension), $allowedFormats)) {
+                $error_message = "Invalid file format. Accepted formats: JPG, JPEG, PNG, GIF.";
             }
 
-            $conn->close();
-        } else {
-            $error_message = "Failed to move the uploaded file.";
+            // Move the uploaded file to a destination folder (adjust the folder path as needed)
+            $uploadPath = "uploads/";
+            $uploadedFileName = $profilePicture["name"];
+            $targetFilePath = $uploadPath . $uploadedFileName;
+
+            if (move_uploaded_file($profilePicture["tmp_name"], $targetFilePath)) {
+                // File upload successful, continue with other data processing
+
+                // Add user to the database
+                $conn = connectToDatabase();
+
+                // Escape and sanitize user input to prevent SQL injection
+                $username = $conn->real_escape_string($username);
+                $email = $conn->real_escape_string($email);
+                $password = password_hash($conn->real_escape_string($password), PASSWORD_DEFAULT); // Hash the password
+                $mobileNumber = $conn->real_escape_string($mobileNumber);
+                $gender = $conn->real_escape_string($gender);
+                $targetFilePath = $conn->real_escape_string($targetFilePath);
+
+                // Insert data into the user table
+                $sql = "INSERT INTO users (username, email, password, mobile_number, gender, profile_image) 
+                        VALUES ('$username', '$email', '$password', '$mobileNumber', '$gender', '$targetFilePath')";
+
+                if ($conn->query($sql) == TRUE) {
+                    // Redirect to login page after successful registration
+                    header("Location: login.php");
+                    exit();
+                } else {
+                    $error_message = "Error: " . $sql . "<br>" . $conn->error;
+                }
+
+                $conn->close();
+            } else {
+                $error_message = "Failed to move the uploaded file.";
+            }
+        } elseif ($profilePicture["error"] != UPLOAD_ERR_NO_FILE) {
+            $error_message = "File upload error: " . $profilePicture["error"];
         }
-    } elseif ($profilePicture["error"] != UPLOAD_ERR_NO_FILE) {
-        $error_message = "File upload error: " . $profilePicture["error"];
     }
 }
 ?>
@@ -162,19 +158,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-align: center;
             margin-top: 10px;
         }
-        .gender-radio {
-    display: flex;
-    margin-top: 5px;
-}
 
-.gender-radio label {
-    margin-right: 10px;
-    white-space: nowrap;
-}
+        .gender-radio {
+            display: flex;
+            margin-top: 5px;
+        }
+
+        .gender-radio label {
+            margin-right: 10px;
+            white-space: nowrap;
+        }
     </style>
     <script>
- 
-
         function validateForm() {
             var name = document.getElementById("name").value;
             var mobileNumber = document.getElementById("mobile_number").value;
@@ -194,37 +189,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 return false;
             }
 
+            // Validate password and confirm password match
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirm_password").value;
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+
             // for image
             if (profilePictureInput.files.length === 0) {
-            alert("Please select a profile picture.");
-            return false;
-        }
+                alert("Please select a profile picture.");
+                return false;
+            }
 
-        // Get the file name and split it to get the extension
-        var fileName = profilePictureInput.value;
-        var fileExtension = fileName.split('.').pop().toLowerCase();
+            // Get the file name and split it to get the extension
+            var fileName = profilePictureInput.value;
+            var fileExtension = fileName.split('.').pop().toLowerCase();
 
-        // Check if the file extension is allowed
-        if (allowedExtensions.indexOf(fileExtension) === -1) {
-            alert("Invalid file format. Accepted formats: JPG, JPEG, PNG, GIF.");
-            profilePictureInput.value = ""; // Clear the file input
-            return false;
-        }
+            // Check if the file extension is allowed
+            if (allowedExtensions.indexOf(fileExtension) === -1) {
+                alert("Invalid file format. Accepted formats: JPG, JPEG, PNG, GIF.");
+                profilePictureInput.value = ""; // Clear the file input
+                return false;
+            }
 
-        return true;
+            return true;
         }
     </script>
 </head>
 <body>
-
     <div class="overlay">
         <h2>Registration</h2>
         <?php if (isset($success_message)): ?>
             <p class="success-message"><?php echo $success_message; ?></p>
         <?php else: ?>
             <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-            <label for="profile_picture">Profile Picture:</label>
-                <input type="file" id="profile_picture" name="profile_picture" accept="image/*"required>
+                <label for="profile_picture">Profile Picture:</label>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*" required>
                 <small>(Accepted formats: JPG, JPEG, PNG, GIF)</small>
 
                 <label for="name">Name:</label>
@@ -249,9 +251,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="confirm_password">Confirm Password:</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
 
-               
-
-               
                 <button type="submit">Register</button>
             </form>
 
@@ -263,6 +262,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ?>
         <?php endif; ?>
     </div>
-
 </body>
 </html>

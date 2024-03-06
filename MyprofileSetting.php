@@ -119,48 +119,55 @@
         </form>
 
         <?php
-       if(!isset($_SESSION)) 
-       { 
-           session_start(); 
-       } 
-        // PHP code for handling form submission and database insertion
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Database connection details
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "Expense";
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Database connection details
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "Expense";
 
-            // Create connection
-            $conn = new mysqli($servername, $username, $password, $dbname);
+        // Create connection
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-            // Get username from session
-            $email = $_SESSION["email"]; // Replace 'your_username_key' with the actual key
-            $name = $_POST["username"];
-            $useremail = $_POST["email"];
-            $gender = $_POST["gender"];
-            $mobile = $_POST["mobile"];
+        // Get username from session
+        $email = $_SESSION["email"]; // Replace 'your_username_key' with the actual key
+        $name = $_POST["username"];
+        $useremail = $_POST["email"];
+        $gender = $_POST["gender"];
+        $mobile = $_POST["mobile"];
 
+        // Check if a new profile image is uploaded
+        if (!empty($_FILES["profileImage"]["name"])) {
             // Handle profile image upload
             $targetDir = "uploads/";
             $targetFile = $targetDir . basename($_FILES["profileImage"]["name"]);
 
             move_uploaded_file($_FILES["profileImage"]["tmp_name"], $targetFile);
 
+            // Update profile image path and other details in the database
             $sql = "UPDATE users SET username='$name', email='$useremail', gender='$gender', mobile_number='$mobile', profile_Image='$targetFile' WHERE email='$email'";
+        } else {
+            // Set default image path if no new profile image is uploaded
+            $default_image = "uploads/Screenshot 2024-01-08 123940.png";
 
-            if ($conn->query($sql) == TRUE) {
-                echo "User data updated successfully.";
-            } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
-            }
+            // Update other details while retaining the default image path
+            $sql = "UPDATE users SET username='$name', email='$useremail', gender='$gender', mobile_number='$mobile', profile_Image='$default_image' WHERE email='$email'";
         }
-        ?>
+
+        if ($conn->query($sql) == TRUE) {
+            echo "User data updated successfully.";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+    }
+?>
+
+
     </div>
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

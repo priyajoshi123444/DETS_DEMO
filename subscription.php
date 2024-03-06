@@ -44,7 +44,7 @@ if ($result_user_id->num_rows > 0) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('assets/images/istockphoto-1342223620-612x612.jpg');
+            background-image: url('assets/images/latest-news-subscribe-update (1) (1).jpg');
             background-size: cover;
             background-position: center;
             color: #333;

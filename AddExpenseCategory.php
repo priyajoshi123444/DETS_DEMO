@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
+            background: url('assets/images/reading-glasses-personal-planning-finances.jpg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;
@@ -18,12 +18,16 @@
         }
 
         .container {
+            width:75% !important;
+            /* max-width: 800px; */
+            margin: auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
-            flex: 1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
         }
         .sidebar {
             width: 250px;
@@ -49,14 +53,12 @@
         .form-group {
             margin-bottom: 20px;
         }
-
         .btn-primary {
-            background-color: #007bff;
-            border: none;
+            background-color: #007bff !important; /* Change background color */
+            border-color: #007bff !important; /* Change border color */
         }
-
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: #0056b3 !important;
         }
 
         .warning-message {

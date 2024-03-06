@@ -41,7 +41,7 @@ if ($result_user_id->num_rows > 0) {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url('assets/images/istockphoto-1342223620-612x612.jpg'); /* Replace 'background.jpg' with your actual background image path */
+    background-image: url('assets/images/financial-income-economic-diagram-money-concept.jpg'); /* Replace 'background.jpg' with your actual background image path */
     background-size: cover;
     background-position: center;
     color: #333;
@@ -49,17 +49,17 @@ if ($result_user_id->num_rows > 0) {
 }
 
 .container {
-    max-width: 800px;
-    margin: auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column; /* Change flex direction to column */
-}
-
+            width:75% !important;
+            /* max-width: 800px; */
+            margin: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            margin-top: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
         .sidebar {
             width: 250px;
             background-color: #111;
@@ -97,12 +97,12 @@ if ($result_user_id->num_rows > 0) {
         }
 
         .btn-primary {
-            background-color: #007bff;
-            border: none;
+            background-color: #007bff !important; /* Change background color */
+            border-color: #007bff !important; /* Change border color */
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: #0056b3 !important;
         }
     </style>
 </head>

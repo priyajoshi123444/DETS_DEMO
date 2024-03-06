@@ -1,3 +1,7 @@
+<?php
+// Start the session
+session_start();
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
@@ -94,8 +98,18 @@
                                         <a class="page-scroll" href="#contact">Contact</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="Login.php">Login</a>
+                                        <?php
+                                        // Check if the user's email is set in the session
+                                        if (isset($_SESSION['email'])) {
+                                            // User is logged in, display Logout option
+                                            echo '<a href="logout.php">Logout</a>';
+                                        } else {
+                                            // User is not logged in, display Login option
+                                            echo '<a href="Login.php">Login</a>';
+                                        }
+                                        ?>
                                     </li>
+
                                 </ul>
                             </div> <!-- navbar collapse -->
                         </nav> <!-- navbar -->

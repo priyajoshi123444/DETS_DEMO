@@ -1,3 +1,13 @@
+<?php
+// Start output buffering to prevent output from being sent prematurely
+ob_start();
+
+// Start the session
+session_start();
+
+// Your remaining PHP code goes here
+// ...
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,20 +19,22 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
+            background: url('assets/images/reading-glasses-personal-planning-finances.jpg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;
             display: flex;
         }
-
         .container {
+            width:75% !important;
+            margin: auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 50px;
-            flex: 1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar {
@@ -69,12 +81,11 @@
 
         .btn-edit,
         .btn-delete {
+            background-color:#007bff;
             text-decoration: none;
             padding: 5px 10px;
             margin-right: 5px;
-            border: 1px solid #007bff;
-            color: #007bff;
-            border-radius: 3px;
+            color: white;
             transition: background-color 0.3s;
         }
 
@@ -84,10 +95,67 @@
             color: #fff;
         }
 
-        .pdf-symbol {
-            font-size: 24px;
-            color: #007bff;
+        .filter-form {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-form label {
             margin-right: 10px;
+        }
+
+        .filter-form select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .filter-form button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .date-column {
+            white-space: nowrap; 
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-buttons a {
+            margin-right: 5px;
+        }
+
+        .container .btn-primary {
+            margin-top: 10px; 
+            width: fit-content; 
+            padding: 5px 10px; 
+            font-size: 16px; 
+            background-color: #007bff; 
+            border-color: #007bff; 
+            color: #fff; 
+        }
+        .btn-primary:hover {
+            background-color: #0056b3 !important;
+        }
+
+        .table-wrapper {
+            height: 500px; 
+            width: 100%; 
+            overflow-y: auto; 
         }
     </style>
 </head>
@@ -98,6 +166,19 @@
 
     <div class="container">
         <h2>Expenses Report</h2>
+
+        <form action="" method="GET" class="filter-form">
+            <label for="month">Filter by Month:</label>
+            <select name="month" id="month">
+                <option value="all">All Months</option>
+                <?php for ($i = 1; $i <= 12; $i++) : ?>
+                    <option value="<?php echo $i; ?>"><?php echo date('F', mktime(0, 0, 0, $i, 1)); ?></option>
+                <?php endfor; ?>
+            </select>
+
+          
+            <button type="submit" class="btn btn-primary">Apply Filter</button>
+        </form>
 
         <?php 
         // Start session to access session variables
@@ -120,11 +201,24 @@
         $email = $_SESSION['email'];
 
         // Fetch expenses for the logged-in user
+        $month = isset($_GET['month']) ? $_GET['month'] : 'all';
+        $year = isset($_GET['year']) ? $_GET['year'] : 'all';
+
         $sql = "SELECT * FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
+
+        if ($month !== 'all') {
+            $sql .= " AND MONTH(expenseDate) = $month";
+        }
+
+        if ($year !== 'all') {
+            $sql .= " AND YEAR(expenseDate) = $year";
+        }
+
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             // Display expenses
+            echo "<div class='table-wrapper'>";
             echo "<table>";
             echo "<tr>
                     <th>ID</th>

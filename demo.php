@@ -1,3 +1,7 @@
+<?php
+// Start the session
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,154 +15,172 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-PyGmuM2e8y9rr8rN50IqBe4J2r+mXPH2M6Zpw/jRP1xCj0zqoqjdt0/Jl08DfP93OiA8s5RTh+H6yOr1P7OxcA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-       /* CSS code */
-/* Updated CSS code */
+        /* CSS code */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('assets/images/creative-business-arrangement-with-colorful-graphics.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #333;
+        }
 
-body {
-    font-family: Arial, sans-serif;
-    background-image: url('assets/images/istockphoto-1342223620-612x612.jpg');
-    background-size: cover;
-    background-position: center;
-    color: #333;
-}
+        .container {
+            width:75% !important;
+            margin: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            margin-top: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap; /* Added flex-wrap */
+            justify-content: space-between; /* Added */
+            margin-right: 56px !important;
 
-.container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start; /* Align items at the start */
-}
-.box {
-    width: calc(50% - 20px); /* Adjust width to fit two boxes side by side with margins */
+        }
+
+        .box {
+    width: calc(25% - 20px); /* Adjust width to fit four boxes evenly with margins */
     height: auto; /* Set height to auto to fit content */
     margin-bottom: 20px; /* Add margin at the bottom */
     padding: 10px; /* Reduce padding */
-    background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+    display: inline-block; /* Display boxes inline */
+    vertical-align: top; /* Align boxes to the top */
+    margin-right: 20px; /* Add margin between the boxes */
 }
-@media (min-width: 768px) {
-    .box {
-        width: calc(25% - 20px); /* Adjust width to fit four boxes evenly with margins */
-    }
-}
-
-.box i {
-    font-size: 48px;
-    margin-bottom: 10px;
-    color: #555;
+        .box:nth-child(1) {
+    background-color: #fff3cd; /* Slightly darker */
 }
 
-.box h3 {
-    font-size: 20px;
-    margin-bottom: 5px;
-    color: #333;
+.box:nth-child(2) {
+    background-color: #cce5ff; /* Slightly darker */
 }
 
-.box p {
-    font-size: 18px;
-    margin-top: 5px;
-    color: #777;
+.box:nth-child(3) {
+    background-color: #d1e7dd; /* Slightly darker */
 }
 
-.charts-container {
-    width: 100%;
+.box:nth-child(4) {
+    background-color: #f5c6cb; /* Slightly darker */
+}
+
+
+        .box i {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .box h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .box p {
+            font-size: 18px;
+            margin-top: 5px;
+            color: #777;
+        }
+
+        .charts-container {
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .chart-container {
+            flex-basis: 48%; /* Adjusted */
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            width: 100%;
+            height: 350px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-container {
     margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
-
-.chart-container {
-    flex: 0 0 calc(50% - 20px);
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-canvas {
-    width: 100%;
-    height: 350px; /* Set a fixed height for better visualization */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.progress-container {
-    margin-top: 20px;
+    width: 100%; /* Set width to 100% to cover the whole container */
 }
 
 .progress {
     height: 30px;
     border-radius: 5px;
     margin-bottom: 10px;
+    width: 100%; /* Set width to 100% to cover the whole container */
 }
 
 .progress-bar {
     border-radius: 5px;
-}
-
-.progress-label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333; /* Adjust text color */
-}
-
-.progress-info {
-    font-size: 14px;
-    color: #777; /* Adjust text color */
-}
-
-.sidebar {
-    width: 250px;
-    background-color: #111;
-    padding-top: 20px;
-    min-height: 100vh;
-    color: #fff;
-    position: fixed;
-    left: 0;
-    top: 0;
-}
-
-.sidebar a {
-    padding: 15px 20px;
-    text-decoration: none;
-    font-size: 18px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidebar a:hover {
-    color: #f1f1f1;
+    width: 100%; /* Set width to 100% to cover the whole container */
 }
 
 
+        .progress-label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .progress-info {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #111;
+            padding-top: 20px;
+            min-height: 100vh;
+            color: #fff;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
 <div class="sidebar">
+    <!-- Sidebar content -->
+    <!-- PHP code for including sidebar -->
     <?php include 'sidebar1.php'; ?>
 </div>
 <div class="container">
+    <!-- PHP code for box content -->
     <?php
     // Start session to access session variables
-    if(!isset($_SESSION)) 
-    { 
+    if(!isset($_SESSION)) { 
         session_start(); 
     } 
     // Include database connection
@@ -230,7 +252,18 @@ canvas {
         }
 
         // Fetch expenses by categories for the logged-in user
-        $sql_expense_categories = "SELECT expenseCategory, SUM(expenseAmount) AS totalExpense FROM expenses WHERE user_id = (SELECT user_id FROM users WHERE email = '$email') GROUP BY expenseCategory";
+        $sql_expense_categories = "SELECT 
+                                        expenseCategory, 
+                                        SUM(expenseAmount) AS totalExpense 
+                                    FROM 
+                                        expenses 
+                                    WHERE 
+                                        user_id = (SELECT user_id FROM users WHERE email = '$email') 
+                                    AND 
+                                        expenseCategory IN 
+                                            (SELECT DISTINCT category FROM budgets WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')) 
+                                    GROUP BY 
+                                        expenseCategory";
         $result_expense_categories = $conn->query($sql_expense_categories);
         $expense_categories = [];
         while ($row = $result_expense_categories->fetch_assoc()) {
@@ -282,13 +315,20 @@ canvas {
     <!-- Progress bars for expense categories -->
     <div class="progress-container">
         <h2>Budget Status by Category</h2>
-        <?php foreach ($category_percentages as $category => $percentage): ?>
-            <div class="progress-label"><?php echo $category; ?></div>
-            <div class="progress">
-                <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo $percentage; ?>%" aria-valuenow="<?php echo $percentage; ?>" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <div class="progress-info"><?php echo number_format($percentage, 2); ?>%</div>
-        <?php endforeach; ?>
+        <?php
+        // Check if there are any budgeted categories
+        if (!empty($category_percentages)) {
+            foreach ($category_percentages as $category => $percentage): ?>
+                <div class="progress-label"><?php echo $category; ?></div>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo $percentage; ?>%" aria-valuenow="<?php echo $percentage; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="progress-info"><?php echo number_format($percentage, 2); ?>%</div>
+            <?php endforeach;
+        } else {
+            echo "<p>No budgeted categories found.</p>";
+        }
+        ?>
     </div>
 </div>
 

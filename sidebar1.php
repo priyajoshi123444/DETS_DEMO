@@ -59,25 +59,32 @@ if ($result->num_rows > 0) {
   
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
-        <li class="nav-item nav-profile">
-            <a href="MyprofileSetting.php" class="nav-link">
-                <div class="nav-profile-image">
-                    <!-- Use the user's profile image if available, otherwise use a default image -->
-                    <?php if (!empty($user['profile_image'])) : ?>
-                        <img src="<?php echo $user['profile_image']; ?>" alt="profile">
-                    <?php else : ?>
-                        <img src="assets/images/default_profile.jpg" alt="profile">
-                    <?php endif; ?>
-                    <span class="login-status online"></span>
-                    <!--change to offline or busy as needed-->
-                </div>
-                <div class="nav-profile-text d-flex flex-column">
-                    <span class="font-weight-bold mb-2"><?php echo $user['username']; ?></span>
-                    <span class="text-secondary text-small"><?php echo $user['email']; ?></span>
-                </div>
-                <span class="mdi mdi-bookmark-check text-success nav-profile-badge"></span>
-            </a>
-        </li>
+    <li class="nav-item nav-profile">
+    <a href="MyprofileSetting.php" class="nav-link">
+        <div class="nav-profile-image">
+            <!-- Use the user's profile image if available, otherwise use a default image -->
+            <?php if (!empty($user['profile_image'])) : ?>
+                <img src="<?php echo $user['profile_image']; ?>" alt="profile">
+            <?php else : ?>
+                <img src="assets/images/hero.jpg" alt="profile">
+            <?php endif; ?>
+            <span class="login-status online"></span>
+            <!--change to offline or busy as needed-->
+        </div>
+        <div class="nav-profile-text d-flex flex-column">
+    <span class="font-weight-bold mb-2">
+        <?php echo $user['username']; ?>
+        <?php if ($user['pricing_status'] == 1): ?>
+            <i class="mdi mdi-star text-primary"></i> <!-- Blue star icon -->
+        <?php endif; ?>
+    </span>
+    <span class="text-secondary text-small"><?php echo $user['email']; ?></span>
+</div>
+
+        <!-- <span class="mdi mdi-bookmark-check text-success nav-profile-badge"></span> -->
+    </a>
+</li>
+
         <li class="nav-item">
             <a class="nav-link" href="index.php">
                 <span class="menu-title">Home</span>
