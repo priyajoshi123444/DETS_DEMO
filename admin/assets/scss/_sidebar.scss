@@ -19,7 +19,7 @@
     margin-bottom: 60px;
 
     .nav-item {
-      padding:0 $sidebar-menu-padding-x;
+      // padding:0 $sidebar-menu-padding-x;
       @include transition-duration(0.25s);
       transition-property: background;
       -webkit-transition-property: background;

@@ -44,8 +44,8 @@
   @include align-items(stretch);
   @include justify-content(stretch);
   >.card{
-    width: 100%;
-    min-width: 100%;
+    width: 20%;
+    min-width: 68%;
   }
 }
 
