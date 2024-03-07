@@ -13,13 +13,13 @@ $mail = new PHPMailer(true);
 try {
     // Server settings
     $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com'; // SMTP server
-    $mail->SMTPAuth   = true;
-    $mail->Username   = 'kagdasakshi09@gmail.com'; // SMTP username
-    $mail->Password   = 'qmqe rosa rkev qlcw';   // SMTP password
+    $mail->Host = 'smtp.gmail.com'; // SMTP server
+    $mail->SMTPAuth = true;
+    $mail->Username = 'kagdasakshi09@gmail.com'; // SMTP username
+    $mail->Password = 'qmqe rosa rkev qlcw';   // SMTP password
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-    $mail->Port       = 587; // TCP port to connect to
-    
+    $mail->Port = 587; // TCP port to connect to
+
     $mail->SMTPSecure = 'tls';
     $mail->SMTPOptions = [
         'ssl' => [
@@ -54,7 +54,7 @@ try {
 
     if ($result !== false && $result->num_rows > 0) {
         // Output data of each row
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             $username = $row["username"];
             $email = $row["email"];
 
@@ -62,8 +62,8 @@ try {
         }
 
         $mail->Subject = 'Your Exclusive Renewal Offer Awaits!';
-        $mail->Body    = 'Your subscription is expiring on ' . $current_date . '. Please renew your subscription.';
-        $mail->AltBody = 'Your subscription is expiring on ' . $current_date . '. Please renew your subscription.';
+        $mail->Body = 'Your subscription is expiring on ' . $current_date . '. Please renew your subscription. Click <a href="C:\xampp\htdocs\DETS(main)\DETS_DEMO\pricing.php">here</a> to view our pricing page.';
+        $mail->AltBody = 'Your subscription is expiring on ' . $current_date . '. Please renew your subscription. Visit C:\xampp\htdocs\DETS(main)\DETS_DEMO\pricing.php to view our pricing page.';
 
         $mail->send();
         echo 'Message has been sent';

@@ -109,6 +109,7 @@ $subscriptions = $resultSub->fetch_all(MYSQLI_ASSOC);
     </sidebar>
     <div class="container mt-5">
       <h2>Subscription Details</h2>
+      <div class="table-wrapper" style="height: 1000px; width: 980px; overflow-y:auto" ;>
       <div class="table table-bordered table-hover">
         <table class="table">
           <thead class="thead">
@@ -168,6 +169,7 @@ $subscriptions = $resultSub->fetch_all(MYSQLI_ASSOC);
         </ul>
         <!-- Button to go back or perform other actions -->
         <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+      </div>
       </div>
     </div>
   </div>

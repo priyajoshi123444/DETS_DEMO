@@ -31,13 +31,13 @@
             color: blueviolet;
             margin-bottom: 20px;
         }
-
+/* 
         .nav-tabs {
             margin-bottom: 20px;
             position: relative;
-        }
+        } */
 
-        .pdf-icon {
+        /* .pdf-icon {
             font-size: 1.5em;
             color: red;
             position: absolute;
@@ -45,7 +45,7 @@
             right: 10px;
             transform: translateY(-50%);
             cursor: pointer;
-        }
+        } */
 
         .main {
             display: flex;
@@ -64,6 +64,11 @@
         .pagination .page-item .page-link {
             color: black;
         }
+        .icon {
+            float: right;
+            margin-right: 10px;
+        }
+
     </style>
 </head>
 
@@ -83,13 +88,50 @@
         <div class="container mt-5">
 
             <h2>View Expenses Reports</h2>
+            <div class="icon">
+                <div class="filter-dropdown">
+                    <label for="filter">Filter by:</label>
+                    <select id="filter" name="filter">
+                        <option value="all">All</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <input type="submit" value="Apply" onclick="applyFilter()">
+                </div>
+            </div>
+            <script>
+               function applyFilter() {
+    var filterValue = document.getElementById('filter').value;
+    var expenses = document.querySelectorAll('.expense-row');
 
+    expenses.forEach(function(expense) {
+        var date = new Date(expense.querySelector('.expense-date').textContent);
+        // Simplified the condition to check if the filter value is 'all'
+        if (filterValue === 'all' || date.getMonth() + 1 === parseInt(filterValue)) {
+            expense.style.display = 'table-row';
+        } else {
+            expense.style.display = 'none';
+        }
+    });
+}
+
+            </script>
             <!-- Tab navigation for expenses and income reports -->
-            <ul class="nav nav-tabs">
+            <!-- <ul class="nav nav-tabs"> -->
 
                 <!-- PDF icon for generating PDF report -->
-                <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-            </ul>
+                <!-- <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i> -->
+            <!-- </ul> -->
             <?php
             // Database connection details
             $host = 'localhost';
@@ -116,15 +158,14 @@
                     $userId = $row["user_id"];
                     $username = $row["username"];
                     $email = $row["email"];
-
+                
                     // SQL query to fetch expenses for the current user
                     $expenseSql = "SELECT * FROM expenses WHERE user_id = $userId";
                     $expenseResult = $conn->query($expenseSql);
-
+                
                     // Check if any expenses exist for the current user
                     if ($expenseResult->num_rows > 0) {
                         echo "<h3>User: $username ($email)</h3>";
-                        // Output table for expenses
                         echo "<table class='table table-bordered table-striped'>";
                         echo "<thead class='thead'>";
                         echo "<tr>";
@@ -137,19 +178,19 @@
                         echo "</tr>";
                         echo "</thead>";
                         echo "<tbody>";
-
+                
                         // Output data of each expense
                         while ($expenseRow = $expenseResult->fetch_assoc()) {
-                            echo "<tr>";
+                            echo "<tr class='expense-row'>";
                             echo "<td>" . $expenseRow["user_id"] . "</td>";
                             echo "<td>" . $expenseRow["expenseName"] . "</td>";
                             echo "<td>" . $expenseRow["expenseAmount"] . "</td>";
                             echo "<td>" . $expenseRow["expenseCategory"] . "</td>";
                             echo "<td>" . $expenseRow["expenseDescription"] . "</td>";
-                            echo "<td>" . $expenseRow["expenseDate"] . "</td>";
+                            echo "<td class='expense-date'>" . $expenseRow["expenseDate"] . "</td>"; 
                             echo "</tr>";
                         }
-
+                
                         echo "</tbody>";
                         echo "</table>";
                     } else {
@@ -157,9 +198,7 @@
                     }
                     echo "<br><br><br>";
                 }
-            } else {
-                echo "<p>No users found.</p>";
-            }
+            }                
             $results_per_page = 10; // Set the desired number of results per page
             if (!isset($_GET['page'])) {
                 $page = 1;

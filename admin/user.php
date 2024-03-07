@@ -1,9 +1,10 @@
 <?php
-// session_start();
+// Ensure session is started
 if (!isset($_SESSION)) {
   session_start();
 }
-// Establish a connection to your database
+
+// Database connection details
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -17,33 +18,34 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch user details from the user table
+// Fetch user details from the users table
 $sql = "SELECT * FROM users";
 $result = $conn->query($sql);
+
+// Initialize an empty array for users
+$users = array();
 
 // Check if there are any users
 if ($result->num_rows > 0) {
   // Fetch user details and populate the $users array
-  $users = array();
   while ($row = $result->fetch_assoc()) {
-    $users[] = $row;
+    $user = $row;
+    // Fetch total expense for the user
+    $sqlExpense = "SELECT SUM(expenseAmount) AS total_expense FROM expenses WHERE user_id = " . $user['user_id'];
+    $resultExpense = $conn->query($sqlExpense);
+    $user['total_expense'] = $resultExpense->fetch_assoc()['total_expense'];
+
+    // Fetch total income for the user
+    $sqlIncome = "SELECT SUM(incomeAmount) AS total_income FROM incomes WHERE user_id = " . $user['user_id'];
+    $resultIncome = $conn->query($sqlIncome);
+    $user['total_income'] = $resultIncome->fetch_assoc()['total_income'];
+
+    // Add user details to the $users array
+    $users[] = $user;
   }
-} else {
-  $users = array(); // If no users found, initialize an empty array
 }
 
-// Fetch total expense and total income for each user
-foreach ($users as &$user) {
-  // Fetch total expense for the user
-  $sqlExpense = "SELECT SUM(expenseAmount) AS total_expense FROM expenses WHERE user_id = " . $user['user_id'];
-  $resultExpense = $conn->query($sqlExpense);
-  $user['total_expense'] = $resultExpense->fetch_assoc()['total_expense'];
 
-  // Fetch total income for the user
-  $sqlIncome = "SELECT SUM(incomeAmount) AS total_income FROM incomes WHERE user_id = " . $user['user_id'];
-  $resultIncome = $conn->query($sqlIncome);
-  $user['total_income'] = $resultIncome->fetch_assoc()['total_income'];
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,9 +56,7 @@ foreach ($users as &$user) {
   <title>Daily Expense Tracker System</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">>
-
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
   <style>
     .main {
       display: flex;
@@ -66,9 +66,6 @@ foreach ($users as &$user) {
     h2 {
       color: black;
     }
-
-
-
 
     .stretch-card .card .card-body {
       width: 68%;
@@ -156,11 +153,12 @@ foreach ($users as &$user) {
     .pagination .page-item .page-link {
       color: black;
     }
+
     .mdi-icon {
-    font-size: 24px;
-   
-    margin-right: 10px; 
-}
+      font-size: 24px;
+
+      margin-right: 10px;
+    }
   </style>
 </head>
 
@@ -194,8 +192,11 @@ foreach ($users as &$user) {
           <tbody>
             <?php foreach ($users as $user): ?>
               <tr>
-                <td><img src="<?php echo $user['profile_image']; ?>" alt="Profile Image"
-                    style="width: 50px; height: 50px;"></td>
+                <td>
+                  <img
+                    src="<?php echo isset($user['profile_image']) && file_exists($user['profile_image']) ? $user['profile_image'] : 'assets/images/faces/face1.jpg'; ?>"
+                    alt="Profile Image" style="width: 50px; height: 50px;">
+                </td>
                 <td>
                   <?php echo $user['username']; ?>
                 </td>
@@ -228,15 +229,14 @@ foreach ($users as &$user) {
                 <td>
                   <form method="post" action="update_pricing_status.php">
                     <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                    <input type="hidden" name="pricing_status" id="pricing_status">
-                    <i id="active" class="mdi mdi-check-circle mdi-icon" style="cursor: pointer;"
-                      onclick="document.getElementById('pricing_status').value = 'active'; this.closest('form').submit();"></i>
-                    <i id="inactive" class="mdi mdi-close-circle mdi-icon" style="cursor: pointer;"
-                      onclick="document.getElementById('pricing_status').value = 'inactive'; this.closest('form').submit();"></i>
-                    <i id="pending" class="mdi mdi-help-circle mdi-icon" style="cursor: pointer;"
-                      onclick="document.getElementById('pricing_status').value = 'pending'; this.closest('form').submit();"></i>
+                    <input type="hidden" name="pricing_status" id="pricing_status_<?php echo $user['user_id']; ?>">
+                    <i class="mdi mdi-check-circle mdi-icon" style="cursor: pointer;"
+                      onclick="updateStatus('active', <?php echo $user['user_id']; ?>)"></i>
+                    <i class="mdi mdi-close-circle mdi-icon" style="cursor: pointer;"
+                      onclick="updateStatus('inactive', <?php echo $user['user_id']; ?>)"></i>
+                    <i class="mdi mdi-help-circle mdi-icon" style="cursor: pointer;"
+                      onclick="updateStatus('pending', <?php echo $user['user_id']; ?>)"></i>
                   </form>
-
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -266,25 +266,13 @@ foreach ($users as &$user) {
     <?php include("footer.php"); ?>
   </footer>
   <script>
-    // Get the button elements
-    var activeBadge = document.getElementById('active');
-    var inactiveButtons = document.getElementById('inactive');
-    var pendingButtons = document.getElementById('pending');
-
-    // Add event listeners to the buttons
-    document.getElementById('active').addEventListener('click', function () {
-      alert('User status updated to Active and Email Sent Sucessfully');
-    });
-
-
-    document.getElementById('inactive').addEventListener('click', function () {
-      alert('User status updated to Inactive');
-    });
-
-    document.getElementById('pending').addEventListener('click', function () {
-      alert('User status updated to Pending');
-    });
+    function updateStatus(status, userId) {
+      document.getElementById('pricing_status_' + userId).value = status;
+      document.getElementById('pricing_status_' + userId).closest('form').submit();
+      alert('User status updated to ' + status + ' for user ID ' + userId);
+    }
   </script>
+
 </body>
 
 </html>

@@ -60,6 +60,10 @@
        .pagination .page-item .page-link {
             color: black;
         }
+        .icon {
+            float: right;
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -76,12 +80,52 @@
         </sidebar>
         <div class="container mt-5">
             <h2>View Income Report</h2>
+            <div class="icon">
+                <div class="filter-dropdown">
+                    <label for="filter">Filter by:</label>
+                    <select id="filter" name="filter">
+                        <option value="all">All</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <input type="submit" value="Apply" onclick="applyFilter()">
+                </div>
+            </div>
+            <script>
+    function applyFilter() {
+        var filterValue = document.getElementById('filter').value;
+        var incomes = document.querySelectorAll('.income-row');
 
-            <ul class="nav nav-tabs">
+        incomes.forEach(function (income) {
+            if (filterValue === 'all') {
+                income.style.display = 'table-row';
+            } else {
+                var date = new Date(income.querySelector('.income-date').textContent);
+                if (date.getMonth() + 1 === parseInt(filterValue)) {
+                    income.style.display = 'table-row';
+                } else {
+                    income.style.display = 'none';
+                }
+            }
+        });
+    }
+</script>
+
+            <!-- <ul class="nav nav-tabs">
 
 
                 <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-            </ul>
+            </ul> -->
 
 
        
@@ -137,13 +181,13 @@ $sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, us
                         
                         // Output data of each income
                         while ($incomeRow = $incomeResult->fetch_assoc()) {
-                            echo "<tr>";
+                            echo "<tr class='income-row'>";
                             echo "<td>" . $incomeRow["user_id"] . "</td>";
                             echo "<td>" . $incomeRow["incomeName"] . "</td>";
                             echo "<td>" . $incomeRow["incomeAmount"] . "</td>";
                             echo "<td>" . $incomeRow["incomeCategory"] . "</td>";
                             echo "<td>" . $incomeRow["incomeDescription"] . "</td>";
-                            echo "<td>" . $incomeRow["incomeDate"] . "</td>";
+                            echo "<td class='income-date'>" . $incomeRow["incomeDate"] . "</td>";
                             echo "</tr>";
                         }
                         

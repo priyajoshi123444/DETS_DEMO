@@ -102,6 +102,10 @@ $result_users = $conn->query($sql_users);
         .pagination .page-item .page-link {
             color: black;
         }
+        .icon {
+            float: right;
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -116,12 +120,56 @@ $result_users = $conn->query($sql_users);
         </sidebar>
         <div class="container mt-5">
             <h2>Combined Expense and Income Report</h2>
+            <div class="table-wrapper" style="height: 1000px; width: 980px; overflow-y:auto" ;>
+            <div class="icon">
+                <div class="filter-dropdown">
+                    <label for="filter">Filter by:</label>
+                    <select id="filter" name="filter">
+                        <option value="all">All</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <input type="submit" value="Apply" onclick="applyFilter()">
+                </div>
+            </div>
+            <script>
+    function applyFilter() {
+        var filterValue = document.getElementById('filter').value; // Get the selected filter value
+        var rows = document.querySelectorAll('.expense-row, .income-row'); // Get all rows with expense-row and income-row classes
 
-            <ul class="nav nav-tabs">
+        rows.forEach(function(row) {
+            var type = row.querySelector('td:first-child').textContent; // Get the type of the row (Expense or Income)
+            var date = row.querySelector('td:last-child').textContent; // Get the date of the row
+
+            // Extract the month from the date
+            var month = new Date(date).getMonth() + 1;
+
+            // Check if the filter value is 'all' or matches the month
+            if (filterValue === 'all' || month === parseInt(filterValue)) {
+                row.style.display = 'table-row'; // Show the row
+            } else {
+                row.style.display = 'none'; // Hide the row
+            }
+        });
+    }
+</script>
+
+
+            <!-- <ul class="nav nav-tabs">
 
 
                 <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-            </ul>
+            </ul> -->
 
             <?php
             // Loop through each user who has added both expenses and income
@@ -199,6 +247,7 @@ $result_users = $conn->query($sql_users);
                 <li class="page-item"><a class="page-link" href="#">Next</a></li>
             </ul>
             <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+            </div>
         </div>
     </div>
 

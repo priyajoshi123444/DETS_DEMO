@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $updateSql = "UPDATE admins SET password = '$hashedNewPassword' WHERE id = '$adminID'";
                 if ($conn->query($updateSql) === TRUE) {
                     echo "Password changed successfully!";
-                    include("Location:accountsetting.php");
+                    header("Location:index.php");
                 } else {
                     echo "Error updating password: " . $conn->error;
                 }
