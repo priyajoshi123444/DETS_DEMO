@@ -17,7 +17,7 @@
             background-color: #f8f9fa;
         }
 
-        .container {
+        /* .container {
             max-width: 800px;
             margin: 50px auto;
             background-color: #ffffff;
@@ -25,19 +25,19 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
-        }
+        } */
 
         h2 {
             color: blueviolet;
             margin-bottom: 20px;
         }
-
+/* 
         .nav-tabs {
             margin-bottom: 20px;
             position: relative;
-        }
+        } */
 
-        .pdf-icon {
+        /* .pdf-icon {
             font-size: 1.5em;
             color: red;
             position: absolute;
@@ -45,62 +45,112 @@
             right: 10px;
             transform: translateY(-50%);
             cursor: pointer;
-        }
-        .main{
+        } */
+
+        .main {
             display: flex;
-            padding-top: 70px ;
+            padding-top: 70px;
         }
+
+        tr {
+            color: black;
+        }
+
+        .thead {
+            background-color: #b66dff;
+
+        }
+
+        .pagination .page-item .page-link {
+            color: black;
+        }
+        .icon {
+            float: right;
+            margin-right: 10px;
+        }
+
     </style>
 </head>
 
 <body>
-    
-<header>
+
+    <header>
         <?php
         include("header.php");
         ?>
     </header>
     <div class="main">
-    <sidebar>
-    <?php
-        include("sidebar.php");
-        ?>
-    </sidebar>
-    <div class="container">
-    
-        <h2>View Expenses Reports</h2>
+        <sidebar>
+            <?php
+            include("sidebar.php");
+            ?>
+        </sidebar>
+        <div class="container mt-5">
 
-        <!-- Tab navigation for expenses and income reports -->
-        <ul class="nav nav-tabs">
-          
-            <!-- PDF icon for generating PDF report -->
-            <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-        </ul>
+            <h2>View Expenses Reports</h2>
+            <div class="icon">
+                <div class="filter-dropdown">
+                    <label for="filter">Filter by:</label>
+                    <select id="filter" name="filter">
+                        <option value="all">All</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <input type="submit" value="Apply" onclick="applyFilter()">
+                </div>
+            </div>
+            <script>
+               function applyFilter() {
+    var filterValue = document.getElementById('filter').value;
+    var expenses = document.querySelectorAll('.expense-row');
 
-        <!-- Tab content for expenses and income reports -->
-        <div class="tab-content">
-            <!-- Expenses Report -->
-            <div class="tab-pane fade show active" id="expenses">
-                <!-- <h3>Expenses Report</h3> -->
-                <?php
+    expenses.forEach(function(expense) {
+        var date = new Date(expense.querySelector('.expense-date').textContent);
+        // Simplified the condition to check if the filter value is 'all'
+        if (filterValue === 'all' || date.getMonth() + 1 === parseInt(filterValue)) {
+            expense.style.display = 'table-row';
+        } else {
+            expense.style.display = 'none';
+        }
+    });
+}
+
+            </script>
+            <!-- Tab navigation for expenses and income reports -->
+            <!-- <ul class="nav nav-tabs"> -->
+
+                <!-- PDF icon for generating PDF report -->
+                <!-- <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i> -->
+            <!-- </ul> -->
+            <?php
             // Database connection details
             $host = 'localhost';
             $username = 'root';
             $password = '';
             $database = 'expense_db';
-            
+
             // Create connection
             $conn = new mysqli($host, $username, $password, $database);
-            
+
             // Check connection
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
             }
-            
+
             // SQL query to fetch users who have added expenses
-            $sql = "SELECT DISTINCT users.id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN expenses ON users.id = expenses.user_id";
+            $sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN expenses ON users.user_id = expenses.user_id";
             $result = $conn->query($sql);
-            
+
             // Check if any users exist
             if ($result->num_rows > 0) {
                 // Output data of each user
@@ -108,17 +158,16 @@
                     $userId = $row["user_id"];
                     $username = $row["username"];
                     $email = $row["email"];
-                    
+                
                     // SQL query to fetch expenses for the current user
                     $expenseSql = "SELECT * FROM expenses WHERE user_id = $userId";
                     $expenseResult = $conn->query($expenseSql);
-                    
+                
                     // Check if any expenses exist for the current user
                     if ($expenseResult->num_rows > 0) {
                         echo "<h3>User: $username ($email)</h3>";
-                        // Output table for expenses
-                        echo "<table class='table table-bordered table-striped'>"; 
-                        echo "<thead class='thead-sucess'>";
+                        echo "<table class='table table-bordered table-striped'>";
+                        echo "<thead class='thead'>";
                         echo "<tr>";
                         echo "<th>User ID</th>";
                         echo "<th>Expense Name</th>";
@@ -129,36 +178,47 @@
                         echo "</tr>";
                         echo "</thead>";
                         echo "<tbody>";
-                        
+                
                         // Output data of each expense
                         while ($expenseRow = $expenseResult->fetch_assoc()) {
-                            echo "<tr>";
+                            echo "<tr class='expense-row'>";
                             echo "<td>" . $expenseRow["user_id"] . "</td>";
                             echo "<td>" . $expenseRow["expenseName"] . "</td>";
                             echo "<td>" . $expenseRow["expenseAmount"] . "</td>";
                             echo "<td>" . $expenseRow["expenseCategory"] . "</td>";
                             echo "<td>" . $expenseRow["expenseDescription"] . "</td>";
-                            echo "<td>" . $expenseRow["expenseDate"] . "</td>";
+                            echo "<td class='expense-date'>" . $expenseRow["expenseDate"] . "</td>"; 
                             echo "</tr>";
                         }
-                        
+                
                         echo "</tbody>";
                         echo "</table>";
                     } else {
                         echo "<p>No expenses found for user: $username ($email)</p>";
                     }
+                    echo "<br><br><br>";
                 }
+            }                
+            $results_per_page = 10; // Set the desired number of results per page
+            if (!isset($_GET['page'])) {
+                $page = 1;
             } else {
-                echo "<p>No users found.</p>";
+                $page = $_GET['page'];
             }
-           
-           
-            ?>
-            
+            $offset = ($page - 1) * $results_per_page;
 
-        <!-- Button to go back or perform other actions -->
-        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
-    </div>
+            ?>
+
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+            <!-- Button to go back or perform other actions -->
+            <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+        </div>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->

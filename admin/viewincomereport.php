@@ -17,7 +17,7 @@
             background-color: #f8f9fa;
         }
 
-        .container {
+        /* .container {
             max-width: 800px;
             margin: 50px auto;
             background-color: #ffffff;
@@ -25,7 +25,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
-        }
+        } */
 
         h2 {
             color: blueviolet;
@@ -50,6 +50,20 @@
             display: flex;
             padding-top: 70px ;
         }
+        tr{
+            color: black;
+        }
+        .thead {
+        background-color: #b66dff;
+
+       }
+       .pagination .page-item .page-link {
+            color: black;
+        }
+        .icon {
+            float: right;
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -61,27 +75,60 @@
         ?>
     </header>
     <div class="main">
-    <sidebar>
-    <?php
-        include("sidebar.php");
-        ?>
-    </sidebar>
-    <div class="container">
-    
-        <h2>View Income Reports</h2>
+        <sidebar>
+            <?php include("sidebar.php"); ?>
+        </sidebar>
+        <div class="container mt-5">
+            <h2>View Income Report</h2>
+            <div class="icon">
+                <div class="filter-dropdown">
+                    <label for="filter">Filter by:</label>
+                    <select id="filter" name="filter">
+                        <option value="all">All</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <input type="submit" value="Apply" onclick="applyFilter()">
+                </div>
+            </div>
+            <script>
+    function applyFilter() {
+        var filterValue = document.getElementById('filter').value;
+        var incomes = document.querySelectorAll('.income-row');
 
-        <!-- Tab navigation for expenses and income reports -->
-        <ul class="nav nav-tabs">
-          
-            <!-- PDF icon for generating PDF report -->
-            <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
-        </ul>
+        incomes.forEach(function (income) {
+            if (filterValue === 'all') {
+                income.style.display = 'table-row';
+            } else {
+                var date = new Date(income.querySelector('.income-date').textContent);
+                if (date.getMonth() + 1 === parseInt(filterValue)) {
+                    income.style.display = 'table-row';
+                } else {
+                    income.style.display = 'none';
+                }
+            }
+        });
+    }
+</script>
 
-        <!-- Tab content for expenses and income reports -->
-        <div class="tab-content">
-            <!-- Expenses Report -->
-            <div class="tab-pane fade show active" id="expenses">
-                <!-- <h3>Expenses Report</h3> -->
+            <!-- <ul class="nav nav-tabs">
+
+
+                <i class="fas fa-file-pdf pdf-icon" onclick="generatePDF()"></i>
+            </ul> -->
+
+
+       
                 <?php
             // Database connection details
             $host = 'localhost';
@@ -98,7 +145,9 @@
             }
             
             // SQL query to fetch users who have added income
-            $sql = "SELECT DISTINCT users.id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN income ON users.id = income.user_id";
+           // SQL query to fetch users who have added income
+$sql = "SELECT DISTINCT users.user_id AS user_id, users.username AS username, users.email AS email FROM users INNER JOIN incomes ON users.user_id = incomes.user_id";
+
             $result = $conn->query($sql);
             
             // Check if any users exist
@@ -110,15 +159,15 @@
                     $email = $row["email"];
                     
                     // SQL query to fetch income for the current user
-                    $incomeSql = "SELECT * FROM income WHERE user_id = $userId";
+                    $incomeSql = "SELECT * FROM incomes WHERE user_id = $userId";
                     $incomeResult = $conn->query($incomeSql);
                     
                     // Check if any income exist for the current user
                     if ($incomeResult->num_rows > 0) {
                         echo "<h3>User: $username ($email)</h3>";
                         // Output table for income
-                        echo "<table class='table table-bordered table-striped'>"; 
-                        echo "<thead class='thead-sucess'>";
+                        echo "<table class='table table-bordered'>"; 
+                        echo "<thead class='thead'>";
                         echo "<tr>";
                         echo "<th>User ID</th>";
                         echo "<th>Income Name</th>";
@@ -132,13 +181,13 @@
                         
                         // Output data of each income
                         while ($incomeRow = $incomeResult->fetch_assoc()) {
-                            echo "<tr>";
+                            echo "<tr class='income-row'>";
                             echo "<td>" . $incomeRow["user_id"] . "</td>";
                             echo "<td>" . $incomeRow["incomeName"] . "</td>";
                             echo "<td>" . $incomeRow["incomeAmount"] . "</td>";
                             echo "<td>" . $incomeRow["incomeCategory"] . "</td>";
                             echo "<td>" . $incomeRow["incomeDescription"] . "</td>";
-                            echo "<td>" . $incomeRow["incomeDate"] . "</td>";
+                            echo "<td class='income-date'>" . $incomeRow["incomeDate"] . "</td>";
                             echo "</tr>";
                         }
                         
@@ -147,41 +196,39 @@
                     } else {
                         echo "<p>No income found for user: $username ($email)</p>";
                     }
+                    echo "<br><br><br>";
                 }
             } else {
                 echo "<p>No users found.</p>";
             }
            
-           
+            $results_per_page = 10; // Set the desired number of results per page
+            if (!isset($_GET['page'])) {
+                $page = 1;
+            } else {
+                $page = $_GET['page'];
+            }
+            $offset = ($page - 1) * $results_per_page;
             ?>
             
-
-        <!-- Button to go back or perform other actions -->
-        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
-    </div>
+            <ul class="pagination">
+  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+  <li class="page-item"><a class="page-link" href="#">1</a></li>
+  <li class="page-item"><a class="page-link" href="#">2</a></li>
+  <li class="page-item"><a class="page-link" href="#">3</a></li>
+  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+</ul>
+<a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+        </div>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Font Awesome JS -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <script>
-        function generatePDF() {
-            // Create a new jsPDF instance
-            var doc = new jsPDF();
-
-            // Add content to the PDF
-            doc.text('Expense Report', 10, 10);
-            // ... Add more content as needed ...
-
-            // Save the PDF with a specific name
-            doc.save('expense_report.pdf');
-        }
-    </script>
     <footer>
-        <?php include('footer.php'); ?>
+        <?php include("footer.php"); ?>
     </footer>
 </body>
-
 </html>
