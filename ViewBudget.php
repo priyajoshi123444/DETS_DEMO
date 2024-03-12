@@ -20,7 +20,7 @@ session_start();
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('assets/images/Screenshot 2024-03-06 143159.png') no-repeat center center fixed;
+            background: url('assets/images/account-assets-audit-bank-bookkeeping-finance-concept.jpg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;

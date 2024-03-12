@@ -21,7 +21,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('assets/images/istockphoto-1342223620-612x612.jpg') no-repeat center center fixed;
+            background: url('assets/images/work-with-magnifying-glass-calculator-papers.jpg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;

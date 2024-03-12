@@ -168,6 +168,7 @@ session_start();
         .sidebar a:hover {
             color: #f1f1f1;
         }
+        
     </style>
 </head>
 <body>
@@ -288,18 +289,18 @@ session_start();
         <h3>Total Monthly Income</h3>
         <p id="totalMonthlyIncome"><?php echo $totalMonthlyIncome; ?></p>
     </div>
-
     <div class="box">
-        <i class="fas fa-coins"></i>
-        <h3>Total Expenses</h3>
-        <p id="totalExpenses"><?php echo $totalExpenses; ?></p>
-    </div>
+    <i class="fas fa-coins"></i>
+    <h3>Total Expenses</h3>
+    <p id="totalExpenses" <?php echo ($totalExpenses > $totalIncome) ? 'style="color: red;"' : ''; ?>><?php echo $totalExpenses; ?></p>
+</div>
 
-    <div class="box">
-        <i class="far fa-calendar-times"></i>
-        <h3>Total Monthly Expenses</h3>
-        <p id="totalMonthlyExpenses"><?php echo $totalMonthlyExpenses; ?></p>
-    </div>
+<div class="box">
+    <i class="far fa-calendar-times"></i>
+    <h3>Total Monthly Expenses</h3>
+    <p id="totalMonthlyExpenses" <?php echo ($totalMonthlyExpenses > $totalMonthlyIncome) ? 'style="color: red;"' : ''; ?>><?php echo $totalMonthlyExpenses; ?></p>
+</div>
+
 
     <div class="charts-container">
         <div class="chart-container">

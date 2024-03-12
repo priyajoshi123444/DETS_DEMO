@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('assets/images/reading-glasses-personal-planning-finances.jpg') no-repeat center center fixed;
+            background: url('assets/images/flat-lay-finance-elements-assortment-with-empty-notepad.jpg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;

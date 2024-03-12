@@ -12,7 +12,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('assets/images/istockphoto-1342223620-612x612.jpg'); /* Replace 'background.jpg' with your actual background image path */
+            background-image: url('assets/images/blue-user-icon-symbol-website-admin-social-login-element-concept-white-background-3d-rendering.jpg'); /* Replace 'background.jpg' with your actual background image path */
             background-size: cover;
             background-position: center;
             color: #333;

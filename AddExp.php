@@ -40,7 +40,7 @@ if ($result_user_info->num_rows > 0) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('assets/images/reading-glasses-personal-planning-finances.jpg');
+            background-image: url('assets/images/flat-lay-finance-elements-assortment-with-empty-notepad.jpg');
             /* Replace 'background.jpg' with your actual background image path */
             background-size: cover;
             background-position: center;

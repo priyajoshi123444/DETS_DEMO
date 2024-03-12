@@ -12,7 +12,7 @@
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url('assets/images/Screenshot 2024-03-06 143159.png'); /* Replace 'background.jpg' with your actual background image path */
+    background-image: url('assets/images/account-assets-audit-bank-bookkeeping-finance-concept.jpg'); /* Replace 'background.jpg' with your actual background image path */
     background-size: cover;
     background-position: center;
     color: #333;
