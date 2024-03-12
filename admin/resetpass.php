@@ -22,34 +22,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["new_password"])) {
         $password = $_POST["new_password"];
 
-        $checkTokenQuery = "SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > NOW()";
-$checkTokenStmt = $conn->prepare($checkTokenQuery);
-$checkTokenStmt->bind_param("s", $token);
-$checkTokenStmt->execute();
-$checkTokenResult = $checkTokenStmt->get_result();
+        // Check if the token is valid and not expired
+        $checkTokenQuery = "SELECT * FROM admins WHERE reset_token = ? AND reset_token_expiry > NOW()";
+        $checkTokenStmt = $conn->prepare($checkTokenQuery);
+        if (!$checkTokenStmt) {
+            die("Prepare failed: " . $conn->error);
+        }
+        $checkTokenStmt->bind_param("s", $token);
+        if (!$checkTokenStmt->execute()) {
+            die("Execute failed: " . $checkTokenStmt->error);
+        }
+        $checkTokenResult = $checkTokenStmt->get_result();
 
-if ($checkTokenResult !== false && $checkTokenResult->num_rows > 0) {
-    $user = $checkTokenResult->fetch_assoc();
-    $email = $user["email"];
+        if ($checkTokenResult !== false && $checkTokenResult->num_rows > 0) {
+            $user = $checkTokenResult->fetch_assoc();
+            $email = $user["email"];
 
-    // Rest of the code
-} else {
-    echo "Invalid or expired token.";
-}
+            // Update the password and set status and last_password_change fields
+            $updatePasswordQuery = $conn->prepare("UPDATE admins SET password = ?, reset_status = 1, last_password_change = NOW() WHERE email = ?");
+            if (!$updatePasswordQuery) {
+                die("Prepare failed: " . $conn->error);
+            }
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $updatePasswordQuery->bind_param("ss", $hashedPassword, $email);
 
-$checkTokenStmt->close();
+            if ($updatePasswordQuery->execute()) {
+                echo "Password reset successfully.";
+            } else {
+                echo "Error updating password: " . $conn->error;
+            }
 
+            $updatePasswordQuery->close();
         } else {
             echo "Invalid or expired token.";
         }
     } else {
         echo "New password not provided.";
     }
-
+}
 ?>
-<!-- Your HTML code remains the same -->
 
-<!-- Your HTML code remains the same -->
 
 <!DOCTYPE html>
 <html lang="en">

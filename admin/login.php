@@ -4,13 +4,11 @@
       session_start(); 
   } 
 
-if (!isset($_SESSION["user_id"])) {
-    // Redirect to the login page if the user is not logged in
-    // header("Location: login.php");
-    // exit();
+if (!isset($_SESSION["id"])) {
+    
 }
 
-// Continue with the rest of your code here
+
 
 
 
@@ -35,9 +33,9 @@ if (isset($_POST['submit'])) {
     $password = trim($_POST["password"]);
 
     // Retrieve hashed password from the database
-    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $sql = "SELECT * FROM admins WHERE email = '$email'";
     $result = $conn->query($sql);
-
+    $error = 0;
     if ($result !== false && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
 
@@ -48,10 +46,11 @@ if (isset($_POST['submit'])) {
             header("Location: index.php");
             exit();
         } else {
-            echo "Incorrect email or password";
+          $error=1;
+            //echo "Incorrect email or password";
         }
     } else {
-        echo "User not found";
+        echo "Admin not found";
     }
 }
 
@@ -65,7 +64,7 @@ if (isset($_POST['submit'])) {
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Budget Buddy</title>
+  <title>Daily Expense Tracker System</title>
   <script>
         function validateForm() {
             var email = document.getElementById("exampleInputEmail1").value;
@@ -111,6 +110,10 @@ return true;
               </div>
               <h4>Hello! let's get started</h4>
               <h6 class="font-weight-light">Sign in to continue.</h6>
+              <?php 
+              if (isset($error) && $error == 1) {
+                echo "<span style='color:#f00000;'>Invalid user name and password</span>";
+              }?>
               <form class="pt-3" method="post" onsubmit="return validateForm()">
                 <div class="form-group">
                   <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email" name="email">
