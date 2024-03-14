@@ -178,7 +178,7 @@ $result_users = $conn->query($sql_users);
                             echo "<tr class='expense-row'>"; // Add expense-row class
                             echo "<td>Expense</td>";
                             echo "<td>" . $row['name'] . "</td>";
-                            echo "<td>$" . $row['amount'] . "</td>";
+                            echo "<td>" . $row['amount'] . "</td>";
                             echo "<td>" . $row['category'] . "</td>";
                             echo "<td>" . $row['description'] . "</td>";
                             echo "<td>" . $row['date'] . "</td>";
@@ -190,7 +190,7 @@ $result_users = $conn->query($sql_users);
                             echo "<tr class='income-row'>"; // Add income-row class
                             echo "<td>Income</td>";
                             echo "<td>" . $row['name'] . "</td>";
-                            echo "<td>$" . $row['amount'] . "</td>";
+                            echo "<td>" . $row['amount'] . "</td>";
                             echo "<td>" . $row['category'] . "</td>";
                             echo "<td>" . $row['description'] . "</td>";
                             echo "<td>" . $row['date'] . "</td>";

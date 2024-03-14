@@ -172,89 +172,91 @@ if ($result->num_rows > 0) {
       <?php include("sidebar.php"); ?>
     </sidebar>
     <div class="content-wrapper">
-    <div class="container mt-5">
-      <h2> User Details</h2>
-      <div class="table-wrapper" style="height: 1000px; width: 980px; overflow-y:auto" ;>
-        <table class=" table table-bordered table-hover">
-          <thead class="thead">
-            <tr>
-              <th>Profile Image</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Gender</th>
-              <th>Mobile Number</th>
-              <th>Current Status</th>
-              <th>Total Expense</th>
-              <th>Total Income</th>
-              <th>Action</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($users as $user): ?>
+      <div class="container mt-5">
+        <h2> User Details</h2>
+        <div class="table-wrapper" style="height: 1000px; width: 980px; overflow-y:auto" ;>
+          <table class=" table table-bordered table-hover">
+            <thead class="thead">
               <tr>
-                <td>
-                  <img
-                    src="<?php echo isset($user['profile_image']) && file_exists($user['profile_image']) ? $user['profile_image'] : 'assets/images/faces/face1.jpg'; ?>"
-                    alt="Profile Image" style="width: 50px; height: 50px;">
-                </td>
-                <td>
-                  <?php echo $user['username']; ?>
-                </td>
-                <td>
-                  <?php echo $user['email']; ?>
-                </td>
-                <td>
-                  <?php echo $user['gender']; ?>
-                </td>
-                <td>
-                  <?php echo $user['mobile_number']; ?>
-                </td>
-                <td>
-                  <?php
-                  if ($user['pricing_status'] == 0) {
-                    echo "Inactive";
-                  } else if ($user['pricing_status'] == 1) {
-                    echo "Active";
-                  } else if ($user['pricing_status'] == 2) {
-                    echo "Pending";
-                  }
-                  ?>
-                </td>
-                <td>
-                  <?php echo isset($user['total_expense']) ? $user['total_expense'] : 0; ?>
-                </td>
-                <td>
-                  <?php echo isset($user['total_income']) ? $user['total_income'] : 0; ?>
-                </td>
-                <td>
-                  <form method="post" action="update_pricing_status.php">
-                    <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                    <input type="hidden" name="pricing_status" id="pricing_status_<?php echo $user['user_id']; ?>">
-                    <i class="mdi mdi-check-circle mdi-icon" style="cursor: pointer;"
-                      onclick="updateStatus('active', <?php echo $user['user_id']; ?>)"></i>
-                    <i class="mdi mdi-close-circle mdi-icon" style="cursor: pointer;"
-                      onclick="updateStatus('inactive', <?php echo $user['user_id']; ?>)"></i>
-                    <i class="mdi mdi-help-circle mdi-icon" style="cursor: pointer;"
-                      onclick="updateStatus('pending', <?php echo $user['user_id']; ?>)"></i>
-                  </form>
-                </td>
+                <th>Profile Image</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Mobile Number</th>
+                <th>Current Status</th>
+                <th>Total Expense</th>
+                <th>Total Income</th>
+                <th>Action</th>
+
               </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-        <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-        <!-- Button to go back or perform other actions -->
-        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+            </thead>
+            <tbody>
+              <?php foreach ($users as $user): ?>
+                <tr>
+                  <td>
+                    <img
+                      src="<?php echo isset($user['profile_image']) && file_exists($user['profile_image']) ? $user['profile_image'] : 'assets/images/faces/face1.jpg'; ?>"
+                      alt="Profile Image" style="width: 50px; height: 50px;">
+                  </td>
+                  <td>
+                    <?php echo $user['username']; ?>
+                  </td>
+                  <td>
+                    <?php echo $user['email']; ?>
+                  </td>
+                  <td>
+                    <?php echo $user['gender']; ?>
+                  </td>
+                  <td>
+                    <?php echo $user['mobile_number']; ?>
+                  </td>
+                  <td>
+                    <?php
+                    if ($user['pricing_status'] == 0) {
+                      echo "Inactive";
+                    } else if ($user['pricing_status'] == 1) {
+                      echo "Active";
+                    } else if ($user['pricing_status'] == 2) {
+                      echo "Pending";
+                    }
+                    ?>
+                  </td>
+                  <td>
+                    <?php echo isset($user['total_expense']) ? $user['total_expense'] : 0; ?>
+                  </td>
+                  <td>
+                    <?php echo isset($user['total_income']) ? $user['total_income'] : 0; ?>
+                  </td>
+                  <td>
+                    <form method="post" action="update_pricing_status.php">
+                      <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                      <input type="hidden" name="pricing_status" id="pricing_status_<?php echo $user['user_id']; ?>">
+                      <i class="mdi mdi-check-circle mdi-icon" style="cursor: pointer;"
+                        onclick="updateStatus('active', <?php echo $user['user_id']; ?>)"></i>
+                      <i class="mdi mdi-close-circle mdi-icon" style="cursor: pointer;"
+                        onclick="updateStatus('inactive', <?php echo $user['user_id']; ?>)"></i>
+                      <i class="mdi mdi-help-circle mdi-icon" style="cursor: pointer;"
+                        onclick="updateStatus('pending', <?php echo $user['user_id']; ?>)"></i>
+                      <i class="mdi mdi-delete mdi-icon" style="cursor: pointer;"
+                        onclick="deleteUser(<?php echo $user['user_id']; ?>)"></i>
+
+                    </form>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+          <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+        </div>
       </div>
     </div>
-  </div>
   </div>
   </div>
 
@@ -272,6 +274,29 @@ if ($result->num_rows > 0) {
       document.getElementById('pricing_status_' + userId).closest('form').submit();
       alert('User status updated to ' + status + ' for user ID ' + userId);
     }
+
+    function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user?')) {
+            // Create a form element
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = 'delete_user.php';
+
+            // Create an input field to hold the user ID
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'user_id';
+            input.value = userId;
+
+            // Append the input field to the form
+            form.appendChild(input);
+
+            // Append the form to the document body and submit it
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
   </script>
 
 </body>

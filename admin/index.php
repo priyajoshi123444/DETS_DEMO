@@ -79,9 +79,11 @@ foreach ($subscriptions as $subscription) {
       width: 20%;
       min-width: 68%;
     }
-    .thead{
+
+    .thead {
       background-color: #b66dff;
     }
+
     th {
       color: white;
     }
@@ -156,17 +158,17 @@ foreach ($subscriptions as $subscription) {
                 <h4 class="card-title">User Status</h4>
                 <div class="table">
                   <table class="table table-striped ">
-                     <thead class="thead">
-                    <tr>
-                      <th>User Id</th>
-                      <th>Subscription ID</th>
-                      <th> Username </th>
-                      <th> Start Date</th>
-                      <th> End Date </th>
-                      <th>Total Expense</th>
-                      <th>Total Income</th>
-                      <th>Renew</th>
-                    </tr>
+                    <thead class="thead">
+                      <tr>
+                        <th>User Id</th>
+                        <th>Subscription ID</th>
+                        <th> Username </th>
+                        <th> Start Date</th>
+                        <th> End Date </th>
+                        <th>Total Expense</th>
+                        <th>Total Income</th>
+                        <th>Renew</th>
+                      </tr>
                     </thead>
                     <?php foreach ($subscriptions as $subscription): ?>
                       <tr>

@@ -195,7 +195,7 @@
     <!-- Font Awesome JS -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 
-    <script>
+    <!-- <script>
         function generatePDF() {
             // Create a new jsPDF instance
             var doc = new jsPDF();
@@ -207,7 +207,7 @@
             // Save the PDF with a specific name
             doc.save('expense_report.pdf');
         }
-    </script>
+    </script> -->
     <footer>
         <?php include('footer.php'); ?>
     </footer>

@@ -92,6 +92,7 @@ $subscriptions = $resultSub->fetch_all(MYSQLI_ASSOC);
       background-color: yellow;
     }
 
+
     .pagination .page-item .page-link {
       color: black;
     }
@@ -108,72 +109,74 @@ $subscriptions = $resultSub->fetch_all(MYSQLI_ASSOC);
       <?php include("sidebar.php"); ?>
     </sidebar>
     <div class="content-wrapper">
-    <div class="container mt-5">
-      <h2>Subscription Details</h2>
-      <div class="table-wrapper" style="height: 1000px; width: 900px; overflow-y:auto" ;>
-      <div class="table table-bordered table-hover">
-        <table class="table">
-          <thead class="thead">
-            <tr>
-              <th>Subscription ID</th>
-              <th>User ID</th>
-              <th>Subscription Plan</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Billing Frequency</th>
-              <th>Amount</th>
-              <th>Payment Method</th>
-              <th>Status</th>
+      <div class="container mt-5">
+        <h2>Subscription Details</h2>
+        <div class="table-wrapper" style="height: 1000px; width: 900px; overflow-y:auto" ;>
+          <div class="table table-bordered table-hover">
+            <table class="table">
+              <thead class="thead">
+                <tr>
+                  <th>Subscription ID</th>
+                  <th>User ID</th>
+                  <th>Subscription Plan</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Billing Frequency</th>
+                  <th>Amount</th>
+                  <th>Payment Method</th>
+                  <th>Status</th>
 
-            </tr>
-          </thead>
-          <?php foreach ($subscriptions as $subscription): ?>
-            <tr>
-              <td>
-                <?php echo $subscription['subscription_id']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['user_id']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['subscription_plan']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['start_date']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['end_date']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['billing_frequency']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['amount']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['payment_method']; ?>
-              </td>
-              <td>
-                <?php echo $subscription['status']; ?>
-              </td>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($subscriptions as $subscription): ?>
+                  <tr>
+                    <td>
+                      <?php echo $subscription['subscription_id']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['user_id']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['subscription_plan']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['start_date']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['end_date']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['billing_frequency']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['amount']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['payment_method']; ?>
+                    </td>
+                    <td>
+                      <?php echo $subscription['status']; ?>
+                    </td>
 
-            </tr>
-          <?php endforeach; ?>
-        </table>
-
-        <ul class="pagination">
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+            <ul class="pagination">
           <li class="page-item"><a class="page-link" href="#">Previous</a></li>
           <li class="page-item"><a class="page-link" href="#">1</a></li>
           <li class="page-item"><a class="page-link" href="#">2</a></li>
           <li class="page-item"><a class="page-link" href="#">3</a></li>
           <li class="page-item"><a class="page-link" href="#">Next</a></li>
         </ul>
-        <!-- Button to go back or perform other actions -->
-        <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
-      </div>
+            <a href="index.php" class="btn btn-primary mt-3">Go Back</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
   <!-- Bootstrap JS and Popper.js -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

@@ -45,7 +45,7 @@ try {
     }
 
     // Get current date
-    $current_date = date("2025-02-18");
+    $current_date = date("2025-02-24");
 
     // Get users whose subscription is expiring in 3 days
     $sql = "SELECT s.*, u.username, u.email FROM subscription s JOIN users u ON s.user_id = u.user_id WHERE s.end_date = DATE_ADD('$current_date', INTERVAL 3 DAY)";
