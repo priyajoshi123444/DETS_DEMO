@@ -1,13 +1,12 @@
 <?php
-// Start the session
-session_start();
-
 // Include PHPMailer classes
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Load Composer's autoloader
 require 'vendor/autoload.php';
+
+// Start the session
+session_start();
 
 // Check if the confirm_payment button was clicked
 if (isset($_POST['confirm_payment'])) {
@@ -20,38 +19,36 @@ if (isset($_POST['confirm_payment'])) {
     // Get the payment method selected by the user
     $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : 'Unknown';
 
-    // Create a new PHPMailer instance
+    // SMTP configuration
+    $smtp_host = 'smtp.gmail.com';
+    $smtp_port = 587; // Use 587 for TLS
+    $smtp_username = '21bcuos093@ddu.ac.in';
+    $smtp_password = 'lejz xnsj qtrk nqsr';
+
     $mail = new PHPMailer(true);
-
     try {
-        //Server settings
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'priyajoshi1613@gmail.com';
-        $mail->Password = 'yluu rfcn zvdl mtly';
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
-        //Recipients
-        $mail->setFrom($user_email); // Set the sender's email address
-        $mail->addAddress($admin_email); // Add the admin's email address
+        // Sender and recipient
+        $mail->setFrom($smtp_username);
+        $mail->addAddress($admin_email);
 
-        // Content
-        $mail->isHTML(true); // Set email format to HTML
+        // Email content
+        $mail->isHTML(false);
         $mail->Subject = 'Payment Confirmation';
-        // Constructing the email body
-        $mail->Body = '<p>Dear Admin,</p>';
-        $mail->Body .= '<p>I am writing to inform you that the payment has been confirmed by a user. Here are the details:</p>';
-        $mail->Body .= '<ul>';
-        $mail->Body .= '<li>User Email: ' . $user_email . '</li>';
-        // You can add more details if needed
-        $mail->Body .= '</ul>';
-        $mail->Body .= '<p>Please take necessary actions accordingly.</p>';
-        $mail->Body .= '<p>Best regards,<br>User</p>';
+        $mail->Body = 'Payment method selected: ' . $paymentMethod;
+
+        // SMTP configuration
+        $mail->isSMTP();
+        $mail->Host = $smtp_host;
+        $mail->SMTPAuth = true;
+        $mail->Username = $smtp_username;
+        $mail->Password = $smtp_password;
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = $smtp_port;
 
         // Send the email
         $mail->send();
-        
+        echo 'Email sent successfully';
+
         // Database connection
         include 'connection.php'; // Include your database connection file
 
@@ -71,7 +68,7 @@ if (isset($_POST['confirm_payment'])) {
             // Other subscription details (assumed constants)
             $subscriptionPlan = 'Premium';
             $billingFrequency = 'Yearly';
-            $amount = 500;
+            $amount = 100;
 
             // Determine status based on pricing status
             $status = $pricing_status == 1 ? 'Active' : 'Pending';
@@ -85,15 +82,15 @@ if (isset($_POST['confirm_payment'])) {
                 echo '<script>alert("Email sent successfully! Payment is confirmed. Subscription information added to the database.");</script>';
                 // Redirect to another page
                 header('Location: bankdetails.php');
+                exit; // Terminate script execution after redirect
             } else {
                 echo "Error: " . $sql . "<br>" . $conn->error;
             }
         } else {
             echo "User not found";
         }
-
     } catch (Exception $e) {
-        echo "Failed to send email: {$mail->ErrorInfo}";
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
 ?>

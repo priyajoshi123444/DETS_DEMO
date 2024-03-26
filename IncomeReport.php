@@ -99,7 +99,8 @@ session_start();
         }
 
         /* Style for the filter dropdown */
-        .filter-form {
+         /* Style for the filter dropdown */
+         .filter-form {
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -107,6 +108,7 @@ session_start();
 
         .filter-form label {
             margin-right: 10px;
+            font-weight: bold;
         }
 
         .filter-form select {
@@ -114,6 +116,7 @@ session_start();
             border-radius: 5px;
             border: 1px solid #ccc;
             outline: none;
+            margin-right: 10px;
         }
 
         .filter-form button {
@@ -130,6 +133,11 @@ session_start();
             background-color: #0056b3;
         }
 
+        /* Adjust button width and margin */
+        .filter-form button {
+            min-width: 100px;
+            margin-left: 10px;
+        }
         /* Adjust date column */
         .date-column {
             white-space: nowrap; /* Prevent line break */
@@ -151,7 +159,7 @@ session_start();
         /* Style for the "Go Back" button */
 /* Style for the "Go Back" button */
 .container .btn-primary {
-    margin-top: 10px; /* Add margin to separate from the table */
+    margin-top: 0px; /* Add margin to separate from the table */
     width: fit-content; /* Adjust button width to fit content */
     padding: 5px 10px; /* Adjust padding */
     font-size: 16px; /* Decrease font size */

@@ -64,11 +64,7 @@ if ($result_user_info->num_rows > 0) {
             width: 250px;
             background-color: #111;
             padding-top: 20px;
-            min-height: 100vh;
-            color: #fff;
-            position: fixed;
-            left: 0;
-            top: 0;
+            height: 100%;
         }
 
         .sidebar a {
@@ -83,6 +79,7 @@ if ($result_user_info->num_rows > 0) {
         .sidebar a:hover {
             color: #f1f1f1;
         }
+
 
         h2 {
             color: #007bff;
@@ -108,6 +105,9 @@ if ($result_user_info->num_rows > 0) {
         .btn-primary:hover {
             background-color: #0056b3 !important;
         }
+        .btn-secondary:not(.btn-light) {
+    color: #ffffff;
+}
     </style>
 </head>
 <body>
@@ -131,12 +131,17 @@ if ($result_user_info->num_rows > 0) {
                 <label for="expenseCategory">Expense Category</label>
                 <select class="form-select" name="expenseCategory" id="expenseCategory" required>
                     <option value="" disabled selected>Select category</option>
-                    <option value="food">Food</option>
-                    <option value="utilities">Utilities</option>
-                    <option value="transportation">Transport</option>
-                    <option value="hospital">Hospital</option>
-                    <option value="education">Education</option>
-                    <option value="selfcare">Self Care</option>
+                    <option value="Food">Food</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Transportation">Transport</option>
+                    <option value="Hospital">Hospital</option>
+                    <option value="Education">Education</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Entertaiment">Entertaiment</option>
+                    <option value="Home">Home</option>
+                    <option value="Other">Other</option>
+                    <option value="Electronic">Electronic</option>
+                   
                    
                     <?php
                     // Loop through categories and generate options

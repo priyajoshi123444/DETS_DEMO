@@ -144,7 +144,7 @@ session_start();
 
         /* Style for the "Go Back" button */
         .container .btn-primary {
-            margin-top: 10px; /* Add margin to separate from the table */
+            margin-top: 0px; /* Add margin to separate from the table */
             width: fit-content; /* Adjust button width to fit content */
             padding: 5px 10px; /* Adjust padding */
             font-size: 16px; /* Decrease font size */
@@ -161,6 +161,45 @@ session_start();
             height: 500px; /* Set height to 500px */
             width: 100%; /* Set width to 100% */
             overflow-y: auto; /* Add vertical scrollbar */
+        }
+        /* Style for the filter dropdown */
+        .filter-form {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-form label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .filter-form select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        .filter-form button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Adjust button width and margin */
+        .filter-form button {
+            min-width: 100px;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -181,17 +220,24 @@ session_start();
                     <option value="<?php echo $i; ?>"><?php echo date('F', mktime(0, 0, 0, $i, 1)); ?></option>
                 <?php endfor; ?>
             </select>
+
+            <label for="year">Filter by Year:</label>
+            <select name="year" id="year">
+                <option value="all">All Years</option>
+                <?php 
+                // Modify the range of years as per your requirement
+                $currentYear = date("Y");
+                for ($year = $currentYear; $year >= 2020; $year--) : ?>
+                    <option value="<?php echo $year; ?>"><?php echo $year; ?></option>
+                <?php endfor; ?>
+            </select>
+
             <button type="submit" class="btn btn-primary">Apply Filter</button>
         </form>
 
+
         <!-- Income Table -->
         <?php 
-        // Start session to access session variables
-        if(!isset($_SESSION)) 
-        { 
-            session_start(); 
-        } 
-
         // Include database connection
         include 'connection.php';
 
@@ -207,11 +253,16 @@ session_start();
 
         // Fetch income for the logged-in user based on filter selection
         $month = isset($_GET['month']) ? $_GET['month'] : 'all';
+        $year = isset($_GET['year']) ? $_GET['year'] : 'all';
 
         $sql = "SELECT * FROM incomes WHERE user_id = (SELECT user_id FROM users WHERE email = '$email')";
 
         if ($month !== 'all') {
             $sql .= " AND MONTH(incomeDate) = $month";
+        }
+
+        if ($year !== 'all') {
+            $sql .= " AND YEAR(incomeDate) = $year";
         }
         
         $result = $conn->query($sql);

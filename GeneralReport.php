@@ -100,8 +100,8 @@
             color: #fff;
         }
 
-        /* Style for the filter dropdown */
-        .filter-form {
+       /* Style for the filter dropdown */
+       .filter-form {
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -109,6 +109,7 @@
 
         .filter-form label {
             margin-right: 10px;
+            font-weight: bold;
         }
 
         .filter-form select {
@@ -116,6 +117,7 @@
             border-radius: 5px;
             border: 1px solid #ccc;
             outline: none;
+            margin-right: 10px;
         }
 
         .filter-form button {
@@ -130,6 +132,12 @@
 
         .filter-form button:hover {
             background-color: #0056b3;
+        }
+
+        /* Adjust button width and margin */
+        .filter-form button {
+            min-width: 100px;
+            margin-left: 10px;
         }
 
         /* Adjust date column */
@@ -153,7 +161,7 @@
 
         /* Style for the "Go Back" button */
         .container .btn-primary {
-            margin-top: 10px; /* Add margin to separate from the table */
+            margin-top: 0px; /* Add margin to separate from the table */
             width: fit-content; /* Adjust button width to fit content */
             padding: 5px 10px; /* Adjust padding */
             font-size: 16px; /* Decrease font size */
@@ -261,7 +269,7 @@ $result = $conn->query($sql);
                             <td>{$row['Category']}</td>
                             <td>{$row['Description']}</td>
                             <td>{$row['Date']}</td>
-                            <td>{$row['Image']}</td>
+                            <td><img src='{$row['Image']}' alt='Bill Image' style='max-width: 100px;'></td>
                             <td>{$row['Type']}</td>
                         </tr>";
         }
@@ -270,6 +278,7 @@ $result = $conn->query($sql);
 
         // PDF download link for combined report
         echo "<a href='download_combined_report.php' class='btn btn-primary'><span class='pdf-symbol'>&#x1F4C4;</span>Download Combined Report (PDF)</a>";
+        
     } else {
         echo "<p>No data found for this user.</p>";
     }

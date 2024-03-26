@@ -171,7 +171,7 @@ if ($result_user_id->num_rows > 0) {
                 <div class='subscription-item'>
                     <strong>Start Date:</strong> <span><?= $row['start_date'] ?></span><br>
                     <strong>End Date:</strong> <span><?= $row['end_date'] ?></span><br>
-                    <strong>Amount Paid:</strong> <span>$<?= $row['amount'] ?></span><br>
+                    <strong>Amount Paid:</strong> <span>₹<?= $row['amount'] ?></span><br>
                     <strong>Subscription Plan:</strong> <span><?= $row['subscription_plan'] ?></span><br>
                     <strong>Billing Frequency:</strong> <span><?= $row['billing_frequency'] ?></span><br>
                     <strong>Payment Method:</strong> <span><?= $row['payment_method'] ?></span><br>

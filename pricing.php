@@ -1,6 +1,13 @@
 <?php
 session_start(); // Start the session (if not already started)
 
+// Check if the user clicked the Activate button and is logged out
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['activate']) && !isset($_SESSION['email'])) {
+    // Redirect user to the login page
+    header("Location: login.php");
+    exit(); // Make sure to exit after redirecting
+}
+
 // Include database connection
 include 'connection.php';
 
@@ -27,7 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['activate'])) {
         }
     }
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,279 +45,168 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['activate'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pricing</title>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
-  <link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
   <style>
     body {
       font-family: 'Source Sans Pro', Arial, sans-serif;
       color: black;
-      text-align: left;
+      text-align: center;
       font-size: 16px;
-      background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background: url('assets/images/top-view-office-desk-with-growth-chart-coins.jpg') center/cover no-repeat fixed;
       margin: 0;
       padding: 0;
     }
 
     .container {
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 20px auto;
       padding: 20px;
       text-align: center;
+    }
+
+    h1, p {
+      margin: 0 0 20px;
     }
 
     h1 {
       font-size: 2.5em;
-      margin-bottom: 20px;
     }
 
     p {
       font-size: 1.1em;
-      margin-bottom: 40px;
     }
 
     .snip1517 {
-      max-width: 800px;
-      margin: 0 auto;
-      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px; /* Adjust the gap as needed */
+      margin-top: 20px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .snip1517 .plan {
-      margin: 0 1%;
-      width: 48%;
-      padding-top: 10px;
-      position: relative;
-      float: left;
-      overflow: hidden;
+    .plan {
+      flex: 1; /* Each box will grow equally */
+      min-width: 300px; /* Minimum width of each plan box */
+      padding: 20px;
       background-color: #ffffff;
       border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    .snip1517 .plan:hover i,
-    .snip1517 .plan.hover i {
-      transform: scale(1.2);
-    }
-
-    .snip1517 * {
-      box-sizing: border-box;
-      transition: all 0.25s ease-out;
-    }
-
-    .snip1517 header {
-      color: black;
-    }
-
-    .snip1517 .plan-title {
-      line-height: 60px;
       position: relative;
-      margin: 0;
-      padding: 0 20px;
-      font-size: 1.6em;
-      letter-spacing: 2px;
-      font-weight: 700;
+      transition: transform 0.3s ease-in-out;
     }
 
-    .snip1517 .plan-title:after {
-      position: absolute;
-      content: '';
-      top: 100%;
-      left: 20px;
-      width: 30px;
-      height: 3px;
-      background-color: #fff;
+    .plan:hover {
+      transform: scale(1.05);
     }
 
-    .snip1517 .plan-cost {
-      padding: 0 20px;
-      margin: 0;
-    }
-
-    .snip1517 .plan-price {
-      font-weight: 400;
-      font-size: 2.8em;
-      margin: 10px 0;
-      display: inline-block;
-    }
-
-    .snip1517 .plan-type {
-      opacity: 0.8;
-      font-size: 0.7em;
-      text-transform: uppercase;
-    }
-
-    .snip1517 .plan-features {
-      padding: 0 0 20px;
-      margin: 0;
-      list-style: outside none none;
-      font-size: 0.9em;
-    }
-
-    .snip1517 .plan-features li {
-      padding: 8px 20px;
-    }
-
-    .snip1517 .plan-features i {
-      margin-right: 8px;
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .snip1517 .plan-select {
-      border-top: 1px solid rgba(0, 0, 0, 0.2);
-      padding: 20px;
+    header, .plan-title, .plan-cost, .plan-features, .plan-select a {
       text-align: center;
     }
 
-    .snip1517 .plan-select a {
-      background-color: #156dab;
-      color: #ffffff;
-      text-decoration: none;
-      padding: 12px 20px;
-      font-size: 0.75em;
-      font-weight: 600;
-      border-radius: 8px;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      display: inline-block;
-    }
-
-    .snip1517 .plan-select a:hover {
-      background-color: #1b8ad8 !important;
-    }
-
-    .snip1517 .featured {
-      margin-top: -10px;
-      z-index: 1;
-      border-radius: 8px;
-      border: 2px solid #ffffff;
-      background-color:#ffffff;
-    }
-
-    .snip1517 .featured .plan-select {
-      padding: 30px 20px;
-    }
-
-    .snip1517 .featured .plan-select a {
-      background-color: #10507e;
-    }
-
-    /* Hidden by default */
-    #paymentDetails {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid #ccc;
-      background-color: #fff;
+    .plan-title {
+      font-size: 1.6em;
+      margin: 0;
       padding: 20px;
-      border-radius: 8px;
     }
 
-    /* Close button */
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
+    .plan-cost {
+      font-size: 2.8em;
+      margin: 10px 0;
     }
 
-    .close:hover,
-    .close:focus {
-      color: black;
+    .plan-features li {
+      padding: 8px 20px;
+      list-style-type: none;
+    }
+
+    .plan-select {
+      display: flex;
+      justify-content: center; /* Center items horizontally */
+      padding: 8px 20px;
+    }
+
+    .plan-select a {
+      background-color: #156dab;
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      text-align: center;
       text-decoration: none;
+      font-size: 16px;
+      margin: 4px 2px;
       cursor: pointer;
+      border-radius: 12px;
+      transition: background-color 0.3s ease;
     }
+
+    .plan-select a:hover {
+      background-color: #1b8ad8;
+    }
+
+    .plan-select button {
+      background-color: #156dab;
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: background-color 0.3s ease;
+    }
+
+    .plan-select button:hover {
+      background-color: #1b8ad8;
+    }
+
   </style>
+
 </head>
 <body>
-  <div class="container">
-    <h1>Our Pricing Plans</h1>
-    <p>Choose the plan that suits you best.</p>
+<div class="container">
+    <h1 class="animate__animated animate__fadeInDown">Our Pricing Plans</h1>
+    <p class="animate__animated animate__fadeInUp">Choose the plan that suits you best.</p>
   </div>
   <div class="snip1517">
-    <div class="plan">
+    <div class="plan animate__animated animate__fadeInLeft">
       <header>
-        <h4 class="plan-title">
-          Basic Plan
-        </h4>
-        <div class="plan-cost"><span class="plan-price">Free</span><span class="plan-type"></span></div>
+        <h4 class="plan-title">Basic Plan</h4>
+        <div class="plan-cost">Free</div>
       </header>
       <ul class="plan-features">
-        <li><i class="ion-android-remove"> </i>Keep track of your daily expenses</li>
-        <li><i class="ion-android-remove"> </i>Here,Get started for free</li>
-        <li><i class="ion-android-remove"> </i>Access basic budgeting tools and expense tracking</li>
-        <li><i class="ion-android-remove"> </i>Enjoy free features like manage income , expense ,etc</li>
-        <li><i class="ion-android-remove"> </i>Start your journey with our Free Basic Plan</li>
+        <li>Keep track of your daily expenses</li>
+        <li>Get started for free</li>
+        <li>Access basic budgeting tools and expense tracking</li>
+        <li>Enjoy free features like manage income, expense, etc.</li>
+        <li>Start your journey with our Free Basic Plan</li>
       </ul>
-      <div class="plan-select"><a href="#">It's Free</a></div>
+      <div class="plan-select"><a href="#" class="animate__animated animate__fadeInUp">It's Free</a></div>
     </div>
-    
-    <div class="plan featured">
+
+    <div class="plan featured animate__animated animate__fadeInRight">
       <header>
-        <h4 class="plan-title">
-          Premium Plan
-        </h4>
-        <div class="plan-cost"><span class="plan-price">₹100</span><span class="plan-type">/month</span></div>
+        <h4 class="plan-title">Premium Plan</h4>
+        <div class="plan-cost">₹100/month</div>
       </header>
-   
       <ul class="plan-features">
-        <li><i class="ion-android-remove"> </i>Upgrade to Premium Plan Today</li>
-        <li><i class="ion-android-remove"> </i>Unlock premium features</li>
-        <li><i class="ion-android-remove"> </i>Gain access to PDF report generation</li>
-        <li><i class="ion-android-remove"> </i>Enjoy expense tracking with our Premium Plan.</li>
-        <li><i class="ion-android-remove"> </i>Elevate your expenses with our Premium Plan</li>
+        <li>Upgrade to Premium Plan Today</li>
+        <li>Unlock premium features</li>
+        <li>Gain access to PDF report generation</li>
+        <li>Enjoy expense tracking with our Premium Plan.</li>
+        <li>Elevate your expenses with our Premium Plan</li>
       </ul>
-      <!-- PHP code to check authentication and display appropriate content -->
       <?php
-     // Placeholder for user authentication status
-     $email = isset($_SESSION['email']) ? $_SESSION['email'] : ''; // Check if user is logged in
-     echo '<!-- Debug: Email: ' . $email . ' -->'; // Add this line for debugging
-     
-     if ($email) {
-         // If user is logged in, display the activation button with pop-up menu
-         echo '<div class="plan-select">';
-         echo '<form method="post" action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '">';
-         echo '<input type="hidden" name="activate">';
-         echo '<button type="submit">Activate</button>';
-         echo '</form>';
-         echo '</div>';
-     } else {
-         // If user is not logged in, disable the activation button
-         echo '<div class="plan-select"><button disabled>Activate</button></div>';
-     }
-    ?>
+        $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+        if ($email) {
+            echo '<div class="plan-select"><form method="post" action="'.htmlspecialchars($_SERVER["PHP_SELF"]).'"><input type="hidden" name="activate"><button type="submit">Activate</button></form></div>';
+        } else {
+            echo '<div class="plan-select"><button disabled>Activate</button></div>';
+        }
+      ?>
+    </div>
   </div>
-
-  <!-- Payment Details Pop-up Menu -->
-  <div id="paymentDetails">
-    <span class="close" onclick="closePaymentDetails()">&times;</span>
-    <h2>Payment Details</h2>
-    <!-- Placeholder for payment details -->
-    <p>Bank Name: [Bank Name]</p>
-    <p>Account Number: [Account Number]</p>
-    <!-- Add more payment details here -->
-    <button onclick="confirmPayment()">Confirm Payment</button>
-  </div>
-
-
-  <script>
-    // JavaScript functions
-    function showPaymentDetails() {
-      var paymentDetails = document.getElementById("paymentDetails");
-      paymentDetails.style.display = "block";
-    }
-
-    function closePaymentDetails() {
-      var paymentDetails = document.getElementById("paymentDetails");
-      paymentDetails.style.display = "none";
-    }
-
-    function confirmPayment() {
-      alert("Payment confirmed!"); // Placeholder for demonstration
-    }
-  </script>
 </body>
 </html>

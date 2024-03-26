@@ -192,7 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Your form fields for updating budget details -->
             <div class="form-group">
                 <label for="plannedAmount">Planned Amount</label>
-                <input type="number" class="form-control" name="planned_amount" id="plannedAmount" placeholder="Enter planned amount" required>
+                <input type="number" class="form-control" name="planned_amount" id="plannedAmount" placeholder="Enter planned amount" value="<?php echo $budget["planned_amount"]; ?>" required>
             </div>
 
             <div class="form-group">

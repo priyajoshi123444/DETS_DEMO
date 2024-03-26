@@ -84,8 +84,46 @@ if (isset($_SESSION['email'])) {
     }
 }
 
-?>
+// PHP code for handling form submission and database update
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if all required fields are filled
+    if (isset($_POST['expenseName']) && isset($_POST['expenseAmount']) && isset($_POST['expenseCategory']) && isset($_POST['expenseDescription']) && isset($_POST['expenseDate'])) {
+        // Retrieve form data
+        $expenseName = $_POST['expenseName'];
+        $expenseAmount = $_POST['expenseAmount'];
+        $expenseCategory = $_POST['expenseCategory'];
+        $expenseDescription = $_POST['expenseDescription'];
+        $expenseDate = $_POST['expenseDate'];
 
+        // Database connection
+        $conn = connectToDatabase();
+
+        // Prepare SQL statement to update expense
+        $sql_update = "UPDATE expenses SET expenseName=?, expenseAmount=?, expenseCategory=?, expenseDescription=?, expenseDate=? WHERE expense_id=?";
+        $stmt = $conn->prepare($sql_update);
+
+        if ($stmt) {
+            // Bind parameters
+            $stmt->bind_param("sisssi", $expenseName, $expenseAmount, $expenseCategory, $expenseDescription, $expenseDate, $expenseId);
+
+            // Execute the statement
+            if ($stmt->execute()) {
+                // echo "Expense updated successfully.";
+            } else {
+                echo "Error updating expense: " . $stmt->error;
+            }
+
+            $stmt->close();
+        } else {
+            echo "Error preparing statement: " . $conn->error;
+        }
+
+        $conn->close();
+    } else {
+        echo "Please fill in all required fields.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

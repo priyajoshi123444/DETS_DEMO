@@ -33,6 +33,16 @@ session_start();
     
     <!--====== Style CSS ======-->
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+  /* Animation for the images */
+  .animated-img {
+    transition: transform 0.3s ease-in-out;
+  }
+  .animated-img:hover {
+    transform: scale(1.1);
+  }
+</style>
     
 </head>
 
@@ -70,8 +80,8 @@ session_start();
                 <div class="row">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="index.html">
-                                <img id="logo" src="assets/images/image_2024_01_23T06_36_16_419Z.png" alt="Logo">
+                            <a class="navbar-brand" href="demo.php">
+                                <img id="logo" src="assets/images/image_2024_03_20T05_11_02_796Z__1_-removebg-preview.png" alt="Logo">
                             </a>
                             <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="toggler-icon"></span>
@@ -124,9 +134,11 @@ session_start();
                     <div class="row justify-content-center">
                         <div class="col-lg-8 col-md-10">
                             <div class="hero_content text-center">
-                                <h2 class="hero_title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">Welcome To Daily </br>Expenses Tracker!</h2>
-                                <p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.5s">Welcome to the Daily Expenses Tracker,<br class="d-none d-xl-block">your go-to solution for managing and optimizing your daily spending effortlessly.</p>
-                                <a href="SingUp.php" class="main-btn wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.8s">SingUp</a>
+                            <h2 class="hero_title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">Welcome To Daily <br>Expenses Tracker!</h2>
+
+<p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.5s">Welcome to the Daily Expenses Tracker,<br class="d-none d-xl-block">your go-to solution for managing and optimizing your daily spending effortlessly.</p>
+<a href="SingUp.php" class="main-btn wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.8s">SingUp</a>
+
                             </div> <!-- hero content -->
                         </div>
                     </div> <!-- row -->
@@ -143,36 +155,37 @@ session_start();
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
-                    <div class="section_title text-center pb-25">
-                        <h4 class="title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">Why Choose Us</h4>
-                        <p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">Why settle for less? Choose us for the ultimate Daily Expenses Tracker that not only keeps tabs on your spending but also assists you in making informed decisions, setting goals, and achieving financial success.</p>
-                    </div> <!-- section title -->
+                <div class="section_title text-center pb-25">
+    <h4 class="title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">Why Choose Us</h4>
+    <p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">Why settle for less? Choose us for the ultimate Daily Expenses Tracker that not only keeps tabs on your spending but also assists you in making informed decisions, setting goals, and achieving financial success.</p>
+</div> <!-- section title -->
+
                 </div>
             </div> <!-- row -->
             <div class="row justify-content-center">
                 <div class="col-lg-4 col-md-7">
-                    <div class="single_features text-center mt-30 wow fadeInUp" data-wow-duration="1.3s"
-                        data-wow-delay="0.2s">
-                        <i class="lni lni-invest-monitor"></i>
-                        <h4 class="features_title">Expenses Management</a></h4>
-                        <p>Simplify your financial life with our Expenses Management feature, ensuring clarity and control over your spending and make step towards savings.</p>
-                    </div> <!-- single features -->
+                <div class="single_features text-center mt-30 wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">
+    <i class="lni lni-invest-monitor"></i>
+    <h4 class="features_title">Expenses Management</a></h4>
+    <p>Simplify your financial life with our Expenses Management feature, ensuring clarity and control over your spending and make step towards savings.</p>
+</div> <!-- single features -->
+
                 </div>
                 <div class="col-lg-4 col-md-7">
-                    <div class="single_features text-center mt-30 wow fadeInUp" data-wow-duration="1.3s"
-                        data-wow-delay="0.4s">
-                        <i class="lni lni-wallet"></i>
-                        <h4 class="features_title">Income Management</a></h4>
-                        <p>Optimize your financial success with our Income Management tool, efficiently and seamlessly tracking and maximizing your earnings.</p>
-                    </div> <!-- single features -->
+                <div class="single_features text-center mt-30 wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">
+    <i class="lni lni-wallet"></i>
+    <h4 class="features_title">Income Management</a></h4>
+    <p>Optimize your financial success with our Income Management tool, efficiently and seamlessly tracking and maximizing your earnings.</p>
+</div> <!-- single features -->
+
                 </div>
                 <div class="col-lg-4 col-md-7">
-                    <div class="single_features text-center mt-30 wow fadeInUp" data-wow-duration="1.3s"
-                        data-wow-delay="0.6s">
-                        <i class="lni lni-revenue"></i>
-                        <h4 class="features_title">Budget Management</a></h4>
-                        <p>Elevate your financial planning with our Budget Management feature, empowering you to set, track, and achieve your financial goals effortlessly.</p>
-                    </div> <!-- single features -->
+                <div class="single_features text-center mt-60 wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">
+    <i class="lni lni-target-revenue"></i>
+    <h4 class="features_title">Manage Budget</h4>
+    <p>Effortlessly control your spending with our concise and user-friendly budget management feature.</p>
+</div> <!-- single features -->
+
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
@@ -300,19 +313,18 @@ session_start();
             </div> <!-- row -->
             <div class="row justify-content-center">
                 <div class="col-lg-4 col-md-8 col-sm-10">
-                    <div class="single_pricing text-center mt-30 wow fadeInUp" data-wow-duration="1.3s"
-                        data-wow-delay="0.2s">
-                        <h4 class="pricing_title">Basic Plane</h4>
-                        <span class="price">Free</span>
-                        <ul class="pricing_list">
-                            <li>Here, Free Basic Plane</li>
-                            <li>Get started for free expense manage</li>
-                            <li>Access basic expense tools</li>
-                            <li>Start your journey with our Basic Plan today</li>
+                <div class="single_pricing text-center mt-30 wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">
+    <h4 class="pricing_title">Basic Plane</h4>
+    <span class="price">Free</span>
+    <ul class="pricing_list">
+        <li>Here, Free Basic Plane</li>
+        <li>Get started for free expense manage</li>
+        <li>Access basic expense tools</li>
+        <li>Start your journey with our Basic Plan today</li>
+    </ul>
+    <a href="pricing.php" class="mian-btn">Know More</a>
+</div> <!-- single pricing -->
 
-                        </ul>
-                        <a href="pricing.php" class="mian-btn">Know More</a>
-                    </div> <!-- single pricing -->
                 </div>
                 <div class="col-lg-4 col-md-8 col-sm-10">
                     <div class="single_pricing text-center mt-30 active wow fadeInUp" data-wow-duration="1.3s"
@@ -346,13 +358,15 @@ session_start();
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6">
-                    <div class="section_title section_title_2 text-center pb-25">
-                        <h4 class="title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">Contact Us</h4>
-                        <p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">Have questions or need assistance? Reach out to us easily through our Contact Us page – we're here to help!</p>
-                    </div>
+                <div class="section_title section_title_2 text-center pb-25">
+    <h4 class="title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">Contact Us</h4>
+    <p class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">Have questions or need assistance? Reach out to us easily through our Contact Us page – we're here to help!</p>
+</div>
+
                 </div>
             </div>
             <form id="contact-form" action="send_email1.php" method="post" class="wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.4s">
+
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="single_form">
@@ -434,6 +448,11 @@ session_start();
     
     <!--====== Main js ======-->
     <script src="assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+
+    <script>
+    new WOW().init();
+</script>
     
 </body>
 

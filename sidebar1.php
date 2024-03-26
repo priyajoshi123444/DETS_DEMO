@@ -52,6 +52,27 @@ if ($result->num_rows > 0) {
   <link rel="stylesheet" href="style.css">
   <!-- End layout styles -->
   <link rel="shortcut icon" href="favicon.ico" />
+  <style>
+ .sidebar .nav.sub-menu .nav-item .nav-link.active {
+    color:  #007bff !important;
+    background: transparent;
+}
+.sidebar .nav .nav-item.active > .nav-link .menu-title {
+    color:  #007bff !important;
+    font-family: "ubuntu-medium", sans-serif;
+}
+.sidebar .nav .nav-item .nav-link i.menu-arrow + .menu-icon {
+  color:#007bff !important;
+    margin-left: 0.25rem;
+}
+.sidebar .nav .nav-item.active > .nav-link i {
+  color:  #007bff !important;
+}
+.star {
+    color: #007bff; /* Set the color of the star */
+}
+
+</style>
 
 </head>
 
@@ -75,7 +96,7 @@ if ($result->num_rows > 0) {
     <span class="font-weight-bold mb-2">
         <?php echo $user['username']; ?>
         <?php if ($user['pricing_status'] == 1): ?>
-            <i class="mdi mdi-star text-primary"></i> <!-- Blue star icon -->
+          <span class="star">&#9733;</span> <!-- Blue star indicating subscription requirement -->
         <?php endif; ?>
     </span>
     <span class="text-secondary text-small"><?php echo $user['email']; ?></span>
@@ -145,7 +166,8 @@ if ($result->num_rows > 0) {
         <span class="menu-title">Category</span>
         <i class="menu-arrow"></i>
         <i class="mdi mdi-microsoft menu-icon"></i>
-        <span class="badge badge-danger">Premium</span> <!-- Add a badge indicating subscription requirement -->
+        <span class="star">&#9733;</span> <!-- Blue star indicating subscription requirement -->
+
     </a>
     <div class="collapse" id="ui-basic-3">
         <ul class="nav flex-column sub-menu">
@@ -161,7 +183,8 @@ if ($result->num_rows > 0) {
           <span class="menu-title">Report</span>
           <i class="menu-arrow"></i>
           <i class=" mdi mdi-file-document menu-icon"></i>
-          <span class="badge badge-danger">Premium</span> <!-- Add a badge indicating subscription requirement -->
+          <span class="star">&#9733;</span> <!-- Blue star indicating subscription requirement -->
+
         </a>
         <div class="collapse" id="ui-basic-4">
           <ul class="nav flex-column sub-menu">

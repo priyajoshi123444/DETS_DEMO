@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0;
             padding: 0;
             height: 100vh;
-            background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
+            background: url('assets/images/top-view-office-desk-with-growth-chart-coins.jpg') center/cover no-repeat fixed;
             display: flex;
             align-items: center;
             justify-content: center;

@@ -97,13 +97,16 @@
                 <label for="category">Category</label>
                 <select class="form-select" name="category" id="category" required>
                     <option value="" disabled selected>Select category</option>
-                    <option value="food">Food</option>
-                    <option value="utilities">Utilities</option>
-                    <option value="transportation">Transportation</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="hospital">Hospital</option>
-                    <option value="education">Education</option>
-                    <option value="selfcare">Self Care</option>
+                    <option value="Food">Food</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Transportation">Transport</option>
+                    <option value="Hospital">Hospital</option>
+                    <option value="Education">Education</option>
+                    <option value="Groceries">Groceries</option>
+                    <option value="Entertaiment">Entertaiment</option>
+                    <option value="Home">Home</option>
+                    <option value="Other">Other</option>
+                    <option value="Electronic">Electronic</option>
                    
                 </select>
             </div>

@@ -107,6 +107,13 @@ session_start();
             margin-right: 10px;
         }
 
+        .filter-form select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
         .filter-form button {
             padding: 8px 15px;
             border: none;
@@ -120,7 +127,6 @@ session_start();
         .filter-form button:hover {
             background-color: #0056b3;
         }
-
         .date-column {
             white-space: nowrap;
         }
@@ -135,7 +141,7 @@ session_start();
         }
 
         .container .btn-primary {
-            margin-top: 10px;
+            margin-top: 0px;
             width: fit-content;
             padding: 5px 10px;
             font-size: 16px;
@@ -156,6 +162,46 @@ session_start();
         .over-budget {
             color: red;
         }
+      /* Style for the filter dropdown */
+      .filter-form {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-form label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .filter-form select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        .filter-form button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .filter-form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Adjust button width and margin */
+        .filter-form button {
+            min-width: 100px;
+            margin-left: 10px;
+        }
+
     </style>
 </head>
 
@@ -176,10 +222,23 @@ session_start();
                     <option value="<?php echo $i; ?>"><?php echo date('F', mktime(0, 0, 0, $i, 1)); ?></option>
                 <?php endfor; ?>
             </select>
+
+            <label for="year">Filter by Year:</label>
+            <select name="year" id="year">
+                <option value="all">All Years</option>
+                <?php 
+                // Modify the range of years as per your requirement
+                $currentYear = date("Y");
+                for ($year = $currentYear; $year >= 2020; $year--) : ?>
+                    <option value="<?php echo $year; ?>"><?php echo $year; ?></option>
+                <?php endfor; ?>
+            </select>
+
             <button type="submit" class="btn btn-primary">Apply Filter</button>
         </form>
 
-        <?php
+
+        <?php 
         if (!isset($_SESSION)) {
             session_start();
         }
@@ -193,16 +252,30 @@ session_start();
         $email = $_SESSION['email'];
 
         $month = isset($_GET['month']) ? $_GET['month'] : 'all';
+        $year = isset($_GET['year']) ? $_GET['year'] : 'all';
 
         $sql = "SELECT b.budget_id, b.planned_amount, b.category, b.start_date, b.end_date, 
-                COALESCE(SUM(e.expenseAmount), 0) AS total_expenses
-                FROM budgets b
-                LEFT JOIN expenses e ON b.category = e.expenseCategory
-                JOIN users u ON b.user_id = u.user_id
-                WHERE u.email = '$email'";
+        COALESCE(SUM(CASE WHEN ";
+
+        if ($year != 'all') {
+            $sql .= "YEAR(e.expenseDate) = '$year'";
+        } else {
+            $sql .= "1=1"; // Always true condition for all years
+        }
+
+        $sql .= " THEN e.expenseAmount ELSE 0 END), 0) AS total_expenses
+        FROM budgets b
+        LEFT JOIN expenses e ON b.category = e.expenseCategory
+        JOIN users u ON b.user_id = u.user_id
+        WHERE u.email = '$email'";
 
         if ($month != 'all') {
             $sql .= " AND MONTH(b.start_date) = $month";
+        }
+
+        // Include condition to filter by year if a specific year is selected
+        if ($year != 'all') {
+            $sql .= " AND YEAR(b.start_date) = $year";
         }
 
         $sql .= " GROUP BY b.budget_id";
@@ -243,12 +316,10 @@ session_start();
 
         $conn->close();
         ?>
-
         <a href="AddBudget.php" class="btn btn-primary">Go Back</a>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

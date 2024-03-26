@@ -4,6 +4,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
 
+
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -15,6 +16,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+$reset_message = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
 
@@ -35,8 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
-                $mail->Username = 'priyajoshi1613@gmail.com';
-                $mail->Password = 'yluu rfcn zvdl mtly';
+                $mail->Username = '21bcuos093@ddu.ac.in';
+                $mail->Password = 'lejz xnsj qtrk nqsr';
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 587;
 
@@ -48,8 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->Body = "Click on the following link to reset your password: $resetLink";
 
                 $mail->send();
+                
 
-                echo "An email with instructions to reset your password has been sent to your email address.";
+                $reset_message = "An email with instructions to reset your password has been sent to your email address.";
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
@@ -79,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: url('assets/images/10061977.jpg') center/cover no-repeat fixed;
+    background: url('assets/images/top-view-office-desk-with-growth-chart-coins.jpg') center/cover no-repeat fixed;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,9 +147,11 @@ button:hover {
 <body>
     <div class="overlay">
         <h2>Forgot Password</h2>
-        <?php if (isset($reset_message)): ?>
-            <p class="reset-message"><?php echo $reset_message; ?></p>
-        <?php else: ?>
+        <?php if ($reset_message !== ""): ?>
+              <p class="reset-message">
+                <?php echo $reset_message; ?>
+              </p>
+              <?php else: ?>
             <form action="" method="post" id="forgetPasswordForm">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>

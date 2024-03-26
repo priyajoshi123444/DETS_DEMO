@@ -17,24 +17,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admin_email = "kagdasakshi09@gmail.com"; // Replace with actual admin email address
 
     // Create a new PHPMailer instance
+    $smtp_host = 'smtp.gmail.com';
+    $smtp_port = 587; // Use 587 for TLS
+    $smtp_username = '21bcuos093@ddu.ac.in';
+    $smtp_password = 'lejz xnsj qtrk nqsr';
+
     $mail = new PHPMailer(true);
-
     try {
-        //Server settings
-        $mail->isSMTP();                                            // Send using SMTP
-        $mail->Host       = 'smtp.gmail.com';                     // SMTP server
-        $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-        $mail->Username = 'priyajoshi1613@gmail.com';
-        $mail->Password = 'yluu rfcn zvdl mtly';                   // SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption
-        $mail->Port       = 587;                                    // TCP port to connect to
+        // Sender and recipient
+        $mail->setFrom($smtp_username);
+        $mail->addAddress($admin_email);
 
-        //Recipients
-        $mail->setFrom($email, $name);                              // Sender's email address and name
-        $mail->addAddress($admin_email);                            // Add a recipient (admin email)
+        // Email content
+        $mail->isHTML(false);
+        $mail->Subject = 'Payment Confirmation';
+        $mail->Body = 'Payment method selected: ' . $paymentMethod;
 
-        // Content
-        $mail->isHTML(false);                                       // Set email format to plain text
+        // SMTP configuration
+        $mail->isSMTP();
+        $mail->Host = $smtp_host;
+        $mail->SMTPAuth = true;
+        $mail->Username = $smtp_username;
+        $mail->Password = $smtp_password;
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = $smtp_port;
+
+        // Send the email
+        $mail->send();                                   // Set email format to plain text
         $mail->Subject = $subject;                                  // Email subject
         $mail->Body    = "Name: $name\nEmail: $email\nPhone Number: $number\nSubject: $subject\nMessage: $message"; // Email body
 

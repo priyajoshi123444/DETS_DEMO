@@ -95,7 +95,8 @@ session_start();
             color: #fff;
         }
 
-        .filter-form {
+         /* Style for the filter dropdown */
+         .filter-form {
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -103,6 +104,7 @@ session_start();
 
         .filter-form label {
             margin-right: 10px;
+            font-weight: bold;
         }
 
         .filter-form select {
@@ -110,6 +112,7 @@ session_start();
             border-radius: 5px;
             border: 1px solid #ccc;
             outline: none;
+            margin-right: 10px;
         }
 
         .filter-form button {
@@ -126,6 +129,12 @@ session_start();
             background-color: #0056b3;
         }
 
+        /* Adjust button width and margin */
+        .filter-form button {
+            min-width: 100px;
+            margin-left: 10px;
+        }
+
         .date-column {
             white-space: nowrap; 
         }
@@ -140,7 +149,7 @@ session_start();
         }
 
         .container .btn-primary {
-            margin-top: 10px; 
+            margin-top: 0px; 
             width: fit-content; 
             padding: 5px 10px; 
             font-size: 16px; 
@@ -237,7 +246,7 @@ session_start();
                         <td>{$row['expenseCategory']}</td>
                         <td>{$row['expenseDescription']}</td>
                         <td>{$row['expenseDate']}</td>
-                        <td>{$row['billImage']}</td>
+                        <td><img src='{$row['billImage']}' alt='Bill Image' style='max-width: 100px;'></td>
                     </tr>";
             }
             echo "</table>";

@@ -32,7 +32,7 @@ if ($userResult->num_rows > 0) {
 }
 
 // Check if the user is subscribed
-if ($userData['pricing_status'] != 2) {
+if ($userData['pricing_status'] != 1) {
     // If the user is not subscribed, set the warning message
     $warningMessage = "You are not subscribed to download the report. Please subscribe to access this feature.";
 } else {

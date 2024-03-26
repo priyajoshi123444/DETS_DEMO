@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("sssssi", $incomeName, $incomeAmount, $incomeCategory, $incomeDescription, $incomeDate, $incomeId);
 
         if ($stmt->execute()) {
-            echo "Income updated successfully.";
+            // echo "Income updated successfully.";
         } else {
             echo "Error updating income: " . $stmt->error;
         }
